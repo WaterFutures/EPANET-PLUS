@@ -871,21 +871,111 @@ char *read_line_from_buffer(char *line, const int maxLen, const char **buf)
     int i;
     for(i=0; i <= maxLen - 1; ++(*buf))
     {
-        line[i] = **buf;
         if(**buf == '\0')
             break;
         if(**buf == '\n')
         {
-            line[i+1]='\0';
+            *(line++)='\0';
             ++(*buf);
             break;
         }
+        
+        *(line++) = **buf;
     }
 
     if(i == maxLen - 1)
-        line[i] = '\0';
+        *(line++) = '\0';
 
     return line;
+}
+
+int netsize_from_buffer(Project *pr, const char* inpBuffer)
+{
+    Parser *parser = &pr->parser;
+
+    char line[MAXLINE + 1]; // Line from input data file
+    char *tok;              // First token of line
+    int sect, newsect;      // Input data sections
+    int errcode = 0;        // Error code
+    Spattern *pattern;
+
+    // Initialize object counts
+    parser->MaxJuncs = 0;
+    parser->MaxTanks = 0;
+    parser->MaxPipes = 0;
+    parser->MaxPumps = 0;
+    parser->MaxValves = 0;
+    parser->MaxControls = 0;
+    parser->MaxRules = 0;
+    parser->MaxCurves = 0;
+    sect = -1;
+
+
+    // Add a "dummy" time pattern with index of 0 and a single multiplier
+    // of 1.0 to be used by all demands not assigned a pattern
+    pr->network.Npats = -1;
+    errcode = addpattern(&pr->network, "");
+    if (errcode) return errcode;
+    pattern = &pr->network.Pattern[0];
+    pattern->Length = 1;
+    pattern[0].F = (double *)calloc(1, sizeof(double));
+    pattern[0].F[0] = 1.0;
+    parser->MaxPats = pr->network.Npats;
+
+    // Make a pass through input buffer counting number of each object
+    if (inpBuffer == NULL) return 0;
+    while(read_line_from_buffer(&line, MAXLINE, &inpBuffer) != NULL)
+    {
+        // Skip blank lines & those beginning with a comment
+        tok = strtok(line, SEPSTR);
+        if (tok == NULL) continue;
+        if (*tok == ';') continue;
+
+        // Check if line begins with a new section heading
+        if (tok[0] == '[')
+        {
+            newsect = findmatch(tok, SectTxt);
+            if (newsect >= 0)
+            {
+                sect = newsect;
+                if (sect == _END) break;
+                continue;
+            }
+            else continue;
+        }
+
+        // Add to count of current object
+        switch (sect)
+        {
+            case _JUNCTIONS: parser->MaxJuncs++;    break;
+            case _RESERVOIRS:
+            case _TANKS:     parser->MaxTanks++;    break;
+            case _PIPES:     parser->MaxPipes++;    break;
+            case _PUMPS:     parser->MaxPumps++;    break;
+            case _VALVES:    parser->MaxValves++;   break;
+            case _CONTROLS:  parser->MaxControls++; break;
+            case _RULES:     addrule(parser,tok);   break;
+            case _PATTERNS:
+                errcode = addpattern(&pr->network, tok);
+                parser->MaxPats = pr->network.Npats;
+                break;
+            case _CURVES:
+                errcode = addcurve(&pr->network, tok);
+                parser->MaxCurves = pr->network.Ncurves;
+                break;
+        }
+        if (errcode) break;
+    }
+
+    parser->MaxNodes = parser->MaxJuncs + parser->MaxTanks;
+    parser->MaxLinks = parser->MaxPipes + parser->MaxPumps + parser->MaxValves;
+    if (parser->MaxPats < 1) parser->MaxPats = 1;
+    if (!errcode)
+    {
+        if (parser->MaxJuncs < 1)       errcode = 223; // Not enough nodes
+        else if (parser->MaxTanks == 0) errcode = 224; // No tanks
+    }
+    return errcode;
 }
 
 int read_data_from_buffer(Project *pr, const char *inpBuffer)
@@ -929,7 +1019,7 @@ int read_data_from_buffer(Project *pr, const char *inpBuffer)
 
     // Read each line from input file
     const char **pData = &inpBuffer;
-    while (read_line_from_buffer(line, MAXLINE, pData) != NULL)
+    while (read_line_from_buffer(&line, MAXLINE, pData) != NULL)
     {
         // Make copy of line and scan for tokens
         strcpy(wline, line);
