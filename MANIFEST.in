@@ -1,0 +1,6 @@
+recursive-include epanet-src/ *
+recursive-include epanet-msx-src/ *
+recursive-include epanet_plus/ *
+recursive-include python-extension/ *
+include epanet_plus/epanet_wrapper.py
+include epanet_plus/epanet_toolkit.py
