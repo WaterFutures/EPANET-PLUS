@@ -31,17 +31,17 @@ class EpanetAPI():
 
         The default is an empty list.
     """
-    def __init__(self, use_project: bool = False, raise_on_error: bool = True,
+    def __init__(self, use_project: bool = False, raise_exception_on_error: bool = True,
                  warn_on_error: bool = False, ignore_error_codes: list[int] = []):
         self._use_project = use_project
         self._ph = None
-        self._raise_on_error = raise_on_error
+        self._raise_on_error = raise_exception_on_error
         self._warn_on_error = warn_on_error
         self._ignore_error_codes = ignore_error_codes
         self._last_error_code = None
         self._last_error_desc = None
 
-    def set_error_handling(self, raise_on_error: bool, warn_on_error: bool,
+    def set_error_handling(self, raise_exception_on_error: bool, warn_on_error: bool,
                            ignore_error_codes: list[int] = []) -> None:
         """
         Specifies the behavior in the case of an error/warning --
@@ -57,7 +57,7 @@ class EpanetAPI():
             List of error codes that should be ignored -- i.e., no exception or
             warning will be generated.
         """
-        self._raise_on_error = raise_on_error
+        self._raise_on_error = raise_exception_on_error
         self._warn_on_error = warn_on_error
         self._ignore_error_codes = ignore_error_codes
 
@@ -162,7 +162,7 @@ class EpanetAPI():
         if self._use_project is False:
             raise ValueError("Can not create project because of use_project=False")
         else:
-            return self._process_result(epanet.EN_createproject())
+            self._ph = self._process_result(epanet.EN_createproject())
 
     def deleteproject(self):
         if self._use_project is False:
@@ -470,7 +470,7 @@ class EpanetAPI():
         if self._use_project is False:
             return self._process_result(epanet.ENgetnodeid(index))
         else:
-            return self._process_result(epanet.EN_getnodeid(index))
+            return self._process_result(epanet.EN_getnodeid(self._ph, index))
 
     def setnodeid(self, index: int, new_id: str):
         if self._use_project is False:
