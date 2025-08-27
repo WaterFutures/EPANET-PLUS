@@ -363,7 +363,7 @@ class EPyT(EpanetAPI):
         `list[int]`
             List of node indices:
         """
-        return list(range(self.getcount(EpanetConstants.EN_NODECOUNT)))
+        return list(range(1, self.getcount(EpanetConstants.EN_NODECOUNT) + 1))
 
     def get_all_junctions_id(self) -> list[str]:
         """
@@ -433,7 +433,7 @@ class EPyT(EpanetAPI):
         `list[int]`
             List of all link indices.
         """
-        return list(range(self.getcount(EpanetConstants.EN_LINKCOUNT)))
+        return list(range(1, self.getcount(EpanetConstants.EN_LINKCOUNT) + 1))
 
     def get_num_links(self) -> int:
         """
