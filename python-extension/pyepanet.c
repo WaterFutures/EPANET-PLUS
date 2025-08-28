@@ -2015,7 +2015,7 @@ PyObject* method_EN_getlinkvalues(PyObject* self, PyObject* args)
         return PyTuple_Pack(1, PyLong_FromLong(err));
     }
 
-    float* value = (float*) malloc(sizeof(float) * numLinks);
+    double* value = (double*) malloc(sizeof(double) * numLinks);
     err = EN_getlinkvalues(ph, property, value);
 
     PyObject* valuesList = PyList_New(numLinks);
