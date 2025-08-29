@@ -940,7 +940,7 @@ PyObject* method_EN_getbasedemand(PyObject* self, PyObject* args)
 {
     uintptr_t ptr;
     int nodeIndex, demandIndex;
-    if(!PyArg_ParseTuple(args, "Ki", &ptr, &nodeIndex, &demandIndex)) {
+    if(!PyArg_ParseTuple(args, "Kii", &ptr, &nodeIndex, &demandIndex)) {
         return NULL;
     }
     EN_Project ph = (EN_Project) ptr;
