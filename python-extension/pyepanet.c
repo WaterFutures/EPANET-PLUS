@@ -628,7 +628,7 @@ PyObject* method_EN_getqualinfo(PyObject* self, PyObject* args)
     char out_chemUnits[MAXID + 1];
     int err = EN_getqualinfo(ph, &qualType, &out_chemName, &out_chemUnits, &traceNode);
 
-    return PyTuple_Pack(5, PyLong_FromLong(err), PyLong_FromLong(qualType), PyUnicode_FromString(&out_chemName), PyUnicode_FromString(&out_chemName), PyLong_FromLong(traceNode));
+    return PyTuple_Pack(5, PyLong_FromLong(err), PyLong_FromLong(qualType), PyUnicode_FromString(&out_chemName), PyUnicode_FromString(&out_chemUnits), PyLong_FromLong(traceNode));
 }
 
 PyObject* method_EN_getqualtype(PyObject* self, PyObject* args)
