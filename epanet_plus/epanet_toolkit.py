@@ -315,10 +315,10 @@ class EPyT(EpanetAPI):
         if self._msx_file is not None:
             self.MSXclose()
 
+        super().close()
+
         if self._use_project is True:
             self.deleteproject()
-
-        super().close()
 
     @property
     def msx_file(self) -> str:
@@ -1659,6 +1659,22 @@ class EPyT(EpanetAPI):
             Index of the pattern.
         """
         self.setlinkvalue(pump_idx, EpanetConstants.EN_PUMP_EPAT, pattern_idx)
+
+    def get_all_patterns_id(self) -> list[str]:
+        """
+        Returns a list of all pattern IDs.
+
+        Returns
+        -------
+        `list[str]`
+            List of IDs.
+        """
+        r = []
+
+        for idx in range(1, self.getcount(EpanetConstants.EN_PATCOUNT) + 1):
+            r.append(self.getpatternid(idx))
+
+        return r
 
     def get_pattern(self, pattern_idx: int) -> list[float]:
         """
