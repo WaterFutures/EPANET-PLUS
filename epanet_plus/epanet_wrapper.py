@@ -33,6 +33,25 @@ class EpanetAPI():
     """
     def __init__(self, use_project: bool = False, raise_exception_on_error: bool = True,
                  warn_on_error: bool = False, ignore_error_codes: list[int] = []):
+        if not isinstance(use_project, bool):
+            raise TypeError("'use_project' must be an instance of 'bool' " +
+                            f"but not of '{type(use_project)}'")
+        if not isinstance(raise_exception_on_error, bool):
+            raise TypeError("'raise_exception_on_error' must be an instance of 'bool' " +
+                            f"but not of '{type(raise_exception_on_error)}'")
+        if not isinstance(warn_on_error, bool):
+            raise TypeError("'warn_on_error' must be an instance of 'bool' " +
+                            f"but not of type '{type(warn_on_error)}'")
+        if not isinstance(ignore_error_codes, list):
+            raise TypeError("'ignore_error_codes' must be an instance of 'list[int]' " +
+                            f"but not of '{type(ignore_error_codes)}'")
+        else:
+            if any(not isinstance(item, int) for item in ignore_error_codes):
+                raise TypeError("All items in 'ignore_error_codes' must be of type 'int'")
+
+        if raise_exception_on_error is True and warn_on_error is True:
+            raise ValueError("'raise_exception_on_error' and 'warn_on_error' can not be both True")
+
         self._use_project = use_project
         self._ph = None
         self._raise_on_error = raise_exception_on_error
@@ -217,7 +236,7 @@ class EpanetAPI():
         if self._use_project is False:
             return self._process_result(epanet.ENsaveinpfile(filename))
         else:
-            return self._process_result(epanet.EN_saveinpfile(filename))
+            return self._process_result(epanet.EN_saveinpfile(self._ph, filename))
 
     def close(self):
         if self._use_project is False:
@@ -576,7 +595,7 @@ class EpanetAPI():
             return self._process_result(epanet.ENsetbasedemand(node_index, demand_index,
                                                                base_demand))
         else:
-            return self._process_result(epanet.EN_setbasedemand(node_index, demand_index,
+            return self._process_result(epanet.EN_setbasedemand(self._ph, node_index, demand_index,
                                                                 base_demand))
 
     def getdemandpattern(self, node_index: int, demand_index: int):
