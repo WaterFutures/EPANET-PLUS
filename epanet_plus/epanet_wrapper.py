@@ -867,7 +867,7 @@ class EpanetAPI():
         minlvl : `float`
         maxlvl : `float`
         diam : `float`
-        minvol : `float
+        minvol : `float`
         volcurve : `str`
         """
         if self._use_project is False:
@@ -1639,7 +1639,7 @@ class EpanetAPI():
         ----------
         type : `int`
         link_index : `int`
-        setting : `float
+        setting : `float`
         node_index . `int`
         level : `float`
         """
@@ -2398,7 +2398,7 @@ class EpanetAPI():
         Parameters
         ----------
         pat : `int`
-        mult : ``list[float]
+        mult : `list[float]`
         len : `int`
         """
         return self._process_result(epanet.MSXsetpattern(pat, mult, len), msx_call=True)
