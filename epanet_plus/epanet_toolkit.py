@@ -800,7 +800,11 @@ class EPyT(EpanetAPI):
                 - 'traceNode': index of node being traced (if applicable,
                                only if 'qualType' = EN_TRACE);
         """
-        return dict(zip(["qualType", "chemName", "chemUnits", "traceNode"], self.getqualinfo()))
+        r = dict(zip(["qualType", "chemName", "chemUnits", "traceNode"], self.getqualinfo()))
+        if r["qualType"] == EpanetConstants.EN_AGE:
+            r["chemUnits"] = "hrs"
+
+        return r
 
     def get_quality_type(self) -> dict:
         """
@@ -811,9 +815,9 @@ class EPyT(EpanetAPI):
         `dict`
             Dictioanry containing the type of quality analysis and the
             index of the node being traced (if applicable):
+
                 - 'qualType': type of quality analysis (EN_NONE, EN_CHEM, EN_AGE, or EN_TRACE);
-                - 'traceNode': index of node being traced (if applicable,
-                               only if 'qualType' = EN_TRACE);
+                - 'traceNode': index of node being traced (if applicable, only if 'qualType' = EN_TRACE);
         """
         return dict(zip(["qualType", "traceNode"], self.getqualtype()))
 
@@ -881,8 +885,8 @@ class EPyT(EpanetAPI):
         """
         Removes all controls.
         """
-        for i in range(self.getcount(EpanetConstants.EN_CONTROLCOUNT)):
-            self.deletecontrol(i + 1)
+        while self.getcount(EpanetConstants.EN_CONTROLCOUNT) > 0:
+            self.deletecontrol(1)
 
     def get_num_rules(self) -> int:
         """
@@ -910,8 +914,8 @@ class EPyT(EpanetAPI):
         """
         Removes all rules.
         """
-        for i in range(self.getcount(EpanetConstants.EN_RULECOUNT)):
-            self.deleterule(i + 1)
+        while self.getcount(EpanetConstants.EN_RULECOUNT) > 0:
+            self.deleterule(1)
 
     def get_hydraulic_time_step(self) -> int:
         """
@@ -2427,5 +2431,3 @@ class EPyT(EpanetAPI):
 
         return r
 
-    def get_msx_pattern(self, pattern_idx: int) -> list[float]:
-        raise NotImplementedError()
