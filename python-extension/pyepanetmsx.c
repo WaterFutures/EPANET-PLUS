@@ -249,7 +249,7 @@ PyObject* method_MSXgetpatternvalue(PyObject* self, PyObject* args)
     double value;
     int err = MSXgetpatternvalue(pat, period, &value);
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyFloat_FromDouble(value));
 }
 
 PyObject* method_MSXgetinitqual(PyObject* self, PyObject* args)
@@ -359,13 +359,13 @@ PyObject* method_MSXsetpatternvalue(PyObject* self, PyObject* args)
 PyObject* method_MSXsetpattern(PyObject* self, PyObject* args)
 {
     int pat, len;
-    PyObject* mult = NULL;
+    PyListObject* mult = NULL;
     if(!PyArg_ParseTuple(args, "iOi", &pat, &mult, &len)) {
         return NULL;
     }
 
     double* multRaw = (double*) malloc(sizeof(double) * len);
-    for(int i=0; i = len; i++) {
+    for(int i=0; i != len; i++) {
         multRaw[i] = PyFloat_AsDouble(PyList_GET_ITEM(mult, i));
     }
 
