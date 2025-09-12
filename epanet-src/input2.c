@@ -967,4 +967,3 @@ int read_data_from_buffer(Project *pr, const char *inpBuffer)
     free(parser->X);
     return errcode;
 }
-
