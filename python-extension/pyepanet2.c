@@ -351,9 +351,9 @@ PyObject* method_ENgetcurve(PyObject* self, PyObject* args)
 
     char out_id[MAXID + 1];
     int nPoints;
-    double* xValues = (double*) PyMem_Calloc(len, sizeof(double));
-    double* yValues = (double*) PyMem_Calloc(len, sizeof(double));
-    err = ENgetcurve(index, &out_id, &nPoints, &xValues, &yValues);
+    float* xValues = (float*) PyMem_Calloc(len, sizeof(float));
+    float* yValues = (float*) PyMem_Calloc(len, sizeof(float));
+    err = ENgetcurve(index, &out_id, &nPoints, xValues, yValues);
 
     PyObject* xValuesList = PyList_New(nPoints);
     PyObject* yValuesList = PyList_New(nPoints);
@@ -365,6 +365,8 @@ PyObject* method_ENgetcurve(PyObject* self, PyObject* args)
 
     PyMem_Free(xValues);
     PyMem_Free(yValues);
+
+    return PyTuple_Pack(5, PyLong_FromLong(err), PyUnicode_FromString(out_id), PyLong_FromLong(nPoints), xValuesList, yValuesList);
 }
 
 PyObject* method_ENgetcurveid(PyObject* self, PyObject* args)
@@ -376,7 +378,7 @@ PyObject* method_ENgetcurveid(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = ENgetcurveid(index, &id);
+    int err = ENgetcurveid(index, id);
 
     return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(id));
 }
@@ -913,10 +915,10 @@ PyObject* method_ENgetvertexcount(PyObject* self, PyObject* args)
 
 PyObject* method_ENinit(PyObject* self, PyObject* args)
 {
-    char* rptFile, outFile = NULL;
+    char* rptFile, *outFile = NULL;
     int unitsType, headlossType;
 
-    if(!PyArg_ParseTuple(args, "ssii", &rptFile, outFile, unitsType, headlossType)) {
+    if(!PyArg_ParseTuple(args, "ssii", &rptFile, &outFile, &unitsType, &headlossType)) {
         return NULL;
     }
 
@@ -1107,12 +1109,12 @@ PyObject* method_ENsetcurve(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    double* xValuesRaw = (double*) malloc(sizeof(double) * nPoints);
-    double* yValuesRaw = (double*) malloc(sizeof(double) * nPoints);
+    float* xValuesRaw = (float*) malloc(sizeof(float) * nPoints);
+    float* yValuesRaw = (float*) malloc(sizeof(float) * nPoints);
 
     for(int i=0; i != nPoints; i++) {
-        xValuesRaw[i] = PyFloat_AsDouble(PyList_GET_ITEM(xValues, i));
-        yValuesRaw[i] = PyFloat_AsDouble(PyList_GET_ITEM(yValues, i));
+        xValuesRaw[i] = (float) PyFloat_AsDouble(PyList_GET_ITEM(xValues, i));
+        yValuesRaw[i] = (float) PyFloat_AsDouble(PyList_GET_ITEM(yValues, i));
     }
 
     int err = ENsetcurve(index, xValuesRaw, yValuesRaw, nPoints);
@@ -1354,7 +1356,7 @@ PyObject* method_ENsetpattern(PyObject* self, PyObject* args)
     }
 
     int numValues = PyList_Size(values);
-    float* valuesRaw = (double*) malloc(sizeof(float) * numValues);
+    float* valuesRaw = (float*) malloc(sizeof(float) * numValues);
     for(int i=0; i != numValues; i++) {
         valuesRaw[i] = (float) PyFloat_AsDouble(PyList_GET_ITEM(values, i));
     }
@@ -1592,7 +1594,7 @@ PyObject* method_ENsetvertices(PyObject* self, PyObject* args)
         yRaw[i] = PyFloat_AsDouble(PyList_GET_ITEM(y, i));
     }
 
-    int err = ENsetvertices(index, &xRaw, &yRaw, count);
+    int err = ENsetvertices(index, xRaw, yRaw, count);
     free(xRaw);
     free(yRaw);
 
@@ -1647,8 +1649,8 @@ PyObject* method_ENwriteline(PyObject* self, PyObject* args)
 
 PyObject* method_ENgettag(PyObject* self, PyObject* args)
 {
-    int object, type;
-    if(!PyArg_ParseTuple(args, "ii", &object, &type)) {
+    int object, index;
+    if(!PyArg_ParseTuple(args, "ii", &object, &index)) {
         return NULL;
     }
 
@@ -1660,9 +1662,9 @@ PyObject* method_ENgettag(PyObject* self, PyObject* args)
 
 PyObject* method_ENsettag(PyObject* self, PyObject* args)
 {
-    int object, type;
+    int object, index;
     char* tag = NULL;
-    if(!PyArg_ParseTuple(args, "iis", &object, &type, &tag)) {
+    if(!PyArg_ParseTuple(args, "iis", &object, &index, &tag)) {
         return NULL;
     }
 

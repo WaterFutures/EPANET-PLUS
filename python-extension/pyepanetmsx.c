@@ -288,7 +288,7 @@ PyObject* method_MSXgeterror(PyObject* self, PyObject* args)
     char msg[MAXLINE + 1];
     int err = MSXgeterror(code, &msg, MAXLINE);
 
-    PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(msg));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&msg));
 }
 
 PyObject* method_MSXsetconstant(PyObject* self, PyObject* args)

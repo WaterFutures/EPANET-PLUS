@@ -110,8 +110,8 @@ PyObject* method_EN_setcomment(PyObject* self, PyObject* args)
 {
     uintptr_t ptr;
     int object, index;
-    char* comment;
-    if(!PyArg_ParseTuple(args, "Kiis", &ptr, &object, &index, comment)) {
+    char* comment = NULL;
+    if(!PyArg_ParseTuple(args, "Kiis", &ptr, &object, &index, &comment)) {
         return NULL;
     }
     EN_Project ph = (EN_Project) ptr;
@@ -648,10 +648,11 @@ PyObject* method_EN_getqualtype(PyObject* self, PyObject* args)
 PyObject* method_EN_setqualtype(PyObject* self, PyObject* args)
 {
     uintptr_t ptr;
-    int qualType, traceNode;
+    int qualType;
     char* chemName = NULL;
     char* chemUnits = NULL;
-    if(!PyArg_ParseTuple(args, "Kissi", &ptr, &qualType, &chemName, &chemUnits, &traceNode)) {
+    char* traceNode = NULL;
+    if(!PyArg_ParseTuple(args, "Kisss", &ptr, &qualType, &chemName, &chemUnits, &traceNode)) {
         return NULL;
     }
     EN_Project ph = (EN_Project) ptr;
@@ -1121,7 +1122,7 @@ PyObject* method_EN_setlinktype(PyObject* self, PyObject* args)
 {
     uintptr_t ptr;
     int inout_index, linkType, actionCode;
-    if(!PyArg_ParseTuple(args, "Kiii", &ptr, &inout_index, linkType, actionCode)) {
+    if(!PyArg_ParseTuple(args, "Kiii", &ptr, &inout_index, &linkType, &actionCode)) {
         return NULL;
     }
     EN_Project ph = (EN_Project) ptr;
@@ -1255,7 +1256,7 @@ PyObject* method_EN_setvertices(PyObject* self, PyObject* args)
         yRaw[i] = PyFloat_AsDouble(PyList_GET_ITEM(y, i));
     }
 
-    int err = EN_setvertices(ph, index, &xRaw, &yRaw, count);
+    int err = EN_setvertices(ph, index, xRaw, yRaw, count);
     free(xRaw);
     free(yRaw);
 
@@ -1296,7 +1297,7 @@ PyObject* method_EN_setheadcurveindex(PyObject* self, PyObject* args)
 {
     uintptr_t ptr;
     int linkIndex, curveIndex;
-    if(!PyArg_ParseTuple(args, "Ki", &ptr, &linkIndex, curveIndex)) {
+    if(!PyArg_ParseTuple(args, "Ki", &ptr, &linkIndex, &curveIndex)) {
         return NULL;
     }
     EN_Project ph = (EN_Project) ptr;
@@ -1585,7 +1586,7 @@ PyObject* method_EN_setcurvevalue(PyObject* self, PyObject* args)
     uintptr_t ptr;
     int curveIndex, pointIndex;
     double x, y;
-    if(!PyArg_ParseTuple(args, "Kiidd", &ptr, &curveIndex, &pointIndex, x, y)) {
+    if(!PyArg_ParseTuple(args, "Kiidd", &ptr, &curveIndex, &pointIndex, &x, &y)) {
         return NULL;
     }
     EN_Project ph = (EN_Project) ptr;
@@ -1614,7 +1615,7 @@ PyObject* method_EN_getcurve(PyObject* self, PyObject* args)
     int nPoints;
     double* xValues = (double*) PyMem_Calloc(len, sizeof(double));
     double* yValues = (double*) PyMem_Calloc(len, sizeof(double));
-    err = EN_getcurve(ph, index, &out_id, &nPoints, &xValues, &yValues);
+    err = EN_getcurve(ph, index, &out_id, &nPoints, xValues, yValues);
 
     PyObject* xValuesList = PyList_New(nPoints);
     PyObject* yValuesList = PyList_New(nPoints);
@@ -1780,7 +1781,7 @@ PyObject* method_EN_getpremise(PyObject* self, PyObject* args)
 {
     uintptr_t ptr;
     int ruleIndex, premiseIndex;
-    if(!PyArg_ParseTuple(args, "Kii", &ptr, &ruleIndex, premiseIndex)) {
+    if(!PyArg_ParseTuple(args, "Kii", &ptr, &ruleIndex, &premiseIndex)) {
         return NULL;
     }
     EN_Project ph = (EN_Project) ptr;
@@ -1917,7 +1918,7 @@ PyObject* method_EN_setrulepriority(PyObject* self, PyObject* args)
     uintptr_t ptr;
     int index;
     double priority;
-    if(!PyArg_ParseTuple(args, "Kid", &ptr, &index, priority)) {
+    if(!PyArg_ParseTuple(args, "Kid", &ptr, &index, &priority)) {
         return NULL;
     }
     EN_Project ph = (EN_Project) ptr;
@@ -1930,8 +1931,8 @@ PyObject* method_EN_setrulepriority(PyObject* self, PyObject* args)
 PyObject* method_EN_gettag(PyObject* self, PyObject* args)
 {
     uintptr_t ptr;
-    int object, type;
-    if(!PyArg_ParseTuple(args, "Kii", &ptr, &object, &type)) {
+    int object, index;
+    if(!PyArg_ParseTuple(args, "Kii", &ptr, &object, &index)) {
         return NULL;
     }
     EN_Project ph = (EN_Project) ptr;
@@ -1945,9 +1946,9 @@ PyObject* method_EN_gettag(PyObject* self, PyObject* args)
 PyObject* method_EN_settag(PyObject* self, PyObject* args)
 {
     uintptr_t ptr;
-    int object, type;
+    int object, index;
     char* tag = NULL;
-    if(!PyArg_ParseTuple(args, "Kiis", &ptr, &object, &type, &tag)) {
+    if(!PyArg_ParseTuple(args, "Kiis", &ptr, &object, &index, &tag)) {
         return NULL;
     }
     EN_Project ph = (EN_Project) ptr;
@@ -2075,6 +2076,7 @@ PyObject* method_EN_setcurvetype(PyObject* self, PyObject* args)
 PyObject* method_EN_getcontrolenabled(PyObject* self, PyObject* args)
 {
     uintptr_t ptr;
+    int index;
     if(!PyArg_ParseTuple(args, "Ki", &ptr, &index)) {
         return NULL;
     }
