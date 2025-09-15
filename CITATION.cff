@@ -1,0 +1,17 @@
+cff-version: "1.2.0"
+authors:
+- family-names: Artelt
+  given-names: André
+  orcid: "https://orcid.org/0000-0002-2426-3126"
+contact:
+- family-names: Artelt
+  given-names: André
+  orcid: "https://orcid.org/0000-0002-2426-3126"
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Artelt
+    given-names: André
+    orcid: "https://orcid.org/0000-0002-2426-3126"
+title: "EPANET-PLUS"
