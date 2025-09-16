@@ -708,7 +708,7 @@ class EpanetAPI():
         else:
             return self._process_result(epanet.EN_getqualtype(self._ph))
 
-    def setqualtype(self, qual_type: int, chem_name: str, chem_units: str, trace_node: int):
+    def setqualtype(self, qual_type: int, chem_name: str, chem_units: str, trace_node_id: str):
         """
         EN_setqualtype
 
@@ -717,14 +717,14 @@ class EpanetAPI():
         qual_type : `int`
         chem_name : `str`
         chem_units : `str`
-        trace_node : `int`
+        trace_node_id : `str`
         """
         if self._use_project is False:
             return self._process_result(epanet.ENsetqualtype(qual_type, chem_name, chem_units,
-                                                             trace_node))
+                                                             trace_node_id))
         else:
             return self._process_result(epanet.EN_setqualtype(self._ph, qual_type, chem_name,
-                                                              chem_units, trace_node))
+                                                              chem_units, trace_node_id))
 
     def addnode(self, node_id: str, node_type: int):
         """

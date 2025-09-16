@@ -2237,6 +2237,19 @@ class EPyT(EpanetAPI):
     def get_msx_options(self) -> dict:
         raise NotImplementedError()
 
+    def add_msx_pattern(self, pattern_id: str, pattern_mult: list[float]) -> None:
+        self.MSXaddpattern(pattern_id)
+        pattern_idx = self.MSXgetindex(EpanetConstants.MSX_PATTERN, pattern_id)
+        self.MSXsetpattern(pattern_idx, pattern_mult, len(pattern_mult))
+
+    def set_msx_source(self, node_id: str, species_id: str, source_type: int,
+                       source_concentration: float, msx_pattern_id: str) -> None:
+        node_idx = self.get_node_idx(node_id)
+        species_idx = self.get_msx_species_idx(species_id)
+        msx_pattern_idx = self.MSXgetindex(EpanetConstants.MSX_PATTERN, msx_pattern_id)
+
+        self.MSXsetsource(node_idx, species_idx, source_type, source_concentration, msx_pattern_idx)
+
     def get_msx_species_init_concentration(self, obj_type: int, obj_index: int,
                                            species_idx: int) -> float:
         """
@@ -2431,3 +2444,11 @@ class EPyT(EpanetAPI):
 
         return r
 
+    def get_msx_pattern(self, pattern_idx: int) -> list[float]:
+        r = []
+
+        pattern_length = self.MSXgetpatternlen(pattern_idx)
+        for idx in range(1, pattern_length + 1):
+            r.append(self.MSXgetpatternvalue(pattern_idx, idx))
+
+        return r
