@@ -2,6 +2,10 @@
 This module contains a Python toolkit with higher-level functions for working with
 EPANET and EPANET-MSX.
 """
+import os
+import re
+import tempfile
+
 from .epanet_wrapper import EpanetAPI
 
 
@@ -292,6 +296,12 @@ class EPyT(EpanetAPI):
 
         self._inp_file = inp_file_in
         self._msx_file = None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self.close()
 
     def load_msx_file(self, msx_file_in: str) -> None:
         """
@@ -797,12 +807,17 @@ class EPyT(EpanetAPI):
                 - 'qualType': type of quality analysis (EN_NONE, EN_CHEM, EN_AGE, or EN_TRACE);
                 - 'chemName': name of chemical constituent;
                 - 'chemUnits': concentration units of constituent;
-                - 'traceNode': index of node being traced (if applicable,
+                - 'traceNode': ID of node being traced (if applicable,
                                only if 'qualType' = EN_TRACE);
         """
         r = dict(zip(["qualType", "chemName", "chemUnits", "traceNode"], self.getqualinfo()))
         if r["qualType"] == EpanetConstants.EN_AGE:
             r["chemUnits"] = "hrs"
+
+        if r["qualType"] == EpanetConstants.EN_TRACE:
+            r["traceNode"] = self.get_node_id(r["traceNode"])
+        else:
+            r["traceNode"] = ""
 
         return r
 
@@ -814,15 +829,21 @@ class EPyT(EpanetAPI):
         -------
         `dict`
             Dictioanry containing the type of quality analysis and the
-            index of the node being traced (if applicable):
+            ID of the node being traced (if applicable):
 
                 - 'qualType': type of quality analysis (EN_NONE, EN_CHEM, EN_AGE, or EN_TRACE);
-                - 'traceNode': index of node being traced (if applicable, only if 'qualType' = EN_TRACE);
+                - 'traceNode': ID of node being traced (if applicable, only if 'qualType' = EN_TRACE);
         """
-        return dict(zip(["qualType", "traceNode"], self.getqualtype()))
+        r = dict(zip(["qualType", "traceNode"], self.getqualtype()))
+        if r["qualType"] == EpanetConstants.EN_TRACE:
+            r["traceNode"] = self.get_node_id(r["traceNode"])
+        else:
+            r["traceNode"] = ""
+
+        return r
 
     def set_quality_type(self, qual_code: int, chem_name: str, chem_units: str,
-                         tracenode_idx: int) -> None:
+                         tracenode_id: str) -> None:
         """
         Specifies the water quality analysis parameters.
 
@@ -839,10 +860,10 @@ class EPyT(EpanetAPI):
             Name of chemical constituent
         chem_units : `str`
             Concentration units of constituent
-        tracenode_idx : `int`
-            Index of node being traced (if applicable, only if 'qualType' = EN_TRACE).
+        tracenode_id : `str`
+            ID of node being traced (if applicable, only if 'qualType' = EN_TRACE).
         """
-        self.setqualtype(qual_code, chem_name, chem_units, tracenode_idx)
+        self.setqualtype(qual_code, chem_name, chem_units, tracenode_id)
 
     def get_num_controls(self) -> int:
         """
@@ -981,7 +1002,7 @@ class EPyT(EpanetAPI):
         time_step : `int`
             Reporting time step in seconds.
         """
-        self.settimeparam(time_step, EpanetConstants.EN_REPORTSTEP)
+        self.settimeparam(EpanetConstants.EN_REPORTSTEP, time_step)
 
     def get_reporting_start_time(self) -> int:
         """
@@ -2228,22 +2249,247 @@ class EPyT(EpanetAPI):
         """
         self.setlinkvalue(valve_idx, EpanetConstants.EN_STATUS, status)
 
+    def split_pipe(self, pipe_id: str, new_pipe_id: str, new_node_id: str) -> None:
+        """
+        Splits a pipe (pipeID), creating two new pipes (pipeID and newPipeID) and adds a
+        junction/node (newNodeID) in between. If the pipe is linear
+        the pipe is splitted in half, otherwisw the middle point of
+        the vertice array elemnts is taken as the split point.
+        The two new pipes have the same properties as the one which is splitted.
+        The new node's properties are the same with the nodes on the left and right
+        and New Node Elevation and Initial quality is the average of the two.
+
+        Note that this code is taken from EPyT -- slightly modified to fit into this toolkit.
+
+        Parameters
+        ----------
+        pipe_id : `str`
+            ID of the pipe to be split.
+        new_pipe_id : `str`
+            ID of the new pipe.
+        new_node_id : `str`
+            ID of the new node, placed in the middle of the splitted pipe.
+        """
+        # Find the coordinates of the Nodes connected with the link/pipe
+        pipeIndex = self.get_link_idx(pipe_id)
+        nodesIndex = self.getlinknodes(pipeIndex)
+        leftNodeIndex = nodesIndex[0]
+        rightNodeIndex = nodesIndex[1]
+        coordNode1 = self.getcoord(leftNodeIndex)
+        coordNode2 = self.getcoord(rightNodeIndex)
+
+        if coordNode1[0] == 0 and coordNode1[1] == 0 \
+                and coordNode2[0] == 0 and coordNode2[1] == 0:
+            raise ValueError('Some nodes have zero values for coordinates')
+
+        if self.getvertexcount(pipeIndex) == 0:
+            # Calculate mid position of the link/pipe based on nodes
+            midX = (coordNode1[0] + coordNode2[0]) / 2
+            midY = (coordNode1[1] + coordNode2[1]) / 2
+        else:
+            # Calculate mid position based on vertices pick midpoint of vertices
+            xVert = []
+            yVert = []
+            for i in range(self.getvertexcount(pipeIndex)):
+                x, y = self.getvertex(pipeIndex, i)
+                xVert.append(x)
+                yVert.append(y)
+
+            xMidPos = int(len(xVert) / 2)
+            midX = xVert[xMidPos]
+            midY = yVert[xMidPos]
+
+        # Add the new node between the link/pipe and add the same properties
+        # as the left node (the elevation is the average of left-right nodes)
+        index = self.addnode(new_node_id, EpanetConstants.EN_JUNCTION)
+        self.setcoord(index, midX, midY)
+
+        newNodeIndex = self.get_node_idx(new_node_id)
+        midElev = (self.get_node_elevation(leftNodeIndex) +
+                   self.get_node_elevation(rightNodeIndex)) / 2
+        self.setjuncdata(newNodeIndex, midElev, 0, "")
+        self.setnodevalue(newNodeIndex, EpanetConstants.EN_EMITTER,
+                          self.get_node_emitter_coeff(leftNodeIndex))
+        if self.getqualtype()[0] > 0:
+            midInitQual = (self.get_node_init_quality(leftNodeIndex) +
+                           self.get_node_init_quality(rightNodeIndex)) / 2
+            self.set_node_init_quality(newNodeIndex, midInitQual)
+            self.set_node_source_quality(newNodeIndex, self.get_node_source_qual(leftNodeIndex))
+            self.setnodevalue(newNodeIndex, EpanetConstants.EN_SOURCEPAT,
+                              self.getnodevalue(leftNodeIndex, EpanetConstants.EN_SOURCEPAT))
+            if self.getnodevalue(leftNodeIndex, EpanetConstants.EN_SOURCETYPE) != 0:
+                self.setnodevalue(newNodeIndex, EpanetConstants.EN_SOURCETYPE,
+                                  self.getnodevalue(leftNodeIndex, EpanetConstants.EN_SOURCETYPE))
+
+        # Access link properties
+        linkDia = self.get_link_diameter(pipeIndex)
+        linkLength = self.get_link_length(pipeIndex)
+        linkRoughnessCoeff = self.get_link_roughness(pipeIndex)
+        linkMinorLossCoeff = self.get_link_minorloss(pipeIndex)
+        linkInitialStatus = self.get_link_init_status(pipeIndex)
+        linkInitialSetting = self.get_link_init_setting(pipeIndex)
+        linkBulkReactionCoeff = self.get_link_bulk_raction_coeff(pipeIndex)
+        linkWallReactionCoeff = self.get_link_wall_raction_coeff(pipeIndex)
+
+        # Delete the link/pipe that is splitted
+        self.deletelink(pipeIndex, 0)
+
+        # Add two new pipes
+        # d.addLinkPipe(pipeID, fromNode, toNode)
+        # Add the Left Pipe and add the same properties as the deleted link
+        leftNodeID = self.get_node_id(leftNodeIndex)
+        leftPipeIndex = self.addlink(pipe_id, EpanetConstants.EN_PIPE, leftNodeID, new_node_id)
+        self.setlinknodes(leftPipeIndex, leftNodeIndex, newNodeIndex)
+        self.setpipedata(leftPipeIndex, linkLength, linkDia, linkRoughnessCoeff, linkMinorLossCoeff)
+        self.setlinkvalue(leftPipeIndex, EpanetConstants.EN_INITSTATUS, linkInitialStatus)
+        self.setlinkvalue(leftPipeIndex, EpanetConstants.EN_INITSETTING, linkInitialSetting)
+        self.setlinkvalue(leftPipeIndex, EpanetConstants.EN_KBULK, linkBulkReactionCoeff)
+        self.setlinkvalue(leftPipeIndex, EpanetConstants.EN_KWALL, linkWallReactionCoeff)
+
+        # Add the Right Pipe and add the same properties as the deleted link
+        rightNodeID = self.get_node_id(rightNodeIndex)
+        rightPipeIndex = self.addlink(new_pipe_id, EpanetConstants.EN_PIPE, new_node_id, rightNodeID)
+        self.setlinknodes(rightPipeIndex, newNodeIndex, rightNodeIndex)
+        self.setpipedata(rightPipeIndex, linkLength, linkDia, linkRoughnessCoeff,
+                         linkMinorLossCoeff)
+        self.setlinkvalue(rightPipeIndex, EpanetConstants.EN_INITSTATUS, linkInitialStatus)
+        self.setlinkvalue(rightPipeIndex, EpanetConstants.EN_INITSETTING, linkInitialSetting)
+        self.setlinkvalue(rightPipeIndex, EpanetConstants.EN_KBULK, linkBulkReactionCoeff)
+        self.setlinkvalue(rightPipeIndex, EpanetConstants.EN_KWALL, linkWallReactionCoeff)
+
+    def _parse_msx_file(self) -> dict:
+        if self._msx_file is None:
+            raise ValueError("No .msx file loaded")
+
+        # Code for parsing .msx files taken from EPyT
+        keys = ["AREA_UNITS", "RATE_UNITS", "SOLVER", "COUPLING", "TIMESTEP", "ATOL", "RTOL",
+                "COMPILER", "SEGMENTS", "PECLET"]
+        float_values = ["TIMESTEP", "ATOL", "RTOL", "SEGMENTS", "PECLET"]
+        values = {key: None for key in keys}
+
+        # Flag to determine if we're in the [OPTIONS] section
+        in_options = False
+
+        # Open and read the file
+        with open(self._msx_file, 'r') as file:
+            for line in file:
+                # Check for [OPTIONS] section
+                if "[OPTIONS]" in line:
+                    in_options = True
+                elif "[" in line and "]" in line:
+                    in_options = False  # We've reached a new section
+
+                if in_options:
+                    # Pattern to match the keys and extract values, ignoring comments and whitespace
+                    pattern = re.compile(r'^\s*(' + '|'.join(keys) + r')\s+(.*?)\s*(?:;.*)?$')
+                    match = pattern.search(line)
+                    if match:
+                        key, value = match.groups()
+                        if key in float_values:
+                            values[key] = float(value)
+                        else:
+                            values[key] = value
+            return values
+
     def get_msx_time_step(self) -> int:
-        raise NotImplementedError()
+        """
+        Returns the MSX time step.
+
+        Returns
+        -------
+        `int`
+            Time step.
+        """
+        return int(self._parse_msx_file()["TIMESTEP"])
 
     def set_msx_time_step(self, time_step: int) -> None:
-        raise NotImplementedError()
+        """
+        Specifies the MSX time step.
+
+        Parameters
+        ----------
+        time_step : `int`
+            New MSX time step.
+        """
+        temp_folder = tempfile.gettempdir()
+        file_name = os.path.basename(self._msx_file)
+        temp_file = os.path.join(temp_folder, file_name)
+
+        self.MSXsavemsxfile(temp_file)
+        self.MSXclose()
+
+        with open(temp_file, 'r+') as f:    # Code taken from EPyT -- workaround for missing functions
+            lines = f.readlines()
+            options_index = -1
+            flag = 0
+            for i, line in enumerate(lines):
+                if line.strip() == '[OPTIONS]':
+                    options_index = i
+                elif line.strip().startswith("TIMESTEP"):
+                    lines[i] = "TIMESTEP" + "\t" + str(time_step) + "\n"
+                    flag = 1
+            if flag == 0 and options_index != -1:
+                lines.insert(options_index + 1, "TIMESTEP" + "\t" + str(time_step) + "\n")
+            f.seek(0)
+            f.writelines(lines)
+            f.truncate()
+
+        self.MSXopen(temp_file)
+        self._msx_file = temp_file
 
     def get_msx_options(self) -> dict:
-        raise NotImplementedError()
+        """
+        Returns the MSX options as specified in the .msx file.
+
+        Returns
+        -------
+        `dict`
+            Dictionary of MSX options as specified in the .msx file -- note that not all
+            options might be specified.
+            Possible options (dictinary keys) are: REA_UNITS, RATE_UNITS, SOLVER, COUPLING,
+            TIMESTEP, ATOL, RTOL, COMPILER, SEGMENTS, PECLET
+        """
+        return self._parse_msx_file()
 
     def add_msx_pattern(self, pattern_id: str, pattern_mult: list[float]) -> None:
+        """
+        Adds a new MSX pattern.
+
+        Parameters
+        ----------
+        pattern_id : `str`
+            ID of the new pattern.
+        pattern_mult : `list[float]`
+            Pattern values (i.e., multipliers).
+        """
         self.MSXaddpattern(pattern_id)
         pattern_idx = self.MSXgetindex(EpanetConstants.MSX_PATTERN, pattern_id)
         self.MSXsetpattern(pattern_idx, pattern_mult, len(pattern_mult))
 
     def set_msx_source(self, node_id: str, species_id: str, source_type: int,
                        source_concentration: float, msx_pattern_id: str) -> None:
+        """
+        Adds a species source (i.e., injection of a given species) at a given node.
+
+        Parameters
+        ----------
+        node_id : `str`
+            ID of the node where the species in injected into the network.
+        species_id : `str`
+            ID of the species to be injected.
+        source_type : `int`
+            Type of injection/source. Must be one of the following:
+
+                - MSX_NOSOURCE  = -1 for no source,
+                - MSX_CONCEN    =  0 for a concentration source,
+                - MSX_MASS      =  1 for a mass booster source,
+                - MSX_SETPOINT  =  2 for a setpoint source,
+                - MSX_FLOWPACED =  3 for a flow paced source;
+        source_concentration : `float`
+            Injetion concentration -- can change over time according the the pattern of multiplies.
+        msx_pattern_id : `str`
+            ID of the injection pattern -- i.e., multipliers.
+        """
         node_idx = self.get_node_idx(node_id)
         species_idx = self.get_msx_species_idx(species_id)
         msx_pattern_idx = self.MSXgetindex(EpanetConstants.MSX_PATTERN, msx_pattern_id)
@@ -2445,10 +2691,40 @@ class EPyT(EpanetAPI):
         return r
 
     def get_msx_pattern(self, pattern_idx: int) -> list[float]:
+        """
+        Returns a particular MSX pattern -- i.e., returns the multipliers.
+
+        Parameters
+        ----------
+        pattern_idx: `int`
+            Index of the pattern.
+
+        Returns
+        -------
+        `list[float]`
+            Pattern multipliers.
+        """
         r = []
 
         pattern_length = self.MSXgetpatternlen(pattern_idx)
         for idx in range(1, pattern_length + 1):
             r.append(self.MSXgetpatternvalue(pattern_idx, idx))
+
+        return r
+
+    def get_all_msx_pattern_id(self) -> list[str]:
+        """
+        Returns a list of the IDs of all MSX patterns.
+
+        Returns
+        -------
+        `list[str]`
+            List of patterns (IDs).
+        """
+        r = []
+
+        n_msx_patterns = self.MSXgetcount(EpanetConstants.MSX_PATTERN)
+        for pattern_idx in range(1, n_msx_patterns + 1):
+            r.append(self.MSXgetID(EpanetConstants.MSX_PATTERN, pattern_idx))
 
         return r
