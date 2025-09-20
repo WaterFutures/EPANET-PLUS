@@ -4,7 +4,7 @@ Welcome to EPANET-PLUS's documentation!
 EPANET-PLUS
 +++++++++++
 
-EPANET-PLUS is a C library that merges `EPANET <https://github.com/USEPA/EPANET2.2>`_ 
+EPANET-PLUS is a C library that merges `EPANET <https://github.com/OpenWaterAnalytics/EPANET>`_ 
 and `EPANET-MSX <https://github.com/USEPA/EPANETMSX/>`_ into a single library.
 Most importantly, it also provides a Python package with a high-performance interface
 (i.e., C extension) to the C library, together with additional helper functions for an easier
