@@ -18,6 +18,8 @@
 #ifndef EPANET2_2_H
 #define EPANET2_2_H
 
+#define epanet2_EXPORTS
+
 #ifdef epanet_py_EXPORTS
   #define DLLEXPORT
 #else
