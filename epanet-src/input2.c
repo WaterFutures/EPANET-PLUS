@@ -795,7 +795,7 @@ int netsize_from_buffer(Project *pr, const char* inpBuffer)
 
     // Make a pass through input buffer counting number of each object
     if (inpBuffer == NULL) return 0;
-    while(read_line_from_buffer(&line, MAXLINE, &inpBuffer) != NULL)
+    while(read_line_from_buffer(&line[0], MAXLINE, &inpBuffer) != NULL)
     {
         // Skip blank lines & those beginning with a comment
         tok = strtok(line, SEPSTR);
@@ -890,7 +890,7 @@ int read_data_from_buffer(Project *pr, const char *inpBuffer)
 
     // Read each line from input file
     const char **pData = &inpBuffer;
-    while (read_line_from_buffer(&line, MAXLINE, pData) != NULL)
+    while (read_line_from_buffer(&line[0], MAXLINE, pData) != NULL)
     {
         // Make copy of line and scan for tokens
         strcpy(wline, line);
