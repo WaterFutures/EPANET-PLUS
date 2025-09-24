@@ -366,7 +366,7 @@ PyObject* method_ENgetcurve(PyObject* self, PyObject* args)
     PyMem_Free(xValues);
     PyMem_Free(yValues);
 
-    return PyTuple_Pack(5, PyLong_FromLong(err), PyUnicode_FromString(out_id[0]), PyLong_FromLong(nPoints), xValuesList, yValuesList);
+    return PyTuple_Pack(5, PyLong_FromLong(err), PyUnicode_FromString(&out_id[0]), PyLong_FromLong(nPoints), xValuesList, yValuesList);
 }
 
 PyObject* method_ENgetcurveid(PyObject* self, PyObject* args)
@@ -380,7 +380,7 @@ PyObject* method_ENgetcurveid(PyObject* self, PyObject* args)
 
     int err = ENgetcurveid(index, id);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(id[0]));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&id[0]));
 }
 
 PyObject* method_ENgetcurveindex(PyObject* self, PyObject* args)
@@ -772,7 +772,7 @@ PyObject* method_ENgetqualinfo(PyObject* self, PyObject* Py_UNUSED(args))
 
     int err = ENgetqualinfo(&qualType, &chemName[0], &chemUnits[0], &traceNode);
 
-    return PyTuple_Pack(5, PyLong_FromLong(err), PyLong_FromLong(qualType), PyUnicode_FromString(chemName[0]), PyUnicode_FromString(chemUnits[0]), PyLong_FromLong(traceNode));
+    return PyTuple_Pack(5, PyLong_FromLong(err), PyLong_FromLong(qualType), PyUnicode_FromString(&chemName[0]), PyUnicode_FromString(&chemUnits[0]), PyLong_FromLong(traceNode));
 }
 
 PyObject* method_ENgetqualtype(PyObject* self, PyObject* Py_UNUSED(args))
