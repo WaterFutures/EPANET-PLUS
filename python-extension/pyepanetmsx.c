@@ -155,9 +155,9 @@ PyObject* method_MSXgetID(PyObject* self, PyObject* args)
     }
 
     char id[MAXID + 1]; // TODO: MSXgetIDlen
-    int err = MSXgetID(type, index, &id, MAXID);
+    int err = MSXgetID(type, index, &id[0], MAXID);
 
-    return Py_BuildValue("(is)", err, id);
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&id[0]));
 }
 
 PyObject* method_MSXgetcount(PyObject* self, PyObject* args)
