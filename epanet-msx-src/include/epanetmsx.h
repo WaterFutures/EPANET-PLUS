@@ -14,6 +14,8 @@
 #ifndef EPANETMSX_H
 #define EPANETMSX_H
 
+#define epanetmsx_EXPORTS
+
 #ifndef MSXDLLEXPORT
 #ifdef _WIN32
 #ifdef epanetmsx_EXPORTS
