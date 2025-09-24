@@ -182,9 +182,9 @@ PyObject* method_MSXgetspecies(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXgetspecies(index, &type, &units, &aTol, &rTol);
+    int err = MSXgetspecies(index, &type, &units[0], &aTol, &rTol);
 
-    return PyTuple_Pack(5, PyLong_FromLong(err), PyLong_FromLong(type), PyUnicode_FromString(units), PyFloat_FromDouble(aTol), PyFloat_FromDouble(rTol));
+    return PyTuple_Pack(5, PyLong_FromLong(err), PyLong_FromLong(type), PyUnicode_FromString(&units[0]), PyFloat_FromDouble(aTol), PyFloat_FromDouble(rTol));
 }
 
 PyObject* method_MSXgetconstant(PyObject* self, PyObject* args)
@@ -286,9 +286,9 @@ PyObject* method_MSXgeterror(PyObject* self, PyObject* args)
     }
     
     char msg[MAXLINE + 1];
-    int err = MSXgeterror(code, &msg, MAXLINE);
+    int err = MSXgeterror(code, &msg[0], MAXLINE);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&msg));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&msg[0]));
 }
 
 PyObject* method_MSXsetconstant(PyObject* self, PyObject* args)

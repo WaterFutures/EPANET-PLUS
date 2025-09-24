@@ -4,6 +4,8 @@
 
 
 
+
+
 PyObject* method_EN_createproject(PyObject* self, PyObject* Py_UNUSED(args))
 {
     EN_Project ph;
@@ -70,9 +72,9 @@ PyObject* method_EN_gettitle(PyObject* self, PyObject* args)
     char out_line1[TITLELEN + 1];
     char out_line2[TITLELEN + 1];
     char out_line3[TITLELEN + 1];
-    int err = EN_gettitle(ph, &out_line1, &out_line2, &out_line3);
+    int err = EN_gettitle(ph, &out_line1[0], &out_line2[0], &out_line3[0]);
 
-    return Py_BuildValue("(isss)", err, out_line1, out_line2, out_line3);
+    return Py_BuildValue("(isss)", err, out_line1, &out_line2, &out_line3);
 }
 
 PyObject* method_EN_settitle(PyObject* self, PyObject* args)
@@ -101,7 +103,7 @@ PyObject* method_EN_getcomment(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char out_comment[MAXLINE + 1];
-    int err = EN_getcomment(ph, object, index, &out_comment);
+    int err = EN_getcomment(ph, object, index, &out_comment[0]);
 
     return Py_BuildValue("(is)", err, out_comment);
 }
@@ -491,10 +493,9 @@ PyObject* method_EN_geterror(PyObject* self, PyObject* args)
     }
     
     char out_errmsg[MAXMSG + 1];
-    int err = EN_geterror(errcode, &out_errmsg, MAXMSG + 1);
+    int err = EN_geterror(errcode, &out_errmsg[0], MAXMSG + 1);
 
-    return Py_BuildValue("(is)", err, out_errmsg);
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_errmsg));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_errmsg[0]));
 }
 
 PyObject* method_EN_getstatistic(PyObject* self, PyObject* args)
@@ -626,9 +627,9 @@ PyObject* method_EN_getqualinfo(PyObject* self, PyObject* args)
     int qualType, traceNode;
     char out_chemName[MAXID + 1];
     char out_chemUnits[MAXID + 1];
-    int err = EN_getqualinfo(ph, &qualType, &out_chemName, &out_chemUnits, &traceNode);
+    int err = EN_getqualinfo(ph, &qualType, &out_chemName[0], &out_chemUnits[0], &traceNode);
 
-    return PyTuple_Pack(5, PyLong_FromLong(err), PyLong_FromLong(qualType), PyUnicode_FromString(&out_chemName), PyUnicode_FromString(&out_chemUnits), PyLong_FromLong(traceNode));
+    return PyTuple_Pack(5, PyLong_FromLong(err), PyLong_FromLong(qualType), PyUnicode_FromString(&out_chemName[0]), PyUnicode_FromString(&out_chemUnits[0]), PyLong_FromLong(traceNode));
 }
 
 PyObject* method_EN_getqualtype(PyObject* self, PyObject* args)
@@ -718,9 +719,9 @@ PyObject* method_EN_getnodeid(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char out_id[MAXID + 1];
-    int err = EN_getnodeid(ph, index, &out_id);
+    int err = EN_getnodeid(ph, index, &out_id[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_id));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_id[0]));
 }
 
 PyObject* method_EN_setnodeid(PyObject* self, PyObject* args)
@@ -1006,9 +1007,9 @@ PyObject* method_EN_getdemandname(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char out_demandName[MAXID + 1];
-    int err = EN_getdemandname(ph, nodeIndex, demandIndex, &out_demandName);
+    int err = EN_getdemandname(ph, nodeIndex, demandIndex, &out_demandName[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_demandName));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_demandName[0]));
 }
 
 PyObject* method_EN_setdemandname(PyObject* self, PyObject* args)
@@ -1083,9 +1084,9 @@ PyObject* method_EN_getlinkid(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char out_id[MAXID + 1];
-    int err = EN_getlinkid(ph, index, &out_id);
+    int err = EN_getlinkid(ph, index, &out_id[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_id));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_id[0]));
 }
 
 PyObject* method_EN_setlinkid(PyObject* self, PyObject* args)
@@ -1360,9 +1361,9 @@ PyObject* method_EN_getpatternid(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char out_id[MAXID + 1];
-    int err = EN_getpatternid(ph, index, &out_id);
+    int err = EN_getpatternid(ph, index, &out_id[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_id));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_id[0]));
 }
 
 PyObject* method_EN_setpatternid(PyObject* self, PyObject* args)
@@ -1516,9 +1517,9 @@ PyObject* method_EN_getcurveid(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char out_id[MAXID + 1];
-    int err = EN_getcurveid(ph, index, &out_id);
+    int err = EN_getcurveid(ph, index, &out_id[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_id));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_id[0]));
 }
 
 PyObject* method_EN_setcurveid(PyObject* self, PyObject* args)
@@ -1772,9 +1773,9 @@ PyObject* method_EN_getruleID(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char out_id[MAXID + 1];
-    int err = EN_getruleID(ph, index, &out_id);
+    int err = EN_getruleID(ph, index, &out_id[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_id));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_id[0]));
 }
 
 PyObject* method_EN_getpremise(PyObject* self, PyObject* args)
@@ -1938,9 +1939,9 @@ PyObject* method_EN_gettag(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char tag[MAXID + 1];
-    int err = EN_gettag(ph, object, index, &tag);
+    int err = EN_gettag(ph, object, index, &tag[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&tag));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&tag[0]));
 }
 
 PyObject* method_EN_settag(PyObject* self, PyObject* args)

@@ -289,9 +289,9 @@ PyObject* method_ENgetcomment(PyObject* self, PyObject* args)
     }
 
     char comment[MAXLINE + 1];
-    int err = ENgetcomment(object, index, &comment);
+    int err = ENgetcomment(object, index, &comment[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&comment));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&comment[0]));
 }
 
 PyObject* method_ENgetcontrol(PyObject* self, PyObject* args)
@@ -353,7 +353,7 @@ PyObject* method_ENgetcurve(PyObject* self, PyObject* args)
     int nPoints;
     float* xValues = (float*) PyMem_Calloc(len, sizeof(float));
     float* yValues = (float*) PyMem_Calloc(len, sizeof(float));
-    err = ENgetcurve(index, &out_id, &nPoints, xValues, yValues);
+    err = ENgetcurve(index, &out_id[0], &nPoints, xValues, yValues);
 
     PyObject* xValuesList = PyList_New(nPoints);
     PyObject* yValuesList = PyList_New(nPoints);
@@ -366,7 +366,7 @@ PyObject* method_ENgetcurve(PyObject* self, PyObject* args)
     PyMem_Free(xValues);
     PyMem_Free(yValues);
 
-    return PyTuple_Pack(5, PyLong_FromLong(err), PyUnicode_FromString(out_id), PyLong_FromLong(nPoints), xValuesList, yValuesList);
+    return PyTuple_Pack(5, PyLong_FromLong(err), PyUnicode_FromString(out_id[0]), PyLong_FromLong(nPoints), xValuesList, yValuesList);
 }
 
 PyObject* method_ENgetcurveid(PyObject* self, PyObject* args)
@@ -380,7 +380,7 @@ PyObject* method_ENgetcurveid(PyObject* self, PyObject* args)
 
     int err = ENgetcurveid(index, id);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(id));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(id[0]));
 }
 
 PyObject* method_ENgetcurveindex(PyObject* self, PyObject* args)
@@ -469,9 +469,9 @@ PyObject* method_ENgetdemandname(PyObject* self, PyObject* args)
     } 
 
     char demandName[MAXID + 1];
-    int err = ENgetdemandname(nodeIndex, demandIndex, demandName);
+    int err = ENgetdemandname(nodeIndex, demandIndex, &demandName[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&demandName));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&demandName[0]));
 }
 
 PyObject* method_ENgetdemandpattern(PyObject* self, PyObject* args)
@@ -510,9 +510,9 @@ PyObject* method_ENgeterror(PyObject* self, PyObject* args)
         return NULL;
     }  
 
-    int err = ENgeterror(errcode, &errmsg, MAXMSG);
+    int err = ENgeterror(errcode, &errmsg[0], MAXMSG);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&errmsg));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&errmsg[0]));
 }
 
 PyObject* method_ENgetflowunits(PyObject* self, PyObject* Py_UNUSED(args))
@@ -545,9 +545,9 @@ PyObject* method_ENgetlinkid(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = ENgetlinkid(index, &id);
+    int err = ENgetlinkid(index, &id[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&id));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&id[0]));
 }
 
 PyObject* method_ENgetlinkindex(PyObject* self, PyObject* args)
@@ -612,9 +612,9 @@ PyObject* method_ENgetnodeid(PyObject* self, PyObject* args)
     }
 
     char id[MAXID + 1];
-    int err = ENgetnodeid(index, &id);
+    int err = ENgetnodeid(index, &id[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&id));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&id[0]));
 }
 
 PyObject* method_ENgetnodeindex(PyObject* self, PyObject* args)
@@ -692,9 +692,9 @@ PyObject* method_ENgetpatternid(PyObject* self, PyObject* args)
     } 
 
     char id[MAXID + 1];
-    int err = ENgetpatternid(index, &id);
+    int err = ENgetpatternid(index, &id[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&id));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&id[0]));
 }
 
 PyObject* method_ENgetpatternindex(PyObject* self, PyObject* args)
@@ -770,9 +770,9 @@ PyObject* method_ENgetqualinfo(PyObject* self, PyObject* Py_UNUSED(args))
     char chemName[MAXID + 1];
     char chemUnits[MAXID + 1];
 
-    int err = ENgetqualinfo(&qualType, &chemName, &chemUnits, &traceNode);
+    int err = ENgetqualinfo(&qualType, &chemName[0], &chemUnits[0], &traceNode);
 
-    return PyTuple_Pack(5, PyLong_FromLong(err), PyLong_FromLong(qualType), PyUnicode_FromString(chemName), PyUnicode_FromString(chemUnits), PyLong_FromLong(traceNode));
+    return PyTuple_Pack(5, PyLong_FromLong(err), PyLong_FromLong(qualType), PyUnicode_FromString(chemName[0]), PyUnicode_FromString(chemUnits[0]), PyLong_FromLong(traceNode));
 }
 
 PyObject* method_ENgetqualtype(PyObject* self, PyObject* Py_UNUSED(args))
@@ -820,9 +820,9 @@ PyObject* method_ENgetruleID(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = ENgetruleID(index, &id);
+    int err = ENgetruleID(index, &id[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&id));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&id[0]));
 }
 
 PyObject* method_ENgetstatistic(PyObject* self, PyObject* args)
@@ -873,9 +873,9 @@ PyObject* method_ENgettitle(PyObject* self, PyObject* Py_UNUSED(args))
     char line2[TITLELEN + 1];
     char line3[TITLELEN + 1];
 
-    int err = ENgettitle(&line1, &line2, &line3);
+    int err = ENgettitle(&line1[0], &line2[0], &line3[0]);
 
-    return PyTuple_Pack(4, PyLong_FromLong(err), PyUnicode_FromString(&line1), PyUnicode_FromString(&line2), PyUnicode_FromString(&line3));
+    return PyTuple_Pack(4, PyLong_FromLong(err), PyUnicode_FromString(&line1[0]), PyUnicode_FromString(&line2[0]), PyUnicode_FromString(&line3[0]));
 }
 
 PyObject* method_ENgetversion(PyObject* self, PyObject* Py_UNUSED(args))
@@ -1655,9 +1655,9 @@ PyObject* method_ENgettag(PyObject* self, PyObject* args)
     }
 
     char tag[MAXID + 1];
-    int err = ENgettag(object, index, &tag);
+    int err = ENgettag(object, index, &tag[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&tag));
+    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&tag[0]));
 }
 
 PyObject* method_ENsettag(PyObject* self, PyObject* args)
