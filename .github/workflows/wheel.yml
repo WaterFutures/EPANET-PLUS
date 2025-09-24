@@ -34,7 +34,7 @@ jobs:
 
       - name: Build wheels
         env:
-          CIBW_ENVIRONMENT_MACOS: CC=/usr/local/bin/gcc-15
+          CIBW_ENVIRONMENT_MACOS: CC=gcc-15
         run: python -m cibuildwheel --output-dir wheelhouse
 
       - uses: actions/upload-artifact@v4
