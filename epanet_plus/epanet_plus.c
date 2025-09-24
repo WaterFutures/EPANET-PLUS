@@ -9,18 +9,26 @@
 #include "types.h"
 #include "text.h"
 
+
 extern Project *_defaultProject;
-extern read_data_from_buffer(Project *pr, const char *inpBuffer);
-extern netsize_from_buffer(Project *pr, const char *inpBuffer);
+extern int read_data_from_buffer(Project *pr, const char *inpBuffer);
+extern int netsize_from_buffer(Project *pr, const char *inpBuffer);
+extern int allocdata(Project *pr);
+extern int openhydfile(Project *pr);
+extern int openfiles(Project *pr, const char *f1, const char *f2, const char *f3);
+extern void writetime(Project *pr, char *fmt);
+extern void writesummary(Project *pr);
+extern void writewin(void(*vp)(char *), char *s);
+extern void initpointers(Project *pr);
+extern void errmsg(Project *pr, int errcode);
+extern void convertunits(Project *pr);
+extern void initunits(Project *pr);
+extern void adjustdata(Project *pr);
+extern void initreport(Report *rpt);
+extern void inittanks(Project *pr);
+extern void setdefaults(Project *pr);
+extern void createtmpfiles();
 
-
-int DLLEXPORT ENopenfrombuffer(const char *inpBuffer, const char *inpFile, const char *rptFile, const char *outFile)
-{
-    int errcode = 0;
-    createtmpfiles();
-    errcode = EN_openfrombuffer(_defaultProject, inpBuffer, inpFile, rptFile, outFile);
-    return errcode;
-}
 
 int getdata_from_buffer(Project *pr, const char *inpBuffer)
 {
@@ -39,7 +47,8 @@ int getdata_from_buffer(Project *pr, const char *inpBuffer)
         adjustdata(pr);
     if (!errcode)
         initunits(pr);
-    ERRCODE(inittanks(pr));
+    if (!errcode)
+        inittanks(pr);
     if (!errcode)
         convertunits(pr);
     return errcode;
@@ -97,5 +106,13 @@ int DLLEXPORT EN_openfrombuffer(EN_Project p, const char *inpBuffer, const char 
         p->Openflag = TRUE;
     }
     else errmsg(p, errcode);
+    return errcode;
+}
+
+int DLLEXPORT ENopenfrombuffer(const char *inpBuffer, const char *inpFile, const char *rptFile, const char *outFile)
+{
+    int errcode = 0;
+    createtmpfiles();
+    errcode = EN_openfrombuffer(_defaultProject, inpBuffer, inpFile, rptFile, outFile);
     return errcode;
 }
