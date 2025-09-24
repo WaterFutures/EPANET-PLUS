@@ -9,12 +9,21 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+        include:
+          - os: macos-13
+            c_compiler: gcc-15
+          - os: macos-14
+            c_compiler: gcc-15
 
     steps:
       - uses: actions/checkout@v4
 
       # Used to host cibuildwheel
       - uses: actions/setup-python@v5
+
+      - name: Install gcc on macOS
+        if: runner.os == 'macOS'
+        run: brew install gcc@15
 
       - name: Install libomp on macOS
         if: runner.os == 'macOS'
