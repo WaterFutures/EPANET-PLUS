@@ -36,6 +36,8 @@ function in epanet2_2.h.
   #define EN_API_FLOAT_TYPE float
 #endif
 
+#define epanet2_EXPORTS
+
 #ifndef DLLEXPORT
   #ifdef _WIN32
     #ifdef epanet2_EXPORTS
