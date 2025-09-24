@@ -1616,7 +1616,7 @@ PyObject* method_EN_getcurve(PyObject* self, PyObject* args)
     int nPoints;
     double* xValues = (double*) PyMem_Calloc(len, sizeof(double));
     double* yValues = (double*) PyMem_Calloc(len, sizeof(double));
-    err = EN_getcurve(ph, index, &out_id, &nPoints, xValues, yValues);
+    err = EN_getcurve(ph, index, &out_id[0], &nPoints, xValues, yValues);
 
     PyObject* xValuesList = PyList_New(nPoints);
     PyObject* yValuesList = PyList_New(nPoints);
