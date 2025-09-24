@@ -918,7 +918,8 @@ int read_data_from_buffer(Project *pr, const char *inpBuffer)
         // Check if max. line length exceeded
         if (strlen(line) >= MAXLINE)
         {
-            sprintf(pr->Msg, "%s section: %s", geterrmsg(214, errmsg), SectTxt[sect]);
+            char errStr[MAXMSG + 1] = "";
+            sprintf(pr->Msg, "%s section: %s", geterrmsg(214, errStr), SectTxt[sect]);
             writeline(pr, pr->Msg);
             writeline(pr, line);
             errsum++;
