@@ -1,7 +1,7 @@
 [![pypi](https://img.shields.io/pypi/v/epanet-plus.svg)](https://pypi.org/project/epanet-plus/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/epanet-plus)
-[![build](https://github.com/WaterFutures/EPANET-PLUS/actions/workflows/build.yml/badge.svg)](https://github.com/WaterFutures/EPANET-PLUS/actions/workflows/build.yml)
+[![Build + Test](https://github.com/WaterFutures/EPANET-PLUS/actions/workflows/build_test.yml/badge.svg)](https://github.com/WaterFutures/EPANET-PLUS/actions/workflows/build_test.yml)
 [![Documentation Status](https://readthedocs.org/projects/epanet-plus/badge/?version=stable)](https://epanet-plus.readthedocs.io/en/stable/?badge=stable)
 [![Downloads](https://static.pepy.tech/badge/epanet-plus)](https://pepy.tech/project/epanet-plus)
 [![Downloads](https://static.pepy.tech/badge/epanet-plus/month)](https://pepy.tech/project/epanet-plus)
