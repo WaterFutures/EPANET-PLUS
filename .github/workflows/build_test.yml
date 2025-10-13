@@ -42,7 +42,7 @@ jobs:
           python -m pip install -r REQUIREMENTS.txt
           python -m pip install -e .
           python -m pip install -r REQUIREMENTS-DEV.txt
-          python -m pytest tests/
+          pytest -v
 
       - uses: actions/upload-artifact@v4
         with:
