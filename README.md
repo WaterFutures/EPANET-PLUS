@@ -24,7 +24,7 @@ Unique features of EPANET-PLUS that make it superior to other Python interfaces 
 
 ## Installation
 
-Note that EPANET-PLUS supports Python 3.9 - 3.13. 
+Note that EPANET-PLUS supports Python 3.9 - 3.14. 
 The Python package contains the the C library as a C extension and is
 already pre-build for all major platforms.
 

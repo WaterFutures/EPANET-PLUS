@@ -22,7 +22,7 @@ require the latest version of `gcc`:
 Installation of the Python Package
 ++++++++++++++++++++++++++++++++++
 
-Note that EPANET-PLUS supports Python 3.9 - 3.13
+Note that EPANET-PLUS supports Python 3.9 - 3.14
 
 .. note::
 
