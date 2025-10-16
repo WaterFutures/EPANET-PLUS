@@ -61,6 +61,23 @@ PyObject* method_EN_open(PyObject* self, PyObject* args)
     return PyTuple_Pack(1, PyLong_FromLong(err));
 }
 
+PyObject* method_EN_openX(PyObject* self, PyObject* args)
+{
+    uintptr_t ptr;
+    char* inpFile = NULL;
+    char* rptFile = NULL;
+    char* outFile = NULL;
+
+    if(!PyArg_ParseTuple(args, "Ksss", &ptr, &inpFile, &rptFile, &outFile)) {
+        return NULL;
+    }
+    EN_Project ph = (EN_Project) ptr;
+
+    int err = EN_openX(ph, inpFile, rptFile, outFile);
+
+    return PyTuple_Pack(1, PyLong_FromLong(err));
+}
+
 PyObject* method_EN_gettitle(PyObject* self, PyObject* args)
 {
     uintptr_t ptr;

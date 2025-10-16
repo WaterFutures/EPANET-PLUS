@@ -237,6 +237,21 @@ class EpanetAPI():
         else:
             return self._process_result(epanet.EN_open(self._ph, inpFile, rptFile, outFile))
 
+    def openX(self, inpFile: str, rptFile: str, outFile: str):
+        """
+        EN_openX
+
+        Parameters
+        ----------
+        inpFile : `str`
+        rptFile : `str`
+        outFile : `str`
+        """
+        if self._use_project is False:
+            return self._process_result(epanet.ENopenX(inpFile, rptFile, outFile))
+        else:
+            return self._process_result(epanet.EN_openX(self._ph, inpFile, rptFile, outFile))
+
     def gettitle(self):
         """
         EN_gettitle

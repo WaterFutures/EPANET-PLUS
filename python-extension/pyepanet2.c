@@ -16,6 +16,18 @@ PyObject* method_ENopen(PyObject* self, PyObject* args)
     return PyTuple_Pack(1, PyLong_FromLong(err));
 }
 
+PyObject* method_ENopenX(PyObject* self, PyObject* args)
+{
+    char *inpFile, *rptFile, *outFile = NULL;
+
+    if(!PyArg_ParseTuple(args, "sss", &inpFile, &rptFile, &outFile)) {
+        return NULL;
+    }
+
+    int err = ENopenX(inpFile, rptFile, outFile);
+
+    return PyTuple_Pack(1, PyLong_FromLong(err));
+}
 
 PyObject* method_ENclose(PyObject* self, PyObject* Py_UNUSED(args))
 {

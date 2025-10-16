@@ -2,6 +2,7 @@
 
 
 PyObject* method_ENopen(PyObject* self, PyObject* args);
+PyObject* method_ENopenX(PyObject* self, PyObject* args);
 PyObject* method_ENclose(PyObject* self, PyObject* Py_UNUSED(args));
 PyObject* method_ENaddcontrol(PyObject* self, PyObject* args);
 PyObject* method_ENaddcurve(PyObject* self, PyObject* args);

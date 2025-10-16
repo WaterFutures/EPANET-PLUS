@@ -5,6 +5,7 @@ PyObject* method_EN_createproject(PyObject* self, PyObject* Py_UNUSED(args));
 PyObject* method_EN_deleteproject(PyObject* self, PyObject* args);
 PyObject* method_EN_init(PyObject* self, PyObject* args);
 PyObject* method_EN_open(PyObject* self, PyObject* args);
+PyObject* method_EN_openX(PyObject* self, PyObject* args);
 PyObject* method_EN_gettitle(PyObject* self, PyObject* args);
 PyObject* method_EN_settitle(PyObject* self, PyObject* args);
 PyObject* method_EN_getcomment(PyObject* self, PyObject* args);
