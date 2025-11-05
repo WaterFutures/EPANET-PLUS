@@ -281,13 +281,23 @@ class EPyT(EpanetAPI):
     ----------
     inp_file_in : `str`
         Path to .inp file.
+    msx_file_in : `str`, optional
+        Path to .msx file.
+        If this is not None, `use_project` must be set to False.
+
+        The default is None.
     use_project : `bool`, optional
         If True, projects will be used when calling EPANET functions (default in EPANET >= 2.2).
-        Note that this is incompatible with EPANET-MSX. Please set to False when using EPANET-MSX.
+        Note that this is incompatible with EPANET-MSX. Please set to False when using EPANET-MSX
+        or when specifying an .msx file in `msx_file_in`.
 
         The default is False.
     """
-    def __init__(self, inp_file_in: str, use_project: bool = False, **kwds):
+    def __init__(self, inp_file_in: str, msx_file_in: str = None, use_project: bool = False,
+                 **kwds):
+        if msx_file_in is not None and use_project is True:
+            raise ValueError("'use_project' must be False if 'msx_file_in' is not None")
+
         super().__init__(use_project=use_project, **kwds)
 
         if use_project is True:
@@ -295,7 +305,10 @@ class EPyT(EpanetAPI):
         self.open(inp_file_in, inp_file_in + ".rpt", "")
 
         self._inp_file = inp_file_in
-        self._msx_file = None
+        self._msx_file = msx_file_in
+
+        if msx_file_in is not None:
+            self.load_msx_file(msx_file_in)
 
     def __enter__(self):
         return self
