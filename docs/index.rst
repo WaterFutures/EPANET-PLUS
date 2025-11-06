@@ -28,6 +28,7 @@ Unique features of EPANET-PLUS that make it superior to other Python interfaces 
 
     installation
     basicusage
+    tut.overview
 
 .. _tut.examples:
 
