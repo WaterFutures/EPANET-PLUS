@@ -4,6 +4,7 @@ EPANET and EPANET-MSX.
 """
 import os
 import re
+import time
 import tempfile
 
 from .epanet_wrapper import EpanetAPI
@@ -279,8 +280,12 @@ class EPyT(EpanetAPI):
 
     Parameters
     ----------
-    inp_file_in : `str`
-        Path to .inp file.
+    inp_file_in : `str`, optional
+        Path to .inp file. Note that the file will be created automatically if it does not exist.
+
+        If None, an empty network will be created in the temp folder.
+
+        The default is None.
     msx_file_in : `str`, optional
         Path to .msx file.
         If this is not None, `use_project` must be set to False.
@@ -293,7 +298,7 @@ class EPyT(EpanetAPI):
 
         The default is False.
     """
-    def __init__(self, inp_file_in: str, msx_file_in: str = None, use_project: bool = False,
+    def __init__(self, inp_file_in: str = None, msx_file_in: str = None, use_project: bool = False,
                  **kwds):
         if msx_file_in is not None and use_project is True:
             raise ValueError("'use_project' must be False if 'msx_file_in' is not None")
@@ -302,13 +307,21 @@ class EPyT(EpanetAPI):
 
         if use_project is True:
             self.createproject()
-        self.open(inp_file_in, inp_file_in + ".rpt", "")
+
+        if inp_file_in is None:
+            inp_file_in = os.path.join(tempfile.gettempdir(), f"{time.time()}.inp")
+        else:
+            if not os.path.exists(inp_file_in):    # Create empty file if it does not exist
+                with open(inp_file_in, "w") as f_inp:
+                    f_inp.flush()
 
         self._inp_file = inp_file_in
         self._msx_file = msx_file_in
 
+        self.open(self._inp_file, self._inp_file + ".rpt", "")
+
         if msx_file_in is not None:
-            self.load_msx_file(msx_file_in)
+            self.load_msx_file(self._msx_file)
 
     def __enter__(self):
         return self
