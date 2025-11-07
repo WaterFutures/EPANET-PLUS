@@ -417,7 +417,7 @@ class EPyT(EpanetAPI):
             if self.getnodetype(i + 1) == EpanetConstants.EN_JUNCTION:
                 r.append(self.getnodeid(i + 1))
 
-        return []
+        return r
 
     def get_all_junctions_idx(self) -> list[int]:
         """
@@ -435,7 +435,7 @@ class EPyT(EpanetAPI):
             if self.getnodetype(i + 1) == EpanetConstants.EN_JUNCTION:
                 r.append(i + 1)
 
-        return []
+        return r
 
     def get_num_junctions(self) -> int:
         """
