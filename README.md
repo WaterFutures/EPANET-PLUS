@@ -14,6 +14,9 @@ Most importantly, it also provides a Python package with a high-performance inte
 (i.e., C extension) to the C library, together with additional helper functions for an easier
 use of EPANET and EPANET-MSX.
 
+If you are interested in creating and simulating complex scenarios, we recommend to take a look
+at [EPyT-Flow](https://github.com/WaterFutures/EPyT-Flow), which builds upon EPANET-PLUS.
+
 ## Unique Features
 
 Unique features of EPANET-PLUS that make it superior to other Python interfaces of EPANET are the following:
@@ -78,7 +81,6 @@ if __name__ == "__main__":
     epanet_api.initH(EpanetConstants.EN_NOSAVE)
 
     tstep = 1
-    r = []
     while tstep > 0:
         t = epanet_api.runH()
 
