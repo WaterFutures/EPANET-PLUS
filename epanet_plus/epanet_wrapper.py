@@ -203,7 +203,11 @@ class EpanetAPI():
         if self._use_project is False:
             raise ValueError("Can not delete project because of use_project=False")
         else:
-            return self._process_result(epanet.EN_deleteproject(self._ph))
+            if self._ph is not None:
+                res = self._process_result(epanet.EN_deleteproject(self._ph))
+                self._ph = None
+
+                return res
 
     def init(self, rptFile: str, outFile: str, unitsType: int, headLossType: int):
         """
@@ -338,7 +342,8 @@ class EpanetAPI():
         if self._use_project is False:
             return self._process_result(epanet.ENclose())
         else:
-            return self._process_result(epanet.EN_close(self._ph))
+            if self._ph is not None:
+                return self._process_result(epanet.EN_close(self._ph))
 
     def solveH(self):
         """
