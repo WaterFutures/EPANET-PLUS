@@ -57,7 +57,7 @@ class EpanetAPI():
         self._raise_on_error = raise_exception_on_error
         self._warn_on_error = warn_on_error
         self._ignore_error_codes = ignore_error_codes
-        self._last_error_code = None
+        self._last_error_code = 0
         self._last_error_desc = None
 
     def set_error_handling(self, raise_exception_on_error: bool, warn_on_error: bool,
@@ -117,8 +117,8 @@ class EpanetAPI():
         return self._last_error_desc is None
 
     def _reset_error(self) -> None:
-        self.__last_error_code = 0
-        self.__last_error_desc = None
+        self._last_error_code = 0
+        self._last_error_desc = None
 
     def _process_result(self, ret: tuple, msx_call: bool = False):
         ret_other = None
