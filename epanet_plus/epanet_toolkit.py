@@ -310,6 +310,9 @@ class EPyT(EpanetAPI):
 
         if inp_file_in is None:
             inp_file_in = os.path.join(tempfile.gettempdir(), f"{time.time()}.inp")
+
+            with open(inp_file_in, "w") as f_inp:
+                    f_inp.flush()  
         else:
             if not os.path.exists(inp_file_in):    # Create empty file if it does not exist
                 with open(inp_file_in, "w") as f_inp:
