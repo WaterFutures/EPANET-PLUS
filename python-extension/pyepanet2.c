@@ -475,7 +475,7 @@ PyObject* method_ENgetcurve(PyObject* self, PyObject* args)
     int nPoints;
     float* xValues = (float*) PyMem_Calloc(len, sizeof(float));
     float* yValues = (float*) PyMem_Calloc(len, sizeof(float));
-    PyObject* err = ENgetcurve(index, &out_id[0], &nPoints, xValues, yValues);
+    PyObject* err = PyLong_FromLong(ENgetcurve(index, &out_id[0], &nPoints, xValues, yValues));
 
     PyObject* xValuesList = PyList_New(nPoints);
     PyObject* yValuesList = PyList_New(nPoints);
