@@ -13,9 +13,12 @@ PyObject* method_MSXENopen(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXENopen(inpFile, rptFile, outFile);
+    PyObject* err = PyLong_FromLong(MSXENopen(inpFile, rptFile, outFile));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXopen(PyObject* self, PyObject* args)
@@ -25,16 +28,22 @@ PyObject* method_MSXopen(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXopen(fname);
+    PyObject* err = PyLong_FromLong(MSXopen(fname));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXsolveH(PyObject* self, PyObject* Py_UNUSED(args))
 {
-    int err = MSXsolveH();
+    PyObject* err = PyLong_FromLong(MSXsolveH());
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXusehydfile(PyObject* self, PyObject* args)
@@ -44,16 +53,22 @@ PyObject* method_MSXusehydfile(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXusehydfile(fname);
+    PyObject* err = PyLong_FromLong(MSXusehydfile(fname));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXsolveQ(PyObject* self, PyObject* Py_UNUSED(args))
 {
-    int err = MSXsolveQ();
+    PyObject* err = PyLong_FromLong(MSXsolveQ());
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXinit(PyObject* self, PyObject* args)
@@ -63,17 +78,27 @@ PyObject* method_MSXinit(PyObject* self, PyObject* args)
         return NULL;
     }   
 
-    int err = MSXinit(saveFlag);
+    PyObject* err = PyLong_FromLong(MSXinit(saveFlag));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXstep(PyObject* self, PyObject* args)
 {
     double t, tleft;
-    int err = MSXstep(&t, &tleft);
+    PyObject* err = PyLong_FromLong(MSXstep(&t, &tleft));
+    PyObject* pyT = PyFloat_FromDouble(t);
+    PyObject* pyTLeft = PyFloat_FromDouble(tleft);
 
-    return Py_BuildValue("(idd)", err, t, tleft);
+    PyObject* r = PyTuple_Pack(3, err, pyT, pyTLeft);
+    Py_DECREF(err);
+    Py_DECREF(pyT);
+    Py_DECREF(pyTLeft);
+
+    return r;
 }
 
 PyObject* method_MSXsaveoutfile(PyObject* self, PyObject* args)
@@ -83,9 +108,12 @@ PyObject* method_MSXsaveoutfile(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXsaveoutfile(fname);
+    PyObject* err = PyLong_FromLong(MSXsaveoutfile(fname));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXsavemsxfile(PyObject* self, PyObject* args)
@@ -95,30 +123,42 @@ PyObject* method_MSXsavemsxfile(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXsavemsxfile(fname);
+    PyObject* err = PyLong_FromLong(MSXsavemsxfile(fname));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXreport(PyObject* self, PyObject* Py_UNUSED(args))
 {
-    int err = MSXreport();
+    PyObject* err = PyLong_FromLong(MSXreport());
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXclose(PyObject* self, PyObject* Py_UNUSED(args))
 {
-    int err = MSXclose();
+    PyObject* err = PyLong_FromLong(MSXclose());
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXENclose(PyObject* self, PyObject* Py_UNUSED(args))
 {
-    int err = MSXENclose();
+    PyObject* err = PyLong_FromLong(MSXENclose());
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXgetindex(PyObject* self, PyObject* args)
@@ -130,9 +170,14 @@ PyObject* method_MSXgetindex(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXgetindex(type, id, &index);
+    PyObject* err = PyLong_FromLong(MSXgetindex(type, id, &index));
+    PyObject* pyIndex = PyLong_FromLong(index);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(index));
+    PyObject* r = PyTuple_Pack(2, err, pyIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyIndex);
+
+    return r;
 }
 
 PyObject* method_MSXgetIDlen(PyObject* self, PyObject* args)
@@ -142,9 +187,14 @@ PyObject* method_MSXgetIDlen(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXgetIDlen(type, index, &len);
+    PyObject* err = PyLong_FromLong(MSXgetIDlen(type, index, &len));
+    PyObject* pyLen = PyLong_FromLong(len);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(len));
+    PyObject* r = PyTuple_Pack(2, err, pyLen);
+    Py_DECREF(err);
+    Py_DECREF(pyLen);
+
+    return r;
 }
 
 PyObject* method_MSXgetID(PyObject* self, PyObject* args)
@@ -155,9 +205,14 @@ PyObject* method_MSXgetID(PyObject* self, PyObject* args)
     }
 
     char id[MAXID + 1]; // TODO: MSXgetIDlen
-    int err = MSXgetID(type, index, &id[0], MAXID);
+    PyObject* err = PyLong_FromLong(MSXgetID(type, index, &id[0], MAXID));
+    PyObject* pyId = PyUnicode_FromString(&id[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&id[0]));
+    PyObject* r = PyTuple_Pack(2, err, pyId);
+    Py_DECREF(err);
+    Py_DECREF(pyId);
+
+    return r;
 }
 
 PyObject* method_MSXgetcount(PyObject* self, PyObject* args)
@@ -167,9 +222,14 @@ PyObject* method_MSXgetcount(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXgetcount(type, &count);
+    PyObject* err = PyLong_FromLong(MSXgetcount(type, &count));
+    PyObject* pyCount = PyLong_FromLong(count);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(count));
+    PyObject* r =  PyTuple_Pack(2, err, pyCount);
+    Py_DECREF(err);
+    Py_DECREF(pyCount);
+
+    return r;
 }
 
 PyObject* method_MSXgetspecies(PyObject* self, PyObject* args)
@@ -182,9 +242,20 @@ PyObject* method_MSXgetspecies(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXgetspecies(index, &type, &units[0], &aTol, &rTol);
+    PyObject* err = PyLong_FromLong(MSXgetspecies(index, &type, &units[0], &aTol, &rTol));
+    PyObject* pyType = PyLong_FromLong(type);
+    PyObject* pyUnits = PyUnicode_FromString(&units[0]);
+    PyObject* pyATol = PyFloat_FromDouble(aTol);
+    PyObject* pyRTol = PyFloat_FromDouble(rTol);
 
-    return PyTuple_Pack(5, PyLong_FromLong(err), PyLong_FromLong(type), PyUnicode_FromString(&units[0]), PyFloat_FromDouble(aTol), PyFloat_FromDouble(rTol));
+    PyObject* r = PyTuple_Pack(5, err, pyType, pyUnits, pyATol, pyRTol);
+    Py_DECREF(err);
+    Py_DECREF(pyType);
+    Py_DECREF(pyUnits);
+    Py_DECREF(pyATol);
+    Py_DECREF(pyRTol);
+
+    return r;
 }
 
 PyObject* method_MSXgetconstant(PyObject* self, PyObject* args)
@@ -195,9 +266,14 @@ PyObject* method_MSXgetconstant(PyObject* self, PyObject* args)
     }
 
     double value;
-    int err = MSXgetconstant(index, &value);
+    PyObject* err = PyLong_FromLong(MSXgetconstant(index, &value));
+    PyObject* pyValue = PyFloat_FromDouble(value);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyFloat_FromDouble(value));
+    PyObject* r = PyTuple_Pack(2, err, pyValue);
+    Py_DECREF(err);
+    Py_DECREF(pyValue);
+
+    return r;
 }
 
 PyObject* method_MSXgetparameter(PyObject* self, PyObject* args)
@@ -208,9 +284,14 @@ PyObject* method_MSXgetparameter(PyObject* self, PyObject* args)
     }
 
     double value;
-    int err = MSXgetparameter(type, index, param, &value);
+    PyObject* err = PyLong_FromLong(MSXgetparameter(type, index, param, &value));
+    PyObject* pyValue = PyFloat_FromDouble(value);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyFloat_FromDouble(value));
+    PyObject* r = PyTuple_Pack(2, err, pyValue);
+    Py_DECREF(err);
+    Py_DECREF(pyValue);
+
+    return r;
 }
 
 PyObject* method_MSXgetsource(PyObject* self, PyObject* args)
@@ -222,9 +303,18 @@ PyObject* method_MSXgetsource(PyObject* self, PyObject* args)
 
     int type, pat;
     double level;
-    int err = MSXgetsource(node, species, &type, &level, &pat);
+    PyObject* err = PyLong_FromLong(MSXgetsource(node, species, &type, &level, &pat));
+    PyObject* pyType = PyLong_FromLong(type);
+    PyObject* pyLevel = PyFloat_FromDouble(level);
+    PyObject* pyPat = PyLong_FromLong(pat);
 
-    return PyTuple_Pack(4, PyLong_FromLong(err), PyLong_FromLong(type), PyFloat_FromDouble(level), PyLong_FromLong(pat));
+    PyObject* r =  PyTuple_Pack(4, err, pyType, pyLevel, pyPat);
+    Py_DECREF(err);
+    Py_DECREF(pyType);
+    Py_DECREF(pyLevel);
+    Py_DECREF(pyPat);
+
+    return r;
 }
 
 PyObject* method_MSXgetpatternlen(PyObject* self, PyObject* args)
@@ -234,9 +324,14 @@ PyObject* method_MSXgetpatternlen(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXgetpatternlen(pat, &len);
+    PyObject* err = PyLong_FromLong(MSXgetpatternlen(pat, &len));
+    PyObject* pyLen = PyLong_FromLong(len);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(len));
+    PyObject* r = PyTuple_Pack(2, err, pyLen);
+    Py_DECREF(err);
+    Py_DECREF(pyLen);
+
+    return r;
 }
 
 PyObject* method_MSXgetpatternvalue(PyObject* self, PyObject* args)
@@ -247,9 +342,14 @@ PyObject* method_MSXgetpatternvalue(PyObject* self, PyObject* args)
     }   
 
     double value;
-    int err = MSXgetpatternvalue(pat, period, &value);
+    PyObject* err = PyLong_FromLong(MSXgetpatternvalue(pat, period, &value));
+    PyObject* pyValue = PyFloat_FromDouble(value);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyFloat_FromDouble(value));
+    PyObject* r = PyTuple_Pack(2, err, pyValue);
+    Py_DECREF(err);
+    Py_DECREF(pyValue);
+
+    return r;
 }
 
 PyObject* method_MSXgetinitqual(PyObject* self, PyObject* args)
@@ -260,9 +360,14 @@ PyObject* method_MSXgetinitqual(PyObject* self, PyObject* args)
     }    
 
     double value;
-    int err = MSXgetinitqual(type, index, species, &value);
+    PyObject* err = PyLong_FromLong(MSXgetinitqual(type, index, species, &value));
+    PyObject* pyValue = PyFloat_FromDouble(value);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyFloat_FromDouble(value));
+    PyObject* r = PyTuple_Pack(2, err, pyValue);
+    Py_DECREF(err);
+    Py_DECREF(pyValue);
+
+    return r;
 }
 
 PyObject* method_MSXgetqual(PyObject* self, PyObject* args)
@@ -273,9 +378,14 @@ PyObject* method_MSXgetqual(PyObject* self, PyObject* args)
     }
 
     double value;
-    int err = MSXgetqual(type, index, species, &value);
+    PyObject* err = PyLong_FromLong(MSXgetqual(type, index, species, &value));
+    PyObject* pyValue = PyFloat_FromDouble(value);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyFloat_FromDouble(value));
+    PyObject* r = PyTuple_Pack(2, err, pyValue);
+    Py_DECREF(err);
+    Py_DECREF(pyValue);
+
+    return r;
 }
 
 PyObject* method_MSXgeterror(PyObject* self, PyObject* args)
@@ -286,9 +396,14 @@ PyObject* method_MSXgeterror(PyObject* self, PyObject* args)
     }
     
     char msg[MAXLINE + 1];
-    int err = MSXgeterror(code, &msg[0], MAXLINE);
+    PyObject* err = PyLong_FromLong(MSXgeterror(code, &msg[0], MAXLINE));
+    PyObject* pyMsg = PyUnicode_FromString(&msg[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&msg[0]));
+    PyObject* r = PyTuple_Pack(2, err, pyMsg);
+    Py_DECREF(err);
+    Py_DECREF(pyMsg);
+
+    return r;
 }
 
 PyObject* method_MSXsetconstant(PyObject* self, PyObject* args)
@@ -299,9 +414,12 @@ PyObject* method_MSXsetconstant(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXsetconstant(index, value);
+    PyObject* err = PyLong_FromLong(MSXsetconstant(index, value));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXsetparameter(PyObject* self, PyObject* args)
@@ -312,9 +430,12 @@ PyObject* method_MSXsetparameter(PyObject* self, PyObject* args)
         return NULL;
     } 
 
-    int err = MSXsetparameter(type, index, param, value);
+    PyObject* err = PyLong_FromLong(MSXsetparameter(type, index, param, value));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXsetinitqual(PyObject* self, PyObject* args)
@@ -325,9 +446,12 @@ PyObject* method_MSXsetinitqual(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXsetinitqual(type, index, species, value);
+    PyObject* err = PyLong_FromLong(MSXsetinitqual(type, index, species, value));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXsetsource(PyObject* self, PyObject* args)
@@ -338,9 +462,12 @@ PyObject* method_MSXsetsource(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXsetsource(node, species, type, level, pat);
+    PyObject* err = PyLong_FromLong(MSXsetsource(node, species, type, level, pat));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXsetpatternvalue(PyObject* self, PyObject* args)
@@ -351,9 +478,12 @@ PyObject* method_MSXsetpatternvalue(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXsetpatternvalue(pat, period, value);
+    PyObject* err = PyLong_FromLong(MSXsetpatternvalue(pat, period, value));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXsetpattern(PyObject* self, PyObject* args)
@@ -369,10 +499,13 @@ PyObject* method_MSXsetpattern(PyObject* self, PyObject* args)
         multRaw[i] = PyFloat_AsDouble(PyList_GET_ITEM(mult, i));
     }
 
-    int err = MSXsetpattern(pat, multRaw, len);
+    PyObject* err = PyLong_FromLong(MSXsetpattern(pat, multRaw, len));
     free(multRaw);
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_MSXaddpattern(PyObject* self, PyObject* args)
@@ -382,7 +515,10 @@ PyObject* method_MSXaddpattern(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = MSXaddpattern(id);
+    PyObject* err = PyLong_FromLong(MSXaddpattern(id));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }

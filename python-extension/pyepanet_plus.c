@@ -13,9 +13,12 @@ PyObject* method_ENopenfrombuffer(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    int err = ENopenfrombuffer(inpBuffer, inpFile, rptFile, outFile);
+    PyObject* err = PyLong_FromLong(ENopenfrombuffer(inpBuffer, inpFile, rptFile, outFile));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_openfrombuffer(PyObject* self, PyObject* args)
@@ -31,7 +34,10 @@ PyObject* method_EN_openfrombuffer(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_openfrombuffer(ph, inpBuffer, inpFile, rptFile, outFile);
+    PyObject* err = PyLong_FromLong(EN_openfrombuffer(ph, inpBuffer, inpFile, rptFile, outFile));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }

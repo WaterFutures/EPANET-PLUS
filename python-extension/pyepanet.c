@@ -22,9 +22,12 @@ PyObject* method_EN_deleteproject(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_deleteproject(ph);
+    PyObject* err = PyLong_FromLong(EN_deleteproject(ph));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_init(PyObject* self, PyObject* args)
@@ -39,9 +42,12 @@ PyObject* method_EN_init(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_init(ph, rptFile, outFile, unitsType, headLossType);
+    PyObject* err = PyLong_FromLong(EN_init(ph, rptFile, outFile, unitsType, headLossType));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_open(PyObject* self, PyObject* args)
@@ -56,9 +62,12 @@ PyObject* method_EN_open(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_open(ph, inpFile, rptFile, outFile);
+    PyObject* err = PyLong_FromLong(EN_open(ph, inpFile, rptFile, outFile));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_openX(PyObject* self, PyObject* args)
@@ -73,9 +82,12 @@ PyObject* method_EN_openX(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_openX(ph, inpFile, rptFile, outFile);
+    PyObject* err = PyLong_FromLong(EN_openX(ph, inpFile, rptFile, outFile));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_gettitle(PyObject* self, PyObject* args)
@@ -105,9 +117,12 @@ PyObject* method_EN_settitle(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_settitle(ph, line1, line2, line3);
+    PyObject* err = PyLong_FromLong(EN_settitle(ph, line1, line2, line3));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getcomment(PyObject* self, PyObject* args)
@@ -135,9 +150,12 @@ PyObject* method_EN_setcomment(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setcomment(ph, object, index, comment);
+    PyObject* err = PyLong_FromLong(EN_setcomment(ph, object, index, comment));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getcount(PyObject* self, PyObject* args)
@@ -164,9 +182,12 @@ PyObject* method_EN_saveinpfile(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;  
 
-    int err = EN_saveinpfile(ph, filename);
+    PyObject* err = PyLong_FromLong(EN_saveinpfile(ph, filename));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_close(PyObject* self, PyObject* args)
@@ -177,9 +198,12 @@ PyObject* method_EN_close(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_close(ph);
+    PyObject* err = PyLong_FromLong(EN_close(ph));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_solveH(PyObject* self, PyObject* args)
@@ -190,9 +214,12 @@ PyObject* method_EN_solveH(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_solveH(ph);
+    PyObject* err = PyLong_FromLong(EN_solveH(ph));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_usehydfile(PyObject* self, PyObject* args)
@@ -204,9 +231,12 @@ PyObject* method_EN_usehydfile(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_usehydfile(ph, filename);
+    PyObject* err = PyLong_FromLong(EN_usehydfile(ph, filename));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_openH(PyObject* self, PyObject* args)
@@ -217,9 +247,12 @@ PyObject* method_EN_openH(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_openH(ph);
+    PyObject* err = PyLong_FromLong(EN_openH(ph));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_initH(PyObject* self, PyObject* args)
@@ -231,9 +264,12 @@ PyObject* method_EN_initH(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_initH(ph, initFlag);
+    PyObject* err = PyLong_FromLong(EN_initH(ph, initFlag));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_runH(PyObject* self, PyObject* args)
@@ -245,9 +281,14 @@ PyObject* method_EN_runH(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     long currentTime;
-    int err = EN_runH(ph, &currentTime);
+    PyObject* err = PyLong_FromLong(EN_runH(ph, &currentTime));
+    PyObject* pyCurrentTime = PyLong_FromLong(currentTime);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(currentTime));
+    PyObject* r = PyTuple_Pack(2, err, pyCurrentTime);
+    Py_DECREF(err);
+    Py_DECREF(pyCurrentTime);
+
+    return r;
 }
 
 PyObject* method_EN_nextH(PyObject* self, PyObject* args)
@@ -259,9 +300,14 @@ PyObject* method_EN_nextH(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     long tStep;
-    int err = EN_nextH(ph, &tStep);
+    PyObject* err = PyLong_FromLong(EN_nextH(ph, &tStep));
+    PyObject* pyTStep = PyLong_FromLong(tStep);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(tStep));
+    PyObject* r = PyTuple_Pack(2, err, pyTStep);
+    Py_DECREF(err);
+    Py_DECREF(pyTStep);
+
+    return r;
 }
 
 PyObject* method_EN_saveH(PyObject* self, PyObject* args)
@@ -272,9 +318,12 @@ PyObject* method_EN_saveH(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_saveH(ph);
+    PyObject* err = PyLong_FromLong(EN_saveH(ph));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_savehydfile(PyObject* self, PyObject* args)
@@ -286,9 +335,12 @@ PyObject* method_EN_savehydfile(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_savehydfile(ph, filename);
+    PyObject* err = PyLong_FromLong(EN_savehydfile(ph, filename));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_closeH(PyObject* self, PyObject* args)
@@ -299,9 +351,12 @@ PyObject* method_EN_closeH(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_closeH(ph);
+    PyObject* err = PyLong_FromLong(EN_closeH(ph));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_solveQ(PyObject* self, PyObject* args)
@@ -312,9 +367,12 @@ PyObject* method_EN_solveQ(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_solveQ(ph);
+    PyObject* err = PyLong_FromLong(EN_solveQ(ph));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_openQ(PyObject* self, PyObject* args)
@@ -325,9 +383,12 @@ PyObject* method_EN_openQ(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_openQ(ph);
+    PyObject* err = PyLong_FromLong(EN_openQ(ph));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_initQ(PyObject* self, PyObject* args)
@@ -339,9 +400,12 @@ PyObject* method_EN_initQ(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_initQ(ph, saveFlag);
+    PyObject* err = PyLong_FromLong(EN_initQ(ph, saveFlag));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_runQ(PyObject* self, PyObject* args)
@@ -353,9 +417,14 @@ PyObject* method_EN_runQ(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     long currentTime;
-    int err = EN_runQ(ph, &currentTime);
+    PyObject* err = PyLong_FromLong(EN_runQ(ph, &currentTime));
+    PyObject* pyCurrentTime = PyLong_FromLong(currentTime);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(currentTime));
+    PyObject* r = PyTuple_Pack(2, err, pyCurrentTime);
+    Py_DECREF(err);
+    Py_DECREF(pyCurrentTime);
+
+    return r;
 }
 
 PyObject* method_EN_nextQ(PyObject* self, PyObject* args)
@@ -367,9 +436,14 @@ PyObject* method_EN_nextQ(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     long tStep;
-    int err = EN_nextQ(ph, &tStep);
+    PyObject* err = PyLong_FromLong(EN_nextQ(ph, &tStep));
+    PyObject* pyTStep = PyLong_FromLong(tStep);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(tStep));
+    PyObject* r = PyTuple_Pack(2, err, pyTStep);
+    Py_DECREF(err);
+    Py_DECREF(pyTStep);
+
+    return r;
 }
 
 PyObject* method_EN_stepQ(PyObject* self, PyObject* args)
@@ -381,9 +455,14 @@ PyObject* method_EN_stepQ(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     long timeLeft;
-    int err = EN_stepQ(ph, &timeLeft);
+    PyObject* err = PyLong_FromLong(EN_stepQ(ph, &timeLeft));
+    PyObject* pyTimeLeft = PyLong_FromLong(timeLeft);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(timeLeft));
+    PyObject* r = PyTuple_Pack(2, err, pyTimeLeft);
+    Py_DECREF(err);
+    Py_DECREF(pyTimeLeft);
+
+    return r;
 }
 
 PyObject* method_EN_closeQ(PyObject* self, PyObject* args)
@@ -394,9 +473,12 @@ PyObject* method_EN_closeQ(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_closeQ(ph);
+    PyObject* err = PyLong_FromLong(EN_closeQ(ph));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_writeline(PyObject* self, PyObject* args)
@@ -408,9 +490,12 @@ PyObject* method_EN_writeline(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_writeline(ph, line);
+    PyObject* err = PyLong_FromLong(EN_writeline(ph, line));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_report(PyObject* self, PyObject* args)
@@ -421,9 +506,12 @@ PyObject* method_EN_report(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_report(ph);
+    PyObject* err = PyLong_FromLong(EN_report(ph));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_copyreport(PyObject* self, PyObject* args)
@@ -435,9 +523,12 @@ PyObject* method_EN_copyreport(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_copyreport(ph, filename);
+    PyObject* err = PyLong_FromLong(EN_copyreport(ph, filename));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_clearreport(PyObject* self, PyObject* args)
@@ -448,9 +539,12 @@ PyObject* method_EN_clearreport(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_clearreport(ph);
+    PyObject* err = PyLong_FromLong(EN_clearreport(ph));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_resetreport(PyObject* self, PyObject* args)
@@ -461,9 +555,12 @@ PyObject* method_EN_resetreport(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_resetreport(ph);
+    PyObject* err = PyLong_FromLong(EN_resetreport(ph));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_setreport(PyObject* self, PyObject* args)
@@ -475,9 +572,12 @@ PyObject* method_EN_setreport(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setreport(ph, format);
+    PyObject* err = PyLong_FromLong(EN_setreport(ph, format));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_setstatusreport(PyObject* self, PyObject* args)
@@ -489,17 +589,25 @@ PyObject* method_EN_setstatusreport(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setstatusreport(ph, level);
+    PyObject* err = PyLong_FromLong(EN_setstatusreport(ph, level));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getversion(PyObject* self, PyObject* args)
 {
     int version;
-    int err = EN_getversion(&version);
+    PyObject* err = PyLong_FromLong(EN_getversion(&version));
+    PyObject* pyVersion = PyLong_FromLong(version);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(version));
+    PyObject* r = PyTuple_Pack(2, err, pyVersion);
+    Py_DECREF(err);
+    Py_DECREF(pyVersion);
+
+    return r;
 }
 
 PyObject* method_EN_geterror(PyObject* self, PyObject* args)
@@ -510,9 +618,14 @@ PyObject* method_EN_geterror(PyObject* self, PyObject* args)
     }
     
     char out_errmsg[MAXMSG + 1];
-    int err = EN_geterror(errcode, &out_errmsg[0], MAXMSG + 1);
+    PyObject* err = PyLong_FromLong(EN_geterror(errcode, &out_errmsg[0], MAXMSG + 1));
+    PyObject* pyOutErrmsg = PyUnicode_FromString(&out_errmsg[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_errmsg[0]));
+    PyObject* r = PyTuple_Pack(2, err, pyOutErrmsg);
+    Py_DECREF(err);
+    Py_DECREF(pyOutErrmsg);
+
+    return r;
 }
 
 PyObject* method_EN_getstatistic(PyObject* self, PyObject* args)
@@ -525,9 +638,14 @@ PyObject* method_EN_getstatistic(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     double value;
-    int err = EN_getstatistic(ph, type, &value);
+    PyObject* err = PyLong_FromLong(EN_getstatistic(ph, type, &value));
+    PyObject* pyValue = PyFloat_FromDouble(value);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyFloat_FromDouble(value));
+    PyObject* r = PyTuple_Pack(2, err, pyValue);
+    Py_DECREF(err);
+    Py_DECREF(pyValue);
+
+    return r;
 }
 
 PyObject* method_EN_getresultindex(PyObject* self, PyObject* args)
@@ -539,10 +657,14 @@ PyObject* method_EN_getresultindex(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_getresultindex(ph, type, index, &value);
+    PyObject* err = PyLong_FromLong(EN_getresultindex(ph, type, index, &value));
+    PyObject* pyValue = PyLong_FromLong(value);
 
-    return Py_BuildValue("(ii)", err, value);
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(value));
+    PyObject* r = PyTuple_Pack(2, err, pyValue);
+    Py_DECREF(err);
+    Py_DECREF(pyValue);
+
+    return r;
 }
 
 PyObject* method_EN_getoption(PyObject* self, PyObject* args)
@@ -555,9 +677,14 @@ PyObject* method_EN_getoption(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     double value;
-    int err = EN_getoption(ph, option, &value);
+    PyObject* err = PyLong_FromLong(EN_getoption(ph, option, &value));
+    PyObject* pyValue = PyFloat_FromDouble(value);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyFloat_FromDouble(value));
+    PyObject* r = PyTuple_Pack(2, err, pyValue);
+    Py_DECREF(err);
+    Py_DECREF(pyValue);
+
+    return r;
 }
 
 PyObject* method_EN_setoption(PyObject* self, PyObject* args)
@@ -570,9 +697,12 @@ PyObject* method_EN_setoption(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setoption(ph, option, value);
+    PyObject* err = PyLong_FromLong(EN_setoption(ph, option, value));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getflowunits(PyObject* self, PyObject* args)
@@ -584,9 +714,14 @@ PyObject* method_EN_getflowunits(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int units;
-    int err = EN_getflowunits(ph, &units);
+    PyObject* err = PyLong_FromLong(EN_getflowunits(ph, &units));
+    PyObject* pyUnits = PyLong_FromLong(units);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(units));
+    PyObject* r = PyTuple_Pack(2, err, pyUnits);
+    Py_DECREF(err);
+    Py_DECREF(pyUnits);
+
+    return r;
 }
 
 PyObject* method_EN_setflowunits(PyObject* self, PyObject* args)
@@ -598,9 +733,12 @@ PyObject* method_EN_setflowunits(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setflowunits(ph, units);
+    PyObject* err = PyLong_FromLong(EN_setflowunits(ph, units));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_gettimeparam(PyObject* self, PyObject* args)
@@ -613,9 +751,14 @@ PyObject* method_EN_gettimeparam(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     long value;
-    int err = EN_gettimeparam(ph, param, &value);
+    PyObject* err = PyLong_FromLong(EN_gettimeparam(ph, param, &value));
+    PyObject* pyValue = PyLong_FromLong(value);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(value));
+    PyObject* r = PyTuple_Pack(2, err, pyValue);
+    Py_DECREF(err);
+    Py_DECREF(pyValue);
+
+    return r;
 }
 
 PyObject* method_EN_settimeparam(PyObject* self, PyObject* args)
@@ -628,9 +771,12 @@ PyObject* method_EN_settimeparam(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_settimeparam(ph, param, value);
+    PyObject* err = PyLong_FromLong(EN_settimeparam(ph, param, value));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getqualinfo(PyObject* self, PyObject* args)
@@ -644,9 +790,20 @@ PyObject* method_EN_getqualinfo(PyObject* self, PyObject* args)
     int qualType, traceNode;
     char out_chemName[MAXID + 1];
     char out_chemUnits[MAXID + 1];
-    int err = EN_getqualinfo(ph, &qualType, &out_chemName[0], &out_chemUnits[0], &traceNode);
+    PyObject* err = PyLong_FromLong(EN_getqualinfo(ph, &qualType, &out_chemName[0], &out_chemUnits[0], &traceNode));
+    PyObject* pyQualType = PyLong_FromLong(qualType);
+    PyObject* pyChemName = PyUnicode_FromString(&out_chemName[0]);
+    PyObject* pyChemUnits = PyUnicode_FromString(&out_chemUnits[0]);
+    PyObject* pyTraceNode = PyLong_FromLong(traceNode);
 
-    return PyTuple_Pack(5, PyLong_FromLong(err), PyLong_FromLong(qualType), PyUnicode_FromString(&out_chemName[0]), PyUnicode_FromString(&out_chemUnits[0]), PyLong_FromLong(traceNode));
+    PyObject* r = PyTuple_Pack(5, err, pyQualType, pyChemName, pyChemUnits, pyTraceNode);
+    Py_DECREF(err);
+    Py_DECREF(pyQualType);
+    Py_DECREF(pyChemName);
+    Py_DECREF(pyChemUnits);
+    Py_DECREF(pyTraceNode);
+
+    return r;
 }
 
 PyObject* method_EN_getqualtype(PyObject* self, PyObject* args)
@@ -658,9 +815,16 @@ PyObject* method_EN_getqualtype(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
     
     int qualType, traceNode;
-    int err = EN_getqualtype(ph, &qualType, &traceNode);
+    PyObject* err = PyLong_FromLong(EN_getqualtype(ph, &qualType, &traceNode));
+    PyObject* pyQualType = PyLong_FromLong(qualType);
+    PyObject* pyTraceNode = PyLong_FromLong(traceNode);
 
-    return PyTuple_Pack(3, PyLong_FromLong(err), PyLong_FromLong(qualType), PyLong_FromLong(traceNode));
+    PyObject* r = PyTuple_Pack(3, err, pyQualType, pyTraceNode);
+    Py_DECREF(err);
+    Py_DECREF(pyQualType);
+    Py_DECREF(pyTraceNode);
+
+    return r;
 }
 
 PyObject* method_EN_setqualtype(PyObject* self, PyObject* args)
@@ -675,9 +839,12 @@ PyObject* method_EN_setqualtype(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setqualtype(ph, qualType, chemName, chemUnits, traceNode);
+    PyObject* err = PyLong_FromLong(EN_setqualtype(ph, qualType, chemName, chemUnits, traceNode));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_addnode(PyObject* self, PyObject* args)
@@ -691,10 +858,14 @@ PyObject* method_EN_addnode(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int index;
-    int err = EN_addnode(ph, id, nodeType, &index);
+    PyObject* err = PyLong_FromLong(EN_addnode(ph, id, nodeType, &index));
+    PyObject* pyIndex = PyLong_FromLong(index);
 
-    return Py_BuildValue("(ii)", err, index);
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(index));
+    PyObject* r = PyTuple_Pack(2, err, pyIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyIndex);
+
+    return r;
 }
 
 PyObject* method_EN_deletenode(PyObject* self, PyObject* args)
@@ -706,9 +877,12 @@ PyObject* method_EN_deletenode(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_deletenode(ph, index, actionCode);
+    PyObject* err = PyLong_FromLong(EN_deletenode(ph, index, actionCode));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getnodeindex(PyObject* self, PyObject* args)
@@ -721,9 +895,14 @@ PyObject* method_EN_getnodeindex(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int index;
-    int err = EN_getnodeindex(ph, id, &index);
+    PyObject* err = PyLong_FromLong(EN_getnodeindex(ph, id, &index));
+    PyObject* pyIndex = PyLong_FromLong(index);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(index));
+    PyObject* r = PyTuple_Pack(2, err, pyIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyIndex);
+
+    return r;
 }
 
 PyObject* method_EN_getnodeid(PyObject* self, PyObject* args)
@@ -736,9 +915,14 @@ PyObject* method_EN_getnodeid(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char out_id[MAXID + 1];
-    int err = EN_getnodeid(ph, index, &out_id[0]);
+    PyObject* err = PyLong_FromLong(EN_getnodeid(ph, index, &out_id[0]));
+    PyObject* pyOutId = PyUnicode_FromString(&out_id[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_id[0]));
+    PyObject* r = PyTuple_Pack(2, err, pyOutId);
+    Py_DECREF(err);
+    Py_DECREF(pyOutId);
+
+    return r;
 }
 
 PyObject* method_EN_setnodeid(PyObject* self, PyObject* args)
@@ -751,9 +935,12 @@ PyObject* method_EN_setnodeid(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setnodeid(ph, index, newid);
+    PyObject* err = PyLong_FromLong(EN_setnodeid(ph, index, newid));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getnodetype(PyObject* self, PyObject* args)
@@ -766,9 +953,14 @@ PyObject* method_EN_getnodetype(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int nodeType;
-    int err = EN_getnodetype(ph, index, &nodeType);
+    PyObject* err = PyLong_FromLong(EN_getnodetype(ph, index, &nodeType));
+    PyObject* pyNodeType = PyLong_FromLong(nodeType);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(nodeType));
+    PyObject* r = PyTuple_Pack(2, err, pyNodeType);
+    Py_DECREF(err);
+    Py_DECREF(pyNodeType);
+
+    return r;
 }
 
 PyObject* method_EN_getnodevalue(PyObject* self, PyObject* args)
@@ -781,9 +973,14 @@ PyObject* method_EN_getnodevalue(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     double value;
-    int err = EN_getnodevalue(ph, index, property, &value);
+    PyObject* err = PyLong_FromLong(EN_getnodevalue(ph, index, property, &value));
+    PyObject* pyValue = PyFloat_FromDouble(value);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyFloat_FromDouble(value));
+    PyObject* r = PyTuple_Pack(2, err, pyValue);
+    Py_DECREF(err);
+    Py_DECREF(pyValue);
+
+    return r;
 }
 
 PyObject* method_EN_setnodevalue(PyObject* self, PyObject* args)
@@ -796,9 +993,12 @@ PyObject* method_EN_setnodevalue(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setnodevalue(ph, index, property, value);
+    PyObject* err = PyLong_FromLong(EN_setnodevalue(ph, index, property, value));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_setjuncdata(PyObject* self, PyObject* args)
@@ -812,9 +1012,12 @@ PyObject* method_EN_setjuncdata(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setjuncdata(ph, index, elev, dmnd, dmndpat);
+    PyObject* err = PyLong_FromLong(EN_setjuncdata(ph, index, elev, dmnd, dmndpat));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_settankdata(PyObject* self, PyObject* args)
@@ -828,9 +1031,12 @@ PyObject* method_EN_settankdata(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_settankdata(ph, index, elev, initlvl, minlvl, maxlvl, diam, minvol, volcurve);
+    PyObject* err = PyLong_FromLong(EN_settankdata(ph, index, elev, initlvl, minlvl, maxlvl, diam, minvol, volcurve));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getcoord(PyObject* self, PyObject* args)
@@ -843,9 +1049,16 @@ PyObject* method_EN_getcoord(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
     
     double x, y;
-    int err = EN_getcoord(ph, index, &x, &y);
+    PyObject* err = PyLong_FromLong(EN_getcoord(ph, index, &x, &y));
+    PyObject* pyX = PyFloat_FromDouble(x);
+    PyObject* pyY = PyFloat_FromDouble(y);
 
-    return PyTuple_Pack(3, PyLong_FromLong(err), PyFloat_FromDouble(x), PyFloat_FromDouble(y));
+    PyObject* r = PyTuple_Pack(3, err, pyX, pyY);
+    Py_DECREF(err);
+    Py_DECREF(pyX);
+    Py_DECREF(pyY);
+
+    return r;
 }
 
 PyObject* method_EN_setcoord(PyObject* self, PyObject* args)
@@ -858,9 +1071,12 @@ PyObject* method_EN_setcoord(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setcoord(ph, index, x, y);
+    PyObject* err = PyLong_FromLong(EN_setcoord(ph, index, x, y));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getdemandmodel(PyObject* self, PyObject* args)
@@ -873,9 +1089,20 @@ PyObject* method_EN_getdemandmodel(PyObject* self, PyObject* args)
 
     int type;
     double pmin, preq, pexp;
-    int err = EN_getdemandmodel(ph, &type, &pmin, &preq, &pexp);
+    PyObject* err = PyLong_FromLong(EN_getdemandmodel(ph, &type, &pmin, &preq, &pexp));
+    PyObject* pyType = PyLong_FromLong(type);
+    PyObject* pyPMin = PyFloat_FromDouble(pmin);
+    PyObject* pyPReq = PyFloat_FromDouble(preq);
+    PyObject* pyPExp = PyFloat_FromDouble(pexp);
 
-    return PyTuple_Pack(5, PyLong_FromLong(err), PyLong_FromLong(type), PyFloat_FromDouble(pmin), PyFloat_FromDouble(preq), PyFloat_FromDouble(pexp));
+    PyObject* r = PyTuple_Pack(5, err, pyType, pyPMin, pyPReq, pyPExp);
+    Py_DECREF(err);
+    Py_DECREF(pyType);
+    Py_DECREF(pyPMin);
+    Py_DECREF(pyPReq);
+    Py_DECREF(pyPExp);
+
+    return r;
 }
 
 PyObject* method_EN_setdemandmodel(PyObject* self, PyObject* args)
@@ -888,9 +1115,12 @@ PyObject* method_EN_setdemandmodel(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setdemandmodel(ph, type, pmin, preq, pexp);
+    PyObject* err = PyLong_FromLong(EN_setdemandmodel(ph, type, pmin, preq, pexp));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_adddemand(PyObject* self, PyObject* args)
@@ -905,9 +1135,12 @@ PyObject* method_EN_adddemand(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_adddemand(ph, nodeIndex, baseDemand, demandPattern, demandName);
+    PyObject* err = PyLong_FromLong(EN_adddemand(ph, nodeIndex, baseDemand, demandPattern, demandName));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_deletedemand(PyObject* self, PyObject* args)
@@ -919,9 +1152,12 @@ PyObject* method_EN_deletedemand(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_deletedemand(ph, nodeIndex, demandIndex);
+    PyObject* err = PyLong_FromLong(EN_deletedemand(ph, nodeIndex, demandIndex));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getdemandindex(PyObject* self, PyObject* args)
@@ -935,9 +1171,14 @@ PyObject* method_EN_getdemandindex(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int demandIndex;
-    int err = EN_getdemandindex(ph, nodeIndex, demandName, &demandIndex);
+    PyObject* err = PyLong_FromLong(EN_getdemandindex(ph, nodeIndex, demandName, &demandIndex));
+    PyObject* pyDemandIndex = PyLong_FromLong(demandIndex);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(demandIndex));
+    PyObject* r = PyTuple_Pack(2, err, pyDemandIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyDemandIndex);
+
+    return r;
 }
 
 PyObject* method_EN_getnumdemands(PyObject* self, PyObject* args)
@@ -950,9 +1191,14 @@ PyObject* method_EN_getnumdemands(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int numDemands;
-    int err = EN_getnumdemands(ph, nodeIndex, &numDemands);
+    PyObject* err = PyLong_FromLong(EN_getnumdemands(ph, nodeIndex, &numDemands));
+    PyObject* pyNumDemands = PyLong_FromLong(numDemands);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(numDemands));
+    PyObject* r = PyTuple_Pack(2, err, pyNumDemands);
+    Py_DECREF(err);
+    Py_DECREF(pyNumDemands);
+
+    return r;
 }
 
 PyObject* method_EN_getbasedemand(PyObject* self, PyObject* args)
@@ -965,9 +1211,14 @@ PyObject* method_EN_getbasedemand(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     double baseDemand;
-    int err = EN_getbasedemand(ph, nodeIndex, demandIndex, &baseDemand);
+    PyObject* err = PyLong_FromLong(EN_getbasedemand(ph, nodeIndex, demandIndex, &baseDemand));
+    PyObject* pyBaseDemand = PyFloat_FromDouble(baseDemand);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyFloat_FromDouble(baseDemand));
+    PyObject* r = PyTuple_Pack(2, err, pyBaseDemand);
+    Py_DECREF(err);
+    Py_DECREF(pyBaseDemand);
+
+    return r;
 }
 
 PyObject* method_EN_setbasedemand(PyObject* self, PyObject* args)
@@ -980,9 +1231,12 @@ PyObject* method_EN_setbasedemand(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setbasedemand(ph, nodeIndex, demandIndex, baseDemand);
+    PyObject* err = PyLong_FromLong(EN_setbasedemand(ph, nodeIndex, demandIndex, baseDemand));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getdemandpattern(PyObject* self, PyObject* args)
@@ -995,9 +1249,14 @@ PyObject* method_EN_getdemandpattern(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int patIndex;
-    int err = EN_getdemandpattern(ph, nodeIndex, demandIndex, &patIndex);
+    PyObject* err = PyLong_FromLong(EN_getdemandpattern(ph, nodeIndex, demandIndex, &patIndex));
+    PyObject* pyPatIndex = PyLong_FromLong(patIndex);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(patIndex));
+    PyObject* r = PyTuple_Pack(2, err, pyPatIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyPatIndex);
+
+    return r;
 }
 
 PyObject* method_EN_setdemandpattern(PyObject* self, PyObject* args)
@@ -1009,9 +1268,12 @@ PyObject* method_EN_setdemandpattern(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setdemandpattern(ph, nodeIndex, demandIndex, patIndex);
+    PyObject* err = PyLong_FromLong(EN_setdemandpattern(ph, nodeIndex, demandIndex, patIndex));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getdemandname(PyObject* self, PyObject* args)
@@ -1024,9 +1286,14 @@ PyObject* method_EN_getdemandname(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char out_demandName[MAXID + 1];
-    int err = EN_getdemandname(ph, nodeIndex, demandIndex, &out_demandName[0]);
+    PyObject* err = PyLong_FromLong(EN_getdemandname(ph, nodeIndex, demandIndex, &out_demandName[0]));
+    PyObject* pyOutDemandName = PyUnicode_FromString(&out_demandName[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_demandName[0]));
+    PyObject* r = PyTuple_Pack(2, err, pyOutDemandName);
+    Py_DECREF(err);
+    Py_DECREF(pyOutDemandName);
+
+    return r;
 }
 
 PyObject* method_EN_setdemandname(PyObject* self, PyObject* args)
@@ -1039,9 +1306,12 @@ PyObject* method_EN_setdemandname(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setdemandname(ph, nodeIndex, demandIndex, demandName);
+    PyObject* err = PyLong_FromLong(EN_setdemandname(ph, nodeIndex, demandIndex, demandName));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_addlink(PyObject* self, PyObject* args)
@@ -1057,9 +1327,14 @@ PyObject* method_EN_addlink(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int index;
-    int err = EN_addlink(ph, id, linkType, fromNode, toNode, &index);
+    PyObject* err = PyLong_FromLong(EN_addlink(ph, id, linkType, fromNode, toNode, &index));
+    PyObject* pyIndex = PyLong_FromLong(index);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(index));
+    PyObject* r = PyTuple_Pack(2, err, pyIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyIndex);
+
+    return r;
 }
 
 PyObject* method_EN_deletelink(PyObject* self, PyObject* args)
@@ -1071,9 +1346,12 @@ PyObject* method_EN_deletelink(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_deletelink(ph, index, actionCode);
+    PyObject* err = PyLong_FromLong(EN_deletelink(ph, index, actionCode));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getlinkindex(PyObject* self, PyObject* args)
@@ -1086,9 +1364,14 @@ PyObject* method_EN_getlinkindex(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int index;
-    int err = EN_getlinkindex(ph, id, &index);
+    PyObject* err = PyLong_FromLong(EN_getlinkindex(ph, id, &index));
+    PyObject* pyIndex = PyLong_FromLong(index);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(index));
+    PyObject* r = PyTuple_Pack(2, err, pyIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyIndex);
+
+    return r;
 }
 
 PyObject* method_EN_getlinkid(PyObject* self, PyObject* args)
@@ -1101,9 +1384,14 @@ PyObject* method_EN_getlinkid(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char out_id[MAXID + 1];
-    int err = EN_getlinkid(ph, index, &out_id[0]);
+    PyObject* err = PyLong_FromLong(EN_getlinkid(ph, index, &out_id[0]));
+    PyObject* pyOutId = PyUnicode_FromString(&out_id[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_id[0]));
+    PyObject* r = PyTuple_Pack(2, err, pyOutId);
+    Py_DECREF(err);
+    Py_DECREF(pyOutId);
+
+    return r;
 }
 
 PyObject* method_EN_setlinkid(PyObject* self, PyObject* args)
@@ -1116,9 +1404,12 @@ PyObject* method_EN_setlinkid(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setlinkid(ph, index, newid);
+    PyObject* err = PyLong_FromLong(EN_setlinkid(ph, index, newid));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getlinktype(PyObject* self, PyObject* args)
@@ -1131,9 +1422,14 @@ PyObject* method_EN_getlinktype(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int linkType;
-    int err = EN_getlinktype(ph, index, &linkType);
+    PyObject* err = PyLong_FromLong(EN_getlinktype(ph, index, &linkType));
+    PyObject* pyLinkType = PyLong_FromLong(linkType);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(linkType));
+    PyObject* r = PyTuple_Pack(2, err, pyLinkType);
+    Py_DECREF(err);
+    Py_DECREF(pyLinkType);
+
+    return r;
 }
 
 PyObject* method_EN_setlinktype(PyObject* self, PyObject* args)
@@ -1145,9 +1441,14 @@ PyObject* method_EN_setlinktype(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setlinktype(ph, &inout_index, linkType, actionCode);
+    PyObject* err = PyLong_FromLong(EN_setlinktype(ph, &inout_index, linkType, actionCode));
+    PyObject* pyInoutIndex = PyLong_FromLong(inout_index);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(inout_index));
+    PyObject* r = PyTuple_Pack(2, err, pyInoutIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyInoutIndex);
+
+    return r;
 }
 
 PyObject* method_EN_getlinknodes(PyObject* self, PyObject* args)
@@ -1160,9 +1461,16 @@ PyObject* method_EN_getlinknodes(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int node1, node2;
-    int err = EN_getlinknodes(ph, index, &node1, &node2);
+    PyObject* err = PyLong_FromLong(EN_getlinknodes(ph, index, &node1, &node2));
+    PyObject* pyNode1 = PyLong_FromLong(node1);
+    PyObject* pyNode2 = PyLong_FromLong(node2);
 
-    return PyTuple_Pack(3, PyLong_FromLong(err), PyLong_FromLong(node1), PyLong_FromLong(node2));
+    PyObject* r = PyTuple_Pack(3, err, pyNode1, pyNode2);
+    Py_DECREF(err);
+    Py_DECREF(pyNode1);
+    Py_DECREF(pyNode2);
+
+    return r;
 }
 
 PyObject* method_EN_setlinknodes(PyObject* self, PyObject* args)
@@ -1174,9 +1482,12 @@ PyObject* method_EN_setlinknodes(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setlinknodes(ph, index, node1, node2);
+    PyObject* err = PyLong_FromLong(EN_setlinknodes(ph, index, node1, node2));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getlinkvalue(PyObject* self, PyObject* args)
@@ -1189,9 +1500,14 @@ PyObject* method_EN_getlinkvalue(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     double value;
-    int err = EN_getlinkvalue(ph, index, property, &value);
+    PyObject* err = PyLong_FromLong(EN_getlinkvalue(ph, index, property, &value));
+    PyObject* pyValue = PyFloat_FromDouble(value);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyFloat_FromDouble(value));
+    PyObject* r = PyTuple_Pack(2, err, pyValue);
+    Py_DECREF(err);
+    Py_DECREF(pyValue);
+
+    return r;
 }
 
 PyObject* method_EN_setlinkvalue(PyObject* self, PyObject* args)
@@ -1204,9 +1520,12 @@ PyObject* method_EN_setlinkvalue(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setlinkvalue(ph, index, property, value);
+    PyObject* err = PyLong_FromLong(EN_setlinkvalue(ph, index, property, value));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_setpipedata(PyObject* self, PyObject* args)
@@ -1219,9 +1538,12 @@ PyObject* method_EN_setpipedata(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setpipedata(ph, index, length, diam, rough, mloss);
+    PyObject* err = PyLong_FromLong(EN_setpipedata(ph, index, length, diam, rough, mloss));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getvertexcount(PyObject* self, PyObject* args)
@@ -1234,9 +1556,14 @@ PyObject* method_EN_getvertexcount(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int count;
-    int err = EN_getvertexcount(ph, index, &count);
+    PyObject* err = PyLong_FromLong(EN_getvertexcount(ph, index, &count));
+    PyObject* pyCount = PyLong_FromLong(count);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(count));
+    PyObject* r = PyTuple_Pack(2, err, pyCount);
+    Py_DECREF(err);
+    Py_DECREF(pyCount);
+
+    return r;
 }
 
 PyObject* method_EN_getvertex(PyObject* self, PyObject* args)
@@ -1249,9 +1576,16 @@ PyObject* method_EN_getvertex(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     double x, y;
-    int err = EN_getvertex(ph, index, vertex, &x, &y);
+    PyObject* err = PyLong_FromLong(EN_getvertex(ph, index, vertex, &x, &y));
+    PyObject* pyX = PyFloat_FromDouble(x);
+    PyObject* pyY = PyFloat_FromDouble(y);
 
-    return PyTuple_Pack(3, PyLong_FromLong(err), PyFloat_FromDouble(x), PyFloat_FromDouble(y));
+    PyObject* r = PyTuple_Pack(3, err, pyX, pyY);
+    Py_DECREF(err);
+    Py_DECREF(pyX);
+    Py_DECREF(pyY);
+
+    return r;
 }
 
 PyObject* method_EN_setvertices(PyObject* self, PyObject* args)
@@ -1274,11 +1608,14 @@ PyObject* method_EN_setvertices(PyObject* self, PyObject* args)
         yRaw[i] = PyFloat_AsDouble(PyList_GET_ITEM(y, i));
     }
 
-    int err = EN_setvertices(ph, index, xRaw, yRaw, count);
+    PyObject* err = PyLong_FromLong(EN_setvertices(ph, index, xRaw, yRaw, count));
     free(xRaw);
     free(yRaw);
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getpumptype(PyObject* self, PyObject* args)
@@ -1291,9 +1628,14 @@ PyObject* method_EN_getpumptype(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int pumpType;
-    int err = EN_getpumptype(ph, linkIndex, &pumpType);
+    PyObject* err = PyLong_FromLong(EN_getpumptype(ph, linkIndex, &pumpType));
+    PyObject* pyPumpType = PyLong_FromLong(pumpType);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(pumpType));
+    PyObject* r = PyTuple_Pack(2, err, pyPumpType);
+    Py_DECREF(err);
+    Py_DECREF(pyPumpType);
+
+    return r;
 }
 
 PyObject* method_EN_getheadcurveindex(PyObject* self, PyObject* args)
@@ -1306,9 +1648,14 @@ PyObject* method_EN_getheadcurveindex(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int curveIndex;
-    int err = EN_getheadcurveindex(ph, linkIndex, &curveIndex);
+    PyObject* err = PyLong_FromLong(EN_getheadcurveindex(ph, linkIndex, &curveIndex));
+    PyObject* pyCurveIndex = PyLong_FromLong(curveIndex);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(curveIndex));
+    PyObject* r = PyTuple_Pack(2, err, pyCurveIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyCurveIndex);
+
+    return r;
 }
 
 PyObject* method_EN_setheadcurveindex(PyObject* self, PyObject* args)
@@ -1320,9 +1667,12 @@ PyObject* method_EN_setheadcurveindex(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setheadcurveindex(ph, linkIndex, curveIndex);
+    PyObject* err = PyLong_FromLong(EN_setheadcurveindex(ph, linkIndex, curveIndex));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_addpattern(PyObject* self, PyObject* args)
@@ -1334,9 +1684,12 @@ PyObject* method_EN_addpattern(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_addpattern(ph, id);
+    PyObject* err = PyLong_FromLong(EN_addpattern(ph, id));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_deletepattern(PyObject* self, PyObject* args)
@@ -1348,9 +1701,12 @@ PyObject* method_EN_deletepattern(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_deletepattern(ph, index);
+    PyObject* err = PyLong_FromLong(EN_deletepattern(ph, index));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getpatternindex(PyObject* self, PyObject* args)
@@ -1363,9 +1719,14 @@ PyObject* method_EN_getpatternindex(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int index;
-    int err = EN_getpatternindex(ph, id, &index);
+    PyObject* err = PyLong_FromLong(EN_getpatternindex(ph, id, &index));
+    PyObject* pyIndex = PyLong_FromLong(index);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(index));
+    PyObject* r = PyTuple_Pack(2, err, pyIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyIndex);
+
+    return r;
 }
 
 PyObject* method_EN_getpatternid(PyObject* self, PyObject* args)
@@ -1378,9 +1739,14 @@ PyObject* method_EN_getpatternid(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char out_id[MAXID + 1];
-    int err = EN_getpatternid(ph, index, &out_id[0]);
+    PyObject* err = PyLong_FromLong(EN_getpatternid(ph, index, &out_id[0]));
+    PyObject* pyOutId = PyUnicode_FromString(&out_id[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_id[0]));
+    PyObject* r = PyTuple_Pack(2, err, pyOutId);
+    Py_DECREF(err);
+    Py_DECREF(pyOutId);
+
+    return r;
 }
 
 PyObject* method_EN_setpatternid(PyObject* self, PyObject* args)
@@ -1393,9 +1759,12 @@ PyObject* method_EN_setpatternid(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setpatternid(ph, index, id);
+    PyObject* err = PyLong_FromLong(EN_setpatternid(ph, index, id));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getpatternlen(PyObject* self, PyObject* args)
@@ -1408,9 +1777,14 @@ PyObject* method_EN_getpatternlen(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int len;
-    int err = EN_getpatternlen(ph, index, &len);
+    PyObject* err = PyLong_FromLong(EN_getpatternlen(ph, index, &len));
+    PyObject* pyLen = PyLong_FromLong(len);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(len));
+    PyObject* r = PyTuple_Pack(2, err, pyLen);
+    Py_DECREF(err);
+    Py_DECREF(pyLen);
+
+    return r;
 }
 
 PyObject* method_EN_getpatternvalue(PyObject* self, PyObject* args)
@@ -1423,9 +1797,14 @@ PyObject* method_EN_getpatternvalue(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     double value;
-    int err = EN_getpatternvalue(ph, index, period, &value);
+    PyObject* err = PyLong_FromLong(EN_getpatternvalue(ph, index, period, &value));
+    PyObject* pyValue = PyFloat_FromDouble(value);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyFloat_FromDouble(value));
+    PyObject* r = PyTuple_Pack(2, err, pyValue);
+    Py_DECREF(err);
+    Py_DECREF(pyValue);
+
+    return r;
 }
 
 PyObject* method_EN_setpatternvalue(PyObject* self, PyObject* args)
@@ -1438,9 +1817,12 @@ PyObject* method_EN_setpatternvalue(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setpatternvalue(ph, index, period, value);
+    PyObject* err = PyLong_FromLong(EN_setpatternvalue(ph, index, period, value));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getaveragepatternvalue(PyObject* self, PyObject* args)
@@ -1453,9 +1835,14 @@ PyObject* method_EN_getaveragepatternvalue(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     double value;
-    int err = EN_getaveragepatternvalue(ph, index, &value);
+    PyObject* err = PyLong_FromLong(EN_getaveragepatternvalue(ph, index, &value));
+    PyObject* pyValue = PyFloat_FromDouble(value);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyFloat_FromDouble(value));
+    PyObject* r = PyTuple_Pack(2, err, pyValue);
+    Py_DECREF(err);
+    Py_DECREF(pyValue);
+
+    return r;
 }
 
 PyObject* method_EN_setpattern(PyObject* self, PyObject* args)
@@ -1475,10 +1862,13 @@ PyObject* method_EN_setpattern(PyObject* self, PyObject* args)
         valuesRaw[i] = PyFloat_AsDouble(PyList_GET_ITEM(values, i));
     }
 
-    int err = EN_setpattern(ph, index, valuesRaw, len);
+    PyObject* err = PyLong_FromLong(EN_setpattern(ph, index, valuesRaw, len));
     free(valuesRaw);
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_addcurve(PyObject* self, PyObject* args)
@@ -1490,9 +1880,12 @@ PyObject* method_EN_addcurve(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_addcurve(ph, id);
+    PyObject* err = PyLong_FromLong(EN_addcurve(ph, id));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_deletecurve(PyObject* self, PyObject* args)
@@ -1504,9 +1897,12 @@ PyObject* method_EN_deletecurve(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_deletecurve(ph, index);
+    PyObject* err = PyLong_FromLong(EN_deletecurve(ph, index));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getcurveindex(PyObject* self, PyObject* args)
@@ -1519,9 +1915,14 @@ PyObject* method_EN_getcurveindex(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int index;
-    int err = EN_getcurveindex(ph, id, &index);
+    PyObject* err = PyLong_FromLong(EN_getcurveindex(ph, id, &index));
+    PyObject* pyIndex = PyLong_FromLong(index);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(index));
+    PyObject* r = PyTuple_Pack(2, err, pyIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyIndex);
+
+    return r;
 }
 
 PyObject* method_EN_getcurveid(PyObject* self, PyObject* args)
@@ -1534,9 +1935,14 @@ PyObject* method_EN_getcurveid(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char out_id[MAXID + 1];
-    int err = EN_getcurveid(ph, index, &out_id[0]);
+    PyObject* err = PyLong_FromLong(EN_getcurveid(ph, index, &out_id[0]));
+    PyObject* pyOutId = PyUnicode_FromString(&out_id[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_id[0]));
+    PyObject* r = PyTuple_Pack(2, err, pyOutId);
+    Py_DECREF(err);
+    Py_DECREF(pyOutId);
+
+    return r;
 }
 
 PyObject* method_EN_setcurveid(PyObject* self, PyObject* args)
@@ -1549,9 +1955,12 @@ PyObject* method_EN_setcurveid(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setcurveid(ph, index, id);
+    PyObject* err = PyLong_FromLong(EN_setcurveid(ph, index, id));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getcurvelen(PyObject* self, PyObject* args)
@@ -1564,9 +1973,14 @@ PyObject* method_EN_getcurvelen(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int len;
-    int err = EN_getcurvelen(ph, index, &len);
+    PyObject* err = PyLong_FromLong(EN_getcurvelen(ph, index, &len));
+    PyObject* pyLen = PyLong_FromLong(len);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(len));
+    PyObject* r = PyTuple_Pack(2, err, pyLen);
+    Py_DECREF(err);
+    Py_DECREF(pyLen);
+
+    return r;
 }
 
 PyObject* method_EN_getcurvetype(PyObject* self, PyObject* args)
@@ -1579,9 +1993,14 @@ PyObject* method_EN_getcurvetype(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int type;
-    int err = EN_getcurvetype(ph, index, &type);
+    PyObject* err = PyLong_FromLong(EN_getcurvetype(ph, index, &type));
+    PyObject* pyType = PyLong_FromLong(type);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(type));
+    PyObject* r = PyTuple_Pack(2, err, pyType);
+    Py_DECREF(err);
+    Py_DECREF(pyType);
+
+    return r;
 }
 
 PyObject* method_EN_getcurvevalue(PyObject* self, PyObject* args)
@@ -1594,9 +2013,16 @@ PyObject* method_EN_getcurvevalue(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     double x, y;
-    int err = EN_getcurvevalue(ph, curveIndex, pointIndex, &x, &y);
+    PyObject* err = PyLong_FromLong(EN_getcurvevalue(ph, curveIndex, pointIndex, &x, &y));
+    PyObject* pyX = PyFloat_FromDouble(x);
+    PyObject* pyY = PyFloat_FromDouble(y);
 
-    return PyTuple_Pack(3, PyLong_FromLong(err), PyFloat_FromDouble(x), PyFloat_FromDouble(y));
+    PyObject* r = PyTuple_Pack(3, err, pyX, pyY);
+    Py_DECREF(err);
+    Py_DECREF(pyX);
+    Py_DECREF(pyY);
+
+    return r;
 }
 
 PyObject* method_EN_setcurvevalue(PyObject* self, PyObject* args)
@@ -1609,9 +2035,12 @@ PyObject* method_EN_setcurvevalue(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setcurvevalue(ph, curveIndex, pointIndex, x, y);
+    PyObject* err = PyLong_FromLong(EN_setcurvevalue(ph, curveIndex, pointIndex, x, y));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getcurve(PyObject* self, PyObject* args)
@@ -1624,16 +2053,20 @@ PyObject* method_EN_getcurve(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int len;
-    int err = EN_getcurvelen(ph, index, &len);
-    if(err != 0) {
-        return PyTuple_Pack(1, PyLong_FromLong(err));
+    int errcode = EN_getcurvelen(ph, index, &len);
+    if(errcode != 0) {
+        PyObject* err = PyLong_FromLong(errcode);
+        PyObject* r = PyTuple_Pack(1, err);
+        Py_DECREF(err);
+
+        return r;
     }
 
     char out_id[MAXID + 1];
     int nPoints;
     double* xValues = (double*) PyMem_Calloc(len, sizeof(double));
     double* yValues = (double*) PyMem_Calloc(len, sizeof(double));
-    err = EN_getcurve(ph, index, &out_id[0], &nPoints, xValues, yValues);
+    PyObject* err = PyLong_FromLong(EN_getcurve(ph, index, &out_id[0], &nPoints, xValues, yValues));
 
     PyObject* xValuesList = PyList_New(nPoints);
     PyObject* yValuesList = PyList_New(nPoints);
@@ -1646,9 +2079,10 @@ PyObject* method_EN_getcurve(PyObject* self, PyObject* args)
     PyMem_Free(xValues);
     PyMem_Free(yValues);
 
-    PyObject* r = PyTuple_Pack(3, PyLong_FromLong(err), xValuesList, yValuesList);
+    PyObject* r = PyTuple_Pack(3, err, xValuesList, yValuesList);
     Py_DECREF(xValuesList);
     Py_DECREF(yValuesList);
+    Py_DECREF(err);
 
     return r;
 }
@@ -1672,11 +2106,14 @@ PyObject* method_EN_setcurve(PyObject* self, PyObject* args)
         yValuesRaw[i] = PyFloat_AsDouble(PyList_GET_ITEM(yValues, i));
     }
 
-    int err = EN_setcurve(ph, index, xValuesRaw, yValuesRaw, nPoints);
+    PyObject* err = PyLong_FromLong(EN_setcurve(ph, index, xValuesRaw, yValuesRaw, nPoints));
     free(xValuesRaw);
     free(yValuesRaw);
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_addcontrol(PyObject* self, PyObject* args)
@@ -1690,9 +2127,14 @@ PyObject* method_EN_addcontrol(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int index;
-    int err = EN_addcontrol(ph, type, linkIndex, setting, nodeIndex, level, &index);
+    PyObject* err = PyLong_FromLong(EN_addcontrol(ph, type, linkIndex, setting, nodeIndex, level, &index));
+    PyObject* pyIndex = PyLong_FromLong(index);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(index));
+    PyObject* r = PyTuple_Pack(2, err, pyIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyIndex);
+
+    return r;
 }
 
 PyObject* method_EN_deletecontrol(PyObject* self, PyObject* args)
@@ -1704,9 +2146,12 @@ PyObject* method_EN_deletecontrol(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_deletecontrol(ph, index);
+    PyObject* err = PyLong_FromLong(EN_deletecontrol(ph, index));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getcontrol(PyObject* self, PyObject* args)
@@ -1720,9 +2165,22 @@ PyObject* method_EN_getcontrol(PyObject* self, PyObject* args)
 
     int type, linkIndex, nodeIndex;
     double setting, level;
-    int err = EN_getcontrol(ph, index, &type, &linkIndex, &setting, &nodeIndex, &level);
+    PyObject* err = PyLong_FromLong(EN_getcontrol(ph, index, &type, &linkIndex, &setting, &nodeIndex, &level));
+    PyObject* pyType = PyLong_FromLong(type);
+    PyObject* pyLinkIndex = PyLong_FromLong(linkIndex);
+    PyObject* pySetting = PyFloat_FromDouble(setting);
+    PyObject* pyNodeIndex = PyLong_FromLong(nodeIndex);
+    PyObject* pyLevel = PyFloat_FromDouble(level);
 
-    return PyTuple_Pack(6, PyLong_FromLong(err), PyLong_FromLong(type), PyLong_FromLong(linkIndex), PyFloat_FromDouble(setting), PyLong_FromLong(nodeIndex), PyFloat_FromDouble(level));
+    PyObject* r = PyTuple_Pack(6, err, pyType, pyLinkIndex, pySetting, pyNodeIndex, pyLevel);
+    Py_DECREF(err);
+    Py_DECREF(pyType);
+    Py_DECREF(pyLinkIndex);
+    Py_DECREF(pySetting);
+    Py_DECREF(pyNodeIndex);
+    Py_DECREF(pyLevel);
+
+    return r;
 }
 
 PyObject* method_EN_setcontrol(PyObject* self, PyObject* args)
@@ -1735,9 +2193,12 @@ PyObject* method_EN_setcontrol(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setcontrol(ph, index, type, linkIndex, setting, nodeIndex, level);
+    PyObject* err = PyLong_FromLong(EN_setcontrol(ph, index, type, linkIndex, setting, nodeIndex, level));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_addrule(PyObject* self, PyObject* args)
@@ -1749,9 +2210,12 @@ PyObject* method_EN_addrule(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_addrule(ph, rule);
+    PyObject* err = PyLong_FromLong(EN_addrule(ph, rule));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_deleterule(PyObject* self, PyObject* args)
@@ -1763,9 +2227,12 @@ PyObject* method_EN_deleterule(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_deleterule(ph, index);
+    PyObject* err = PyLong_FromLong(EN_deleterule(ph, index));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getrule(PyObject* self, PyObject* args)
@@ -1779,9 +2246,20 @@ PyObject* method_EN_getrule(PyObject* self, PyObject* args)
 
     int nPremises, nThenActions, nElseActions;
     double priority;
-    int err = EN_getrule(ph, index, &nPremises, &nThenActions, &nElseActions, &priority);
+    PyObject* err = PyLong_FromLong(EN_getrule(ph, index, &nPremises, &nThenActions, &nElseActions, &priority));
+    PyObject* pyNPremises = PyLong_FromLong(nPremises);
+    PyObject* pyNThenActions = PyLong_FromLong(nThenActions);
+    PyObject* pyNElseActions = PyLong_FromLong(nElseActions);
+    PyObject* pyPriority = PyFloat_FromDouble(priority);
 
-    return PyTuple_Pack(5, PyLong_FromLong(err), PyLong_FromLong(nPremises), PyLong_FromLong(nThenActions), PyLong_FromLong(nElseActions), PyFloat_FromDouble(priority));
+    PyObject* r = PyTuple_Pack(5, err, pyNPremises, pyNThenActions, pyNElseActions, pyPriority);
+    Py_DECREF(err);
+    Py_DECREF(pyNPremises);
+    Py_DECREF(pyNThenActions);
+    Py_DECREF(pyNElseActions);
+    Py_DECREF(pyPriority);
+
+    return r;
 }
 
 PyObject* method_EN_getruleID(PyObject* self, PyObject* args)
@@ -1794,9 +2272,14 @@ PyObject* method_EN_getruleID(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char out_id[MAXID + 1];
-    int err = EN_getruleID(ph, index, &out_id[0]);
+    PyObject* err = PyLong_FromLong(EN_getruleID(ph, index, &out_id[0]));
+    PyObject* pyOutId = PyUnicode_FromString(&out_id[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&out_id[0]));
+    PyObject* r =  PyTuple_Pack(2, err, pyOutId);
+    Py_DECREF(err);
+    Py_DECREF(pyOutId);
+
+    return r;
 }
 
 PyObject* method_EN_getpremise(PyObject* self, PyObject* args)
@@ -1810,9 +2293,26 @@ PyObject* method_EN_getpremise(PyObject* self, PyObject* args)
 
     int logop, object, objIndex, variable, relop, status;
     double value;
-    int err = EN_getpremise(ph, ruleIndex, premiseIndex, &logop, &object, &objIndex, &variable, &relop, &status, &value);
+    PyObject* err = PyLong_FromLong(EN_getpremise(ph, ruleIndex, premiseIndex, &logop, &object, &objIndex, &variable, &relop, &status, &value));
+    PyObject* pyLogop = PyLong_FromLong(logop);
+    PyObject* pyObject = PyLong_FromLong(object);
+    PyObject* pyObjIndex = PyLong_FromLong(objIndex);
+    PyObject* pyVariable = PyLong_FromLong(variable);
+    PyObject* pyRelop = PyLong_FromLong(relop);
+    PyObject* pyStatus = PyLong_FromLong(status);
+    PyObject* pyValue = PyFloat_FromDouble(value);
 
-    return PyTuple_Pack(8, PyLong_FromLong(err), PyLong_FromLong(logop), PyLong_FromLong(object), PyLong_FromLong(objIndex), PyLong_FromLong(variable), PyLong_FromLong(relop), PyLong_FromLong(status), PyFloat_FromDouble(value));
+    PyObject* r = PyTuple_Pack(8, err, pyLogop, pyObject, pyObjIndex, pyVariable, pyRelop, pyStatus, pyValue);
+    Py_DECREF(err);
+    Py_DECREF(pyLogop);
+    Py_DECREF(pyObject);
+    Py_DECREF(pyObjIndex);
+    Py_DECREF(pyVariable);
+    Py_DECREF(pyRelop);
+    Py_DECREF(pyStatus);
+    Py_DECREF(pyValue);
+
+    return r;
 }
 
 PyObject* method_EN_setpremise(PyObject* self, PyObject* args)
@@ -1825,9 +2325,12 @@ PyObject* method_EN_setpremise(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setpremise(ph, ruleIndex, premiseIndex, logop, object, objIndex, variable, relop, status, value);
+    PyObject* err = PyLong_FromLong(EN_setpremise(ph, ruleIndex, premiseIndex, logop, object, objIndex, variable, relop, status, value));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r =  PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_setpremiseindex(PyObject* self, PyObject* args)
@@ -1839,9 +2342,12 @@ PyObject* method_EN_setpremiseindex(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setpremiseindex(ph, ruleIndex, premiseIndex, objIndex);
+    PyObject* err = PyLong_FromLong(EN_setpremiseindex(ph, ruleIndex, premiseIndex, objIndex));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r =  PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_setpremisestatus(PyObject* self, PyObject* args)
@@ -1853,9 +2359,12 @@ PyObject* method_EN_setpremisestatus(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setpremisestatus(ph, ruleIndex, premiseIndex, status);
+    PyObject* err = PyLong_FromLong(EN_setpremisestatus(ph, ruleIndex, premiseIndex, status));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r =  PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_setpremisevalue(PyObject* self, PyObject* args)
@@ -1868,9 +2377,12 @@ PyObject* method_EN_setpremisevalue(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setpremisevalue(ph, ruleIndex, premiseIndex, value);
+    PyObject* err = PyLong_FromLong(EN_setpremisevalue(ph, ruleIndex, premiseIndex, value));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r =  PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getthenaction(PyObject* self, PyObject* args)
@@ -1884,9 +2396,18 @@ PyObject* method_EN_getthenaction(PyObject* self, PyObject* args)
 
     int linkIndex, status;
     double setting;
-    int err = EN_getthenaction(ph, ruleIndex, actionIndex, &linkIndex, &status, &setting);
+    PyObject* err = PyLong_FromLong(EN_getthenaction(ph, ruleIndex, actionIndex, &linkIndex, &status, &setting));
+    PyObject* pyLinkIndex = PyLong_FromLong(linkIndex);
+    PyObject* pyStatus = PyLong_FromLong(status);
+    PyObject* pySetting = PyLong_FromLong(setting);
 
-    return PyTuple_Pack(4, PyLong_FromLong(err), PyLong_FromLong(linkIndex), PyLong_FromLong(status), PyFloat_FromDouble(setting));
+    PyObject* r = PyTuple_Pack(4, err, pyLinkIndex, pyStatus, pySetting);
+    Py_DECREF(err);
+    Py_DECREF(pyLinkIndex);
+    Py_DECREF(pyStatus);
+    Py_DECREF(pySetting);
+
+    return r;
 }
 
 PyObject* method_EN_setthenaction(PyObject* self, PyObject* args)
@@ -1899,9 +2420,12 @@ PyObject* method_EN_setthenaction(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setthenaction(ph, ruleIndex, actionIndex, linkIndex, status, setting);
+    PyObject* err = PyLong_FromLong(EN_setthenaction(ph, ruleIndex, actionIndex, linkIndex, status, setting));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r =  PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getelseaction(PyObject* self, PyObject* args)
@@ -1915,9 +2439,18 @@ PyObject* method_EN_getelseaction(PyObject* self, PyObject* args)
 
     int linkIndex, status;
     double setting;
-    int err = EN_getelseaction(ph, ruleIndex, actionIndex, &linkIndex, &status, &setting);
+    PyObject* err = PyLong_FromLong(EN_getelseaction(ph, ruleIndex, actionIndex, &linkIndex, &status, &setting));
+    PyObject* pyLinkIndex = PyLong_FromLong(linkIndex);
+    PyObject* pyStatus = PyLong_FromLong(status);
+    PyObject* pySetting = PyFloat_FromDouble(setting);
 
-    return PyTuple_Pack(4, PyLong_FromLong(err), PyLong_FromLong(linkIndex), PyLong_FromLong(status), PyFloat_FromDouble(setting));
+    PyObject* r = PyTuple_Pack(4, err, pyLinkIndex, pyStatus, pySetting);
+    Py_DECREF(err);
+    Py_DECREF(pyLinkIndex);
+    Py_DECREF(pyStatus);
+    Py_DECREF(pySetting);
+
+    return r;
 }
 
 PyObject* method_EN_setelseaction(PyObject* self, PyObject* args)
@@ -1930,9 +2463,12 @@ PyObject* method_EN_setelseaction(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setelseaction(ph, ruleIndex, actionIndex, linkIndex, status, setting);
+    PyObject* err = PyLong_FromLong(EN_setelseaction(ph, ruleIndex, actionIndex, linkIndex, status, setting));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r =  PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_setrulepriority(PyObject* self, PyObject* args)
@@ -1945,9 +2481,12 @@ PyObject* method_EN_setrulepriority(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setrulepriority(ph, index, priority);
+    PyObject* err = PyLong_FromLong(EN_setrulepriority(ph, index, priority));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r =  PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_gettag(PyObject* self, PyObject* args)
@@ -1960,9 +2499,14 @@ PyObject* method_EN_gettag(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char tag[MAXID + 1];
-    int err = EN_gettag(ph, object, index, &tag[0]);
+    PyObject* err = PyLong_FromLong(EN_gettag(ph, object, index, &tag[0]));
+    PyObject* pyTag = PyUnicode_FromString(&tag[0]);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyUnicode_FromString(&tag[0]));
+    PyObject* r =  PyTuple_Pack(2, err, pyTag);
+    Py_DECREF(err);
+    Py_DECREF(pyTag);
+
+    return r;
 }
 
 PyObject* method_EN_settag(PyObject* self, PyObject* args)
@@ -1975,9 +2519,12 @@ PyObject* method_EN_settag(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_settag(ph, object, index, tag);
+    PyObject* err = PyLong_FromLong(EN_settag(ph, object, index, tag));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r =  PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_timetonextevent(PyObject* self, PyObject* args)
@@ -1990,9 +2537,18 @@ PyObject* method_EN_timetonextevent(PyObject* self, PyObject* args)
 
     int eventType, elemIndex;
     long duration;
-    int err = EN_timetonextevent(ph, &eventType, &duration, &elemIndex);
+    PyObject* err = PyLong_FromLong(EN_timetonextevent(ph, &eventType, &duration, &elemIndex));
+    PyObject* pyEventType = PyLong_FromLong(eventType);
+    PyObject* pyDuration = PyLong_FromLong(duration);
+    PyObject* pyElemIndex = PyLong_FromLong(elemIndex);
 
-    return PyTuple_Pack(4, PyLong_FromLong(err), PyLong_FromLong(eventType), PyLong_FromLong(duration), PyLong_FromLong(elemIndex));
+    PyObject* r = PyTuple_Pack(4, err, pyEventType, pyDuration, pyElemIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyEventType);
+    Py_DECREF(pyDuration);
+    Py_DECREF(pyElemIndex);
+
+    return r;
 }
 
 PyObject* method_EN_getnodevalues(PyObject* self, PyObject* args)
@@ -2005,13 +2561,17 @@ PyObject* method_EN_getnodevalues(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int numNodes;
-    int err = EN_getcount(ph, EN_NODECOUNT, &numNodes);
-    if(err != 0) {
-        return PyTuple_Pack(1, PyLong_FromLong(err));
+    int errcode = EN_getcount(ph, EN_NODECOUNT, &numNodes);
+    if(errcode != 0) {
+        PyObject* err = PyLong_FromLong(errcode);
+        PyObject* r = PyTuple_Pack(1, err);
+        Py_DECREF(err);
+
+        return r;
     }
 
     double* values = (double*) malloc(sizeof(double) * numNodes);
-    err = EN_getnodevalues(ph, property, values);
+    PyObject* err = PyLong_FromLong(EN_getnodevalues(ph, property, values));
 
     PyObject* valuesList = PyList_New(numNodes);
     for(int i=0; i != numNodes; i++) {
@@ -2020,8 +2580,9 @@ PyObject* method_EN_getnodevalues(PyObject* self, PyObject* args)
 
     free(values);
 
-    PyObject* r = PyTuple_Pack(2, PyLong_FromLong(err), valuesList);
+    PyObject* r = PyTuple_Pack(2, err, valuesList);
     Py_DECREF(valuesList);
+    Py_DECREF(err);
 
     return r;
 }
@@ -2036,13 +2597,17 @@ PyObject* method_EN_getlinkvalues(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int numLinks;
-    int err = EN_getcount(ph, EN_LINKCOUNT, &numLinks);
-    if(err != 0) {
-        return PyTuple_Pack(1, PyLong_FromLong(err));
+    int errcode = EN_getcount(ph, EN_LINKCOUNT, &numLinks);
+    if(errcode != 0) {
+        PyObject* err = PyLong_FromLong(errcode);
+        PyObject* r = PyTuple_Pack(1, err);
+        Py_DECREF(err);
+
+        return r;
     }
 
     double* value = (double*) malloc(sizeof(double) * numLinks);
-    err = EN_getlinkvalues(ph, property, value);
+    PyObject* err = PyLong_FromLong(EN_getlinkvalues(ph, property, value));
 
     PyObject* valuesList = PyList_New(numLinks);
     for(int i=0; i != numLinks; i++) {
@@ -2051,8 +2616,9 @@ PyObject* method_EN_getlinkvalues(PyObject* self, PyObject* args)
 
     free(value);
 
-    PyObject* r = PyTuple_Pack(2, PyLong_FromLong(err), valuesList);
+    PyObject* r = PyTuple_Pack(2, err, valuesList);
     Py_DECREF(valuesList);
+    Py_DECREF(err);
 
     return r;
 }
@@ -2067,9 +2633,12 @@ PyObject* method_EN_setvertex(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setvertex(ph, index, vertex, x, y);
+    PyObject* err = PyLong_FromLong(EN_setvertex(ph, index, vertex, x, y));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r =  PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_loadpatternfile(PyObject* self, PyObject* args)
@@ -2082,9 +2651,12 @@ PyObject* method_EN_loadpatternfile(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_loadpatternfile(ph, filename, id);
+    PyObject* err = PyLong_FromLong(EN_loadpatternfile(ph, filename, id));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r =  PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_setcurvetype(PyObject* self, PyObject* args)
@@ -2096,9 +2668,12 @@ PyObject* method_EN_setcurvetype(PyObject* self, PyObject* args)
     }    
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setcurvetype(ph, index, type);
+    PyObject* err = PyLong_FromLong(EN_setcurvetype(ph, index, type));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r =  PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getcontrolenabled(PyObject* self, PyObject* args)
@@ -2111,9 +2686,14 @@ PyObject* method_EN_getcontrolenabled(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int out_enabled;
-    int err = EN_getcontrolenabled(ph, index, &out_enabled);
+    PyObject* err = PyLong_FromLong(EN_getcontrolenabled(ph, index, &out_enabled));
+    PyObject* pyOutEnabled = PyLong_FromLong(out_enabled);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(out_enabled));
+    PyObject* r =  PyTuple_Pack(2, err, pyOutEnabled);
+    Py_DECREF(err);
+    Py_DECREF(pyOutEnabled);
+
+    return r;
 }
 
 PyObject* method_EN_setcontrolenabled(PyObject* self, PyObject* args)
@@ -2125,9 +2705,12 @@ PyObject* method_EN_setcontrolenabled(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setcontrolenabled(ph, index, enabled);
+    PyObject* err = PyLong_FromLong(EN_setcontrolenabled(ph, index, enabled));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r =  PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
 
 PyObject* method_EN_getruleenabled(PyObject* self, PyObject* args)
@@ -2140,9 +2723,14 @@ PyObject* method_EN_getruleenabled(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int out_enabled;
-    int err = EN_getruleenabled(ph, index, &out_enabled);
+    PyObject* err = PyLong_FromLong(EN_getruleenabled(ph, index, &out_enabled));
+    PyObject* pyOutEnabled = PyLong_FromLong(out_enabled);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), PyLong_FromLong(out_enabled));
+    PyObject* r = PyTuple_Pack(2, err, pyOutEnabled);
+    Py_DECREF(err);
+    Py_DECREF(pyOutEnabled);
+
+    return r;
 }
 
 PyObject* method_EN_setruleenabled(PyObject* self, PyObject* args)
@@ -2154,7 +2742,10 @@ PyObject* method_EN_setruleenabled(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int err = EN_setruleenabled(ph, index, enabled);
+    PyObject* err = PyLong_FromLong(EN_setruleenabled(ph, index, enabled));
 
-    return PyTuple_Pack(1, PyLong_FromLong(err));
+    PyObject* r = PyTuple_Pack(1, err);
+    Py_DECREF(err);
+
+    return r;
 }
