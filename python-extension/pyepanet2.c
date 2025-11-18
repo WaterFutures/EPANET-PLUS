@@ -378,7 +378,11 @@ PyObject* method_ENgetcurve(PyObject* self, PyObject* args)
     PyMem_Free(xValues);
     PyMem_Free(yValues);
 
-    return PyTuple_Pack(5, PyLong_FromLong(err), PyUnicode_FromString(&out_id[0]), PyLong_FromLong(nPoints), xValuesList, yValuesList);
+    PyObject* r = PyTuple_Pack(5, PyLong_FromLong(err), PyUnicode_FromString(&out_id[0]), PyLong_FromLong(nPoints), xValuesList, yValuesList);
+    Py_DECREF(xValuesList);
+    Py_DECREF(yValuesList);
+
+    return r;
 }
 
 PyObject* method_ENgetcurveid(PyObject* self, PyObject* args)
@@ -1717,7 +1721,10 @@ PyObject* method_ENgetnodevalues(PyObject* self, PyObject* args)
 
     free(values);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), valuesList);
+    PyObject* r = PyTuple_Pack(2, PyLong_FromLong(err), valuesList);
+    Py_DECREF(valuesList);
+
+    return r;
 }
 
 PyObject* method_ENgetlinkvalues(PyObject* self, PyObject* args)
@@ -1743,7 +1750,10 @@ PyObject* method_ENgetlinkvalues(PyObject* self, PyObject* args)
 
     free(value);
 
-    return PyTuple_Pack(2, PyLong_FromLong(err), valuesList);
+    PyObject* r = PyTuple_Pack(2, PyLong_FromLong(err), valuesList);
+    Py_DECREF(valuesList);
+
+    return r;
 }
 
 PyObject* method_ENsetvertex(PyObject* self, PyObject* args)
