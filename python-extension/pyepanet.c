@@ -101,9 +101,19 @@ PyObject* method_EN_gettitle(PyObject* self, PyObject* args)
     char out_line1[TITLELEN + 1];
     char out_line2[TITLELEN + 1];
     char out_line3[TITLELEN + 1];
-    int err = EN_gettitle(ph, &out_line1[0], &out_line2[0], &out_line3[0]);
+    PyObject* err = PyLong_FromLong(EN_gettitle(ph, &out_line1[0], &out_line2[0], &out_line3[0]));
+    PyObject* pyOutLine1 = PyUnicode_FromString(&out_line1[0]);
+    PyObject* pyOutLine2 = PyUnicode_FromString(&out_line2[0]);
+    PyObject* pyOutLine3 = PyUnicode_FromString(&out_line3[0]);
 
-    return Py_BuildValue("(isss)", err, out_line1, &out_line2, &out_line3);
+
+    PyObject* r = PyTuple_Pack(4, err, pyOutLine1, pyOutLine2, pyOutLine3);
+    Py_DECREF(err);
+    Py_DECREF(pyOutLine1);
+    Py_DECREF(pyOutLine2);
+    Py_DECREF(pyOutLine3);
+
+    return r;
 }
 
 PyObject* method_EN_settitle(PyObject* self, PyObject* args)
@@ -135,9 +145,14 @@ PyObject* method_EN_getcomment(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     char out_comment[MAXLINE + 1];
-    int err = EN_getcomment(ph, object, index, &out_comment[0]);
+    PyObject* err = PyLong_FromLong(EN_getcomment(ph, object, index, &out_comment[0]));
+    PyObject* pyOutComment = PyUnicode_FromString(&out_comment[0]);
 
-    return Py_BuildValue("(is)", err, out_comment);
+    PyObject* r = PyTuple_Pack(2, err, pyOutComment);
+    Py_DECREF(err);
+    Py_DECREF(pyOutComment);
+
+    return r;
 }
 
 PyObject* method_EN_setcomment(PyObject* self, PyObject* args)
@@ -168,9 +183,14 @@ PyObject* method_EN_getcount(PyObject* self, PyObject* args)
     EN_Project ph = (EN_Project) ptr;
 
     int count;
-    int err = EN_getcount(ph, object, &count);
+    PyObject* err = PyLong_FromLong(EN_getcount(ph, object, &count));
+    PyObject* pyCount = PyLong_FromLong(count);
 
-    return Py_BuildValue("(ii)", err, count);
+    PyObject* r = PyTuple_Pack(2, err, pyCount);
+    Py_DECREF(err);
+    Py_DECREF(pyCount);
+
+    return r;
 }
 
 PyObject* method_EN_saveinpfile(PyObject* self, PyObject* args)
