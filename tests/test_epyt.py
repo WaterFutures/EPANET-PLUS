@@ -1,6 +1,7 @@
 """
 This module tests the toolkit functions implemented in the clas EPyT.
 """
+import os
 from epanet_plus import EPyT, EpanetConstants
 
 
@@ -26,10 +27,10 @@ def test_topology():
         epanet_api.get_all_pumps_id()
         epanet_api.get_all_pumps_idx()
 
-    with EPyT("net2-cl2.inp") as epanet_api:
+    with EPyT(os.path.join("tests", "net2-cl2.inp")) as epanet_api:
         __test_code(epanet_api)
 
-    with EPyT("net2-cl2.inp", use_project=True) as epanet_api:
+    with EPyT(os.path.join("tests", "net2-cl2.inp"), use_project=True) as epanet_api:
         __test_code(epanet_api)
 
 
@@ -41,10 +42,10 @@ def test_parameters():
         assert epanet_api.get_reporting_time_step() > 0
         assert epanet_api.get_quality_time_step() > 0
 
-    with EPyT("net2-cl2.inp") as epanet_api:
+    with EPyT(os.path.join("tests", "net2-cl2.inp")) as epanet_api:
         __test_code(epanet_api)
 
-    with EPyT("net2-cl2.inp", use_project=True) as epanet_api:
+    with EPyT(os.path.join("tests", "net2-cl2.inp"), use_project=True) as epanet_api:
         __test_code(epanet_api)
 
 
@@ -64,10 +65,10 @@ def test_hyd_simulation():
 
         epanet_api.closeH()
 
-    with EPyT("net2-cl2.inp") as epanet_api:
+    with EPyT(os.path.join("tests", "net2-cl2.inp")) as epanet_api:
         __test_code(epanet_api)
 
-    with EPyT("net2-cl2.inp", use_project=True) as epanet_api:
+    with EPyT(os.path.join("tests", "net2-cl2.inp"), use_project=True) as epanet_api:
         __test_code(epanet_api)
 
 
@@ -95,16 +96,16 @@ def test_quality_simulation():
         epanet_api.closeQ()
         epanet_api.closeH()
 
-    with EPyT("net2-cl2.inp") as epanet_api:
+    with EPyT(os.path.join("tests", "net2-cl2.inp")) as epanet_api:
         __test_code(epanet_api)
 
-    with EPyT("net2-cl2.inp", use_project=True) as epanet_api:
+    with EPyT(os.path.join("tests", "net2-cl2.inp"), use_project=True) as epanet_api:
         __test_code(epanet_api)
 
 
 def test_msx():
-    with EPyT("net2-cl2.inp", use_project=False) as epanet_api:
-        epanet_api.load_msx_file("net2-cl2.msx")
+    with EPyT(os.path.join("tests", "net2-cl2.inp"), use_project=False) as epanet_api:
+        epanet_api.load_msx_file(os.path.join("tests", "net2-cl2.msx"))
 
         assert epanet_api.get_msx_time_step() > 0
         epanet_api.set_msx_time_step(150)

@@ -1,13 +1,15 @@
 """
 This module tests EPANET-MSX functions.
 """
+import os
 from epanet_plus import EPyT, EpanetAPI, EpanetConstants
 
 
 def test_msx_basic():
     epanet_api = EpanetAPI()
-    epanet_api.MSXENopen("net2-cl2.inp", "net2-cl2.rpt", "")
-    epanet_api.MSXopen("net2-cl2.msx")
+    epanet_api.MSXENopen(os.path.join("tests", "net2-cl2.inp"),
+                         os.path.join("tests", "net2-cl2.rpt"), "")
+    epanet_api.MSXopen(os.path.join("tests", "net2-cl2.msx"))
 
     epanet_api.gettitle()
     epanet_api.MSXgetspecies(1)
@@ -18,8 +20,8 @@ def test_msx_basic():
 
 
 def test_simulation():
-    with EPyT("net2-cl2.inp", use_project=False) as epanet_api:
-        epanet_api.load_msx_file("net2-cl2.msx")
+    with EPyT(os.path.join("tests", "net2-cl2.inp"), use_project=False) as epanet_api:
+        epanet_api.load_msx_file(os.path.join("tests", "net2-cl2.msx"))
 
         epanet_api.MSXsolveH()
 

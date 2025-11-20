@@ -1,12 +1,14 @@
 """
 This module tests the EPANET functions.
 """
+import os
 from epanet_plus import EpanetAPI, EpanetConstants
 
 
 def test():
     epanet_api = EpanetAPI()
-    epanet_api.open("net2-cl2.inp", "net2-cl2.rpt", "")
+    epanet_api.open(os.path.join("tests", "net2-cl2.inp"),
+                    os.path.join("tests", "net2-cl2.rpt"), "")
 
     assert epanet_api.gettitle() is not None
     assert epanet_api.getcount(EpanetConstants.EN_NODECOUNT) > 0
