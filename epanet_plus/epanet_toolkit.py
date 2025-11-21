@@ -297,9 +297,13 @@ class EPyT(EpanetAPI):
         or when specifying an .msx file in `msx_file_in`.
 
         The default is False.
+    inp_buffer : `str`, optional,
+        Buffer containing the network -- i.e., content of an .inp file.
+
+        The default is None.
     """
     def __init__(self, inp_file_in: str = None, msx_file_in: str = None, use_project: bool = False,
-                 **kwds):
+                 inp_buffer: str = None, **kwds):
         if msx_file_in is not None and use_project is True:
             raise ValueError("'use_project' must be False if 'msx_file_in' is not None")
 
@@ -312,7 +316,7 @@ class EPyT(EpanetAPI):
             inp_file_in = os.path.join(tempfile.gettempdir(), f"{time.time()}.inp")
 
             with open(inp_file_in, "w") as f_inp:
-                    f_inp.flush()  
+                f_inp.flush()
         else:
             if not os.path.exists(inp_file_in):    # Create empty file if it does not exist
                 with open(inp_file_in, "w") as f_inp:
@@ -321,7 +325,10 @@ class EPyT(EpanetAPI):
         self._inp_file = inp_file_in
         self._msx_file = msx_file_in
 
-        self.open(self._inp_file, self._inp_file + ".rpt", "")
+        if inp_buffer is not None:
+            self.openfrombuffer(inp_buffer, self._inp_file, self._inp_file + ".rpt", "")
+        else:
+            self.open(self._inp_file, self._inp_file + ".rpt", "")
 
         if msx_file_in is not None:
             self.load_msx_file(self._msx_file)

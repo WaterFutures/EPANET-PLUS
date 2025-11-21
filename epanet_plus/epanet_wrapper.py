@@ -184,8 +184,8 @@ class EpanetAPI():
             return self._process_result(epanet.ENopenfrombuffer(inpBuffer, inpFile, rptFile,
                                                                 outFile))
         else:
-            return self._process_result(epanet.EN_openfrombuffer(inpBuffer, inpFile, rptFile,
-                                                                 outFile))
+            return self._process_result(epanet.EN_openfrombuffer(self._ph, inpBuffer, inpFile,
+                                                                 rptFile, outFile))
 
     def createproject(self):
         """
