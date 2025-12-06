@@ -1046,7 +1046,7 @@ PyObject* method_EN_settankdata(PyObject* self, PyObject* args)
     int index;
     double elev, initlvl, minlvl, maxlvl, diam, minvol;
     char* volcurve = NULL;
-    if(!PyArg_ParseTuple(args, "Kiddddds", &ptr, &index, &elev, &initlvl, &minlvl, &maxlvl, &diam, &minvol, &volcurve)) {
+    if(!PyArg_ParseTuple(args, "Kidddddds", &ptr, &index, &elev, &initlvl, &minlvl, &maxlvl, &diam, &minvol, &volcurve)) {
         return NULL;
     }
     EN_Project ph = (EN_Project) ptr;
