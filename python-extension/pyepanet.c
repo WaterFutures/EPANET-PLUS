@@ -1929,7 +1929,7 @@ PyObject* method_EN_getcurveindex(PyObject* self, PyObject* args)
 {
     uintptr_t ptr;
     char* id = NULL;
-    if(!PyArg_ParseTuple(args, "Ki", &ptr, &id)) {
+    if(!PyArg_ParseTuple(args, "Ks", &ptr, &id)) {
         return NULL;
     }
     EN_Project ph = (EN_Project) ptr;
