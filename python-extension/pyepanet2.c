@@ -504,14 +504,14 @@ PyObject* method_ENgetcurve(PyObject* self, PyObject* args)
 PyObject* method_ENgetcurveid(PyObject* self, PyObject* args)
 {
     int index;
-    char* id = NULL;
 
     if(!PyArg_ParseTuple(args, "i", &index)) {
         return NULL;
     }
 
-    PyObject* err = PyLong_FromLong(ENgetcurveid(index, id));
-    PyObject* pyId = PyUnicode_FromString(&id[0]);
+    char out_id[MAXID + 1];
+    PyObject* err = PyLong_FromLong(ENgetcurveid(index, &out_id[0]));
+    PyObject* pyId = PyUnicode_FromString(&out_id[0]);
 
     PyObject* r = PyTuple_Pack(2, err, pyId);
     Py_DECREF(err);
