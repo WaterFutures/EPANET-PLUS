@@ -6,7 +6,6 @@ import os
 import re
 import time
 import tempfile
-import warnings
 
 from .epanet_wrapper import EpanetAPI
 
@@ -1236,10 +1235,6 @@ class EPyT(EpanetAPI):
         """
         return self.getlinkvalue(link_idx, EpanetConstants.EN_KBULK)
 
-    def get_link_bulk_deacy(self, link_idx: int) -> float:
-        warnings.warn("'get_link_bulk_deacy' is deprecated, please use 'get_link_bulk_decay' instead")
-        return self.get_link_bulk_decay(link_idx)
-
     def get_link_wall_decay(self, link_idx: int) -> float:
         """
         Returns the wall decay rate at a given link.
@@ -1992,10 +1987,6 @@ class EPyT(EpanetAPI):
         """
         return self.getlinkvalue(link_idx, EpanetConstants.EN_KWALL)
 
-    def get_link_wall_raction_coeff(self, link_idx: int) -> float:
-        warnings.warn("'get_link_wall_raction_coeff' is deprecated, please use 'get_link_wall_reaction_coeff' instead")
-        return self.get_link_wall_reaction_coeff(link_idx)
-
     def get_link_bulk_reaction_coeff(self, link_idx: int) -> float:
         """
         Returns the bulk reaction coefficient of a link.
@@ -2011,10 +2002,6 @@ class EPyT(EpanetAPI):
             Bulk reaction coefficient.
         """
         return self.getlinkvalue(link_idx, EpanetConstants.EN_KBULK)
-
-    def get_link_bulk_raction_coeff(self, link_idx: int) -> float:
-        warnings.warn("'get_link_bulk_raction_coeff' is deprecated, please use 'get_link_bulk_reaction_coeff' instead")
-        return self.get_link_bulk_reaction_coeff(link_idx)
 
     def get_tank_bulk_reaction_coeff(self, tank_idx: int) -> float:
         """
