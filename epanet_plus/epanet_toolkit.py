@@ -831,6 +831,58 @@ class EPyT(EpanetAPI):
         """
         return self.getlinktype(link_idx)
 
+    def get_curve(self, curve_id: str) -> list[tuple[float, float]]:
+        """
+        Returns the values/points of a given curve.
+
+        Parameters
+        ----------
+        curve_id : `str`
+            ID of the curve.
+
+        Returns
+        -------
+        `list[tuple[float, float]]`
+            List of all values/points of the curve.
+        """
+        r = []
+
+        curve_idx = self.getcurveindex(curve_id)
+        for i in range(self.getcurvelen(curve_idx)):
+            x, y = self.getcurvevalue(curve_idx, i+1)
+            r.append((x, y))
+
+        return r
+
+    def add_curve(self, curve_id: str, values: list[tuple[float, float]]) -> None:
+        """
+        Adds a new curve -- e.g., a head curve for a pump or a volume curve
+        for a (non-cylindric) tank.
+
+        Parameters
+        ----------
+        curve_id : `str`
+            ID of the curve.
+        values : `list[tuple[float, float]]`
+            Curve values/points.
+        """
+        self.addcurve(curve_id)
+        curve_idx = self.getcurveindex(curve_id)
+        for i, (x, y) in enumerate(values):
+            self.setcurvevalue(curve_idx, i+1, x, y)
+
+    def remove_curve(self, curve_id: str) -> None:
+        """
+        Deletes a given curve.
+
+        Parameters
+        ----------
+        curve_id : `str`
+            ID of the curve.
+        """
+        curve_idx = self.getcurveindex(curve_id)
+        self.deletecurve(curve_idx)
+
     def get_quality_info(self) -> dict:
         """
         Returns the water quality analysis parameters.
