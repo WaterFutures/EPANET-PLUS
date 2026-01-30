@@ -14,6 +14,9 @@ class EpanetConstants:
     """
     EPANET and EPANET-MSX constants.
     """
+    EN_TRUE = 1
+    EN_FALSE = 0
+
     EN_MAXID   = 31
     EN_MAXMSG  = 255
     EN_ELEVATION     = 0    # Elevation
@@ -43,7 +46,12 @@ class EpanetConstants:
     EN_TANKVOLUME    = 24   # Current computed tank volume (read only)
     EN_MAXVOLUME     = 25   # Tank maximum volume (read only)
     EN_CANOVERFLOW   = 26   # Tank can overflow (= 1) or not (= 0)
-    EN_DEMANDDEFICIT = 27
+    EN_DEMANDDEFICIT = 27   # Amount that full demand is reduced under PDA (read only)
+    EN_NODE_INCONTROL = 28  # `EN_TRUE` (= 1) if the node appears in any control, `EN_FALSE` (= 0) if not
+    EN_EMITTERFLOW    = 29  # Current emitter flow (read only)
+    EN_LEAKAGEFLOW    = 30  # Current leakage flow (read only)
+    EN_DEMANDFLOW     = 31  # Current consumer demand delivered (read only)
+    EN_FULLDEMAND     = 32  # Current consumer demand requested (read only)
 
     EN_DIAMETER     = 0     # Pipe/valve diameter
     EN_LENGTH       = 1     # Pipe length
@@ -67,7 +75,14 @@ class EpanetConstants:
     EN_PUMP_HCURVE  = 19    # Pump head v. flow curve index
     EN_PUMP_ECURVE  = 20    # Pump efficiency v. flow curve index
     EN_PUMP_ECOST   = 21    # Pump average energy price
-    EN_PUMP_EPAT    = 22
+    EN_PUMP_EPAT    = 22    # Pump energy price time pattern index
+    EN_LINK_INCONTROL = 23  # Is present in any simple or rule-based control (= 1) or not (= 0)
+    EN_GPV_CURVE    = 24    # GPV head loss v. flow curve index
+    EN_PCV_CURVE    = 25    # PCV characteristic curve index
+    EN_LEAK_AREA    = 26    # Pipe leak area (sq mm per 100 length units)
+    EN_LEAK_EXPAN   = 27    # Leak expansion rate (sq mm per unit of pressure head)
+    EN_LINK_LEAKAGE = 28    # Current leakage rate (read only)
+    EN_VALVE_TYPE   = 29    # Type of valve (see @ref EN_LinkType)
 
     EN_DURATION      = 0   # Total simulation duration
     EN_HYDSTEP       = 1   # Hydraulic time step
