@@ -7,7 +7,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 09/03/2025
+ Last Updated: 01/28/2026
  ******************************************************************************
 */
 
@@ -4020,11 +4020,11 @@ int DLLEXPORT EN_getlinkvalue(EN_Project p, int index, int property, double *val
         break;
 
     case EN_LEAK_AREA:
-        v = Link[index].LeakArea * Ucf[LENGTH];
+        v = Link[index].LeakArea / Ucf[LENGTH];
         break;
 
     case EN_LEAK_EXPAN:
-        v = Link[index].LeakExpan * Ucf[LENGTH];
+        v = Link[index].LeakExpan / Ucf[LENGTH];
         break;
 
     case EN_LINK_LEAKAGE:
@@ -4130,10 +4130,16 @@ int DLLEXPORT EN_setlinkvalue(EN_Project p, int index, int property, double valu
     case EN_STATUS:
         // Cannot set status for a check valve
         if (Link[index].Type == CVPIPE) return 207;
+        
+        // Status 's' must be either EN_CLOSED (0) or EN_OPEN (1)
+        // (to set the status of a valve to ACTIVE, assign a value to its
+        // EN_INITSETTING or EN_SETTING property)
         s = (char)ROUND(value);
-        if (s < 0 || s > 2) return 211;
+        if (s < 0 || s > 1) return 211;
+
         if (property == EN_INITSTATUS)
         {
+            // Convert 0/1 to StatusType CLOSED/OPEN
             Link[index].InitStatus = s + CLOSED;
         }
         else
@@ -4281,14 +4287,14 @@ int DLLEXPORT EN_setlinkvalue(EN_Project p, int index, int property, double valu
         }
         break;
 
-    case EN_LEAK_AREA:  // leak area in sq mm per 100 pipe length units
+    case EN_LEAK_AREA:  // leak area per 100 pipe lengths units
         if (value < 0.0) return 211;
-        Link[index].LeakArea = value / Ucf[LENGTH];
+        Link[index].LeakArea = value * Ucf[LENGTH];
         break;
 
-    case EN_LEAK_EXPAN:  // leak area expansion slope (sq mm per unit of head)
+    case EN_LEAK_EXPAN:  // leak area expansion slope per 100 pipe length units
         if (value < 0.0) return 211;
-        Link[index].LeakExpan = value / Ucf[LENGTH];
+        Link[index].LeakExpan = value * Ucf[LENGTH];
         break;
         
     case EN_VALVE_TYPE:
