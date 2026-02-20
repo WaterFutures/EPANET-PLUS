@@ -99,7 +99,22 @@ class EpanetConstants:
     EN_QTIME         = 12   # Elapsed time of current quality solution (read only)
     EN_HALTFLAG      = 13   # Flag indicating if the simulation was halted (read only)
     EN_NEXTEVENT     = 14   # Shortest time until a tank becomes empty or full (read only)
-    EN_NEXTEVENTTANK = 15
+    EN_NEXTEVENTTANK = 15   # Index of tank with shortest time to become empty or full (read only)
+
+    EN_STEP_REPORT       = 0   # A reporting time step has ended 
+    EN_STEP_HYD          = 1   # A hydraulic time step has ended
+    EN_STEP_WQ           = 2   # A water quality time step has ended
+    EN_STEP_TANKEVENT    = 3   # A tank has become empty or full
+    EN_STEP_CONTROLEVENT = 4   # A link control needs to be activated
+
+    EN_ITERATIONS      = 0  # Number of hydraulic iterations taken
+    EN_RELATIVEERROR   = 1  # Sum of link flow changes / sum of link flows
+    EN_MAXHEADERROR    = 2  # Largest head loss error for links
+    EN_MAXFLOWCHANGE   = 3  # Largest flow change in links
+    EN_MASSBALANCE     = 4  # Cumulative water quality mass balance ratio
+    EN_DEFICIENTNODES  = 5  # Number of pressure deficient nodes
+    EN_DEMANDREDUCTION = 6  # % demand reduction at pressure deficient nodes
+    EN_LEAKAGELOSS     = 7  # % flow lost to system leakage
 
     EN_ITERATIONS      = 0  # Number of hydraulic iterations taken
     EN_RELATIVEERROR   = 1  # Sum of link flow changes / sum of link flows
@@ -114,7 +129,7 @@ class EpanetConstants:
     EN_TIMEPAT = 2     # Time patterns
     EN_CURVE   = 3     # Data curves
     EN_CONTROL = 4     # Simple controls
-    EN_RULE    = 5
+    EN_RULE    = 5     # Control rules
 
     EN_NODECOUNT    = 0  # Number of nodes (junctions + tanks + reservoirs)
     EN_TANKCOUNT    = 1  # Number of tanks and reservoirs
@@ -122,11 +137,11 @@ class EpanetConstants:
     EN_PATCOUNT     = 3  # Number of time patterns
     EN_CURVECOUNT   = 4  # Number of data curves
     EN_CONTROLCOUNT = 5  # Number of simple controls
-    EN_RULECOUNT    = 6
+    EN_RULECOUNT    = 6  # Number of rule-based controls
 
     EN_JUNCTION    = 0   # Junction node
     EN_RESERVOIR   = 1   # Reservoir node
-    EN_TANK        = 2
+    EN_TANK        = 2   # Storage tank node
 
     EN_CVPIPE       = 0  # Pipe with check valve
     EN_PIPE         = 1  # Pipe
@@ -136,29 +151,30 @@ class EpanetConstants:
     EN_PBV          = 5  # Pressure breaker valve
     EN_FCV          = 6  # Flow control valve
     EN_TCV          = 7  # Throttle control valve
-    EN_GPV          = 8
+    EN_GPV          = 8  # General purpose valve
+    EN_PCV          = 9  # Positional control valve
 
-    EN_CLOSED       = 0
-    EN_OPEN         = 1
+    EN_CLOSED       = 0  # Link is closed and cannot convey any flow
+    EN_OPEN         = 1  # Link is open and is able to convey flow
 
     EN_PUMP_XHEAD   = 0  # Pump closed - cannot supply head
     EN_PUMP_CLOSED  = 2  # Pump closed
     EN_PUMP_OPEN    = 3  # Pump open
-    EN_PUMP_XFLOW   = 5
+    EN_PUMP_XFLOW   = 5  # Pump open - cannot supply flow
 
     EN_NONE        = 0   # No quality analysis
     EN_CHEM        = 1   # Chemical fate and transport
     EN_AGE         = 2   # Water age analysis
-    EN_TRACE       = 3
+    EN_TRACE       = 3   # Source tracing analysis
 
     EN_CONCEN      = 0   # Sets the concentration of external inflow entering a node
     EN_MASS        = 1   # Injects a given mass/minute into a node
     EN_SETPOINT    = 2   # Sets the concentration leaving a node to a given value
-    EN_FLOWPACED   = 3
+    EN_FLOWPACED   = 3   # Adds a given value to the concentration leaving a node
 
     EN_HW          = 0   # Hazen-Williams
     EN_DW          = 1   # Darcy-Weisbach
-    EN_CM          = 2
+    EN_CM          = 2   # Chezy-Manning
 
     EN_CFS         = 0   # Cubic feet per second
     EN_GPM         = 1   # Gallons per minute
@@ -169,10 +185,17 @@ class EpanetConstants:
     EN_LPM         = 6   # Liters per minute
     EN_MLD         = 7   # Million liters per day
     EN_CMH         = 8   # Cubic meters per hour
-    EN_CMD         = 9
+    EN_CMD         = 9   # Cubic meters per day
+    EN_CMS         = 10  # Cubic meters per second
+
+    EN_PSI          = 0  # Pounds per square inch
+    EN_KPA          = 1  # Kilopascals
+    EN_METERS       = 2  # Meters
+    EN_BAR          = 3  # Bar
+    EN_FEET         = 4  # Feet
 
     EN_DDA         = 0   # Demand driven analysis
-    EN_PDA         = 1
+    EN_PDA         = 1   # Pressure driven analysis
 
     EN_TRIALS         = 0   # Maximum trials allowed for hydraulic convergence
     EN_ACCURACY       = 1   # Total normalized flow change for hydraulic convergence
@@ -196,50 +219,55 @@ class EpanetConstants:
     EN_BULKORDER      = 19  # Bulk water reaction order for pipes
     EN_WALLORDER      = 20  # Wall reaction order for pipes (either 0 or 1)
     EN_TANKORDER      = 21  # Bulk water reaction order for tanks
-    EN_CONCENLIMIT    = 22
+    EN_CONCENLIMIT    = 22  # Limiting concentration for growth reactions
+    EN_DEMANDPATTERN  = 23  # Name of default demand pattern
+    EN_EMITBACKFLOW   = 24  # `EN_TRUE` (= 1) if emitters can backflow, `EN_FALSE` (= 0) if not
+    EN_PRESS_UNITS    = 25  # Pressure units (see @ref EN_PressUnits)
+    EN_STATUS_REPORT  = 26  # Type of status report to produce (see @ref EN_StatusReport)
 
     EN_LOWLEVEL    = 0   # Act when pressure or tank level drops below a setpoint
     EN_HILEVEL     = 1   # Act when pressure or tank level rises above a setpoint
     EN_TIMER       = 2   # Act at a prescribed elapsed amount of time
-    EN_TIMEOFDAY   = 3
+    EN_TIMEOFDAY   = 3   # Act at a particular time of day
 
     EN_SERIES      = 0   # Report all time series points
     EN_AVERAGE     = 1   # Report average value over simulation period
     EN_MINIMUM     = 2   # Report minimum value over simulation period
     EN_MAXIMUM     = 3   # Report maximum value over simulation period
-    EN_RANGE       = 4
+    EN_RANGE       = 4   # Report maximum - minimum over simulation period
 
     EN_MIX1        = 0   # Complete mix model
     EN_MIX2        = 1   # 2-compartment model
     EN_FIFO        = 2   # First in, first out model
-    EN_LIFO        = 3
+    EN_LIFO        = 3   # Last in, first out model
 
     EN_NOSAVE        = 0    # Don't save hydraulics; don't re-initialize flows
     EN_SAVE          = 1    # Save hydraulics to file, don't re-initialize flows
     EN_INITFLOW      = 10   # Don't save hydraulics; re-initialize flows
-    EN_SAVE_AND_INIT = 11
+    EN_SAVE_AND_INIT = 11   # Save hydraulics; re-initialize flows
 
     EN_CONST_HP    = 0   # Constant horsepower
     EN_POWER_FUNC  = 1   # Power function
     EN_CUSTOM      = 2   # User-defined custom curve
-    EN_NOCURVE     = 3
+    EN_NOCURVE     = 3  # No curve
 
     EN_VOLUME_CURVE  = 0   # Tank volume v. depth curve
     EN_PUMP_CURVE    = 1   # Pump head v. flow curve
     EN_EFFIC_CURVE   = 2   # Pump efficiency v. flow curve
     EN_HLOSS_CURVE   = 3   # Valve head loss v. flow curve
-    EN_GENERIC_CURVE = 4
+    EN_GENERIC_CURVE = 4   # Generic curve
+    EN_VALVE_CURVE   = 5   # % of fully open flow v. % open
 
     EN_UNCONDITIONAL = 0    # Delete all controls and connecing links
-    EN_CONDITIONAL   = 1
+    EN_CONDITIONAL   = 1    # Cancel object deletion if it appears in controls or has connecting links
 
     N_NO_REPORT      = 0   # No status reporting
-    EN_NORMAL_REPORT = 1    # Normal level of status reporting
-    EN_FULL_REPORT   = 2
+    EN_NORMAL_REPORT = 1   # Normal level of status reporting
+    EN_FULL_REPORT   = 2   # Full level of status reporting
 
     EN_R_NODE      = 6   # Clause refers to a node
     EN_R_LINK      = 7   # Clause refers to a link
-    EN_R_SYSTEM    = 8
+    EN_R_SYSTEM    = 8   # Clause refers to a system parameter (e.g., time)
 
     EN_R_DEMAND    = 0   # Nodal demand
     EN_R_HEAD      = 1   # Nodal hydraulic head
@@ -253,7 +281,7 @@ class EpanetConstants:
     EN_R_TIME      = 9   # Elapsed simulation time
     EN_R_CLOCKTIME = 10  # Time of day
     EN_R_FILLTIME  = 11  # Time to fill a tank
-    EN_R_DRAINTIME = 12
+    EN_R_DRAINTIME = 12  # Time to drain a tank
 
     EN_R_EQ        = 0   # Equal to
     EN_R_NE        = 1   # Not equal
@@ -264,13 +292,15 @@ class EpanetConstants:
     EN_R_IS        = 6   # Is equal to
     EN_R_NOT       = 7   # Is not equal to
     EN_R_BELOW     = 8   # Is below
-    EN_R_ABOVE     = 9
+    EN_R_ABOVE     = 9   # Is above
 
     EN_R_IS_OPEN   = 1   # Link is open
     EN_R_IS_CLOSED = 2   # Link is closed
-    EN_R_IS_ACTIVE = 3
+    EN_R_IS_ACTIVE = 3   # Control valve is active
 
-    EN_MISSING    = -1.E10
+    EN_MISSING    = -1.E10  # Missing value indicator
+    EN_SET_CLOSED = -1.E10  # Link set closed indicator
+    EN_SET_OPEN   =  1.E10  # Link set open indicator
 
     MSX_NODE       = 0
     MSX_LINK       = 1
