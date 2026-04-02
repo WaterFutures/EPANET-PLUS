@@ -7,7 +7,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 02/14/2025
+ Last Updated: 03/05/2026
  ******************************************************************************
  */
 
@@ -225,6 +225,8 @@ extern "C" {
 
    int DLLEXPORT ENsetnodevalue(int index, int property, EN_API_FLOAT_TYPE value);
 
+   int DLLEXPORT ENsetnodevalues(int property, EN_API_FLOAT_TYPE *values, int *badIndex);
+
    int DLLEXPORT ENsetjuncdata(int index, EN_API_FLOAT_TYPE elev,
                  EN_API_FLOAT_TYPE dmnd, const char *dmndpat);
 
@@ -303,6 +305,8 @@ extern "C" {
   int DLLEXPORT ENgetlinkvalues(int property, EN_API_FLOAT_TYPE *value);
 
   int DLLEXPORT ENsetlinkvalue(int index, int property, EN_API_FLOAT_TYPE value);
+
+  int DLLEXPORT ENsetlinkvalues(int property, EN_API_FLOAT_TYPE *values, int *badIndex);
 
   int DLLEXPORT ENsetpipedata(int index, EN_API_FLOAT_TYPE length,
                 EN_API_FLOAT_TYPE diam, EN_API_FLOAT_TYPE rough,

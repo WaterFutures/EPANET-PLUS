@@ -7,7 +7,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 02/17/2026
+ Last Updated: 03/19/2026
  ******************************************************************************
 */
 
@@ -2758,6 +2758,55 @@ int DLLEXPORT EN_setnodevalue(EN_Project p, int index, int property, double valu
     return 0;
 }
 
+int DLLEXPORT EN_setnodevalues(EN_Project p, int property, double *values, int *badIndex)
+/*----------------------------------------------------------------
+**  Input:   property = node property code (see EN_NodeProperty)
+**           values = array of node property values
+**  Output:  badIndex = index of node whose assignment fails (0 if none)
+**  Returns: error code
+**  Purpose: sets an array of node property values
+**----------------------------------------------------------------
+*/
+{
+    int i, j, errcode = 0;
+    int n = p->network.Nnodes;
+    double *old = NULL;
+
+    if (badIndex) *badIndex = 0;
+
+    old = (double *)malloc(n * sizeof(double));
+    if (!old) return 101; /* insufficient memory available */
+
+    for (i = 1; i <= n; i++)
+    {
+        errcode = EN_getnodevalue(p, i, property, &old[i - 1]);
+        if (errcode != 0)
+        {
+            *badIndex = i;
+            j = i - 1;        // Need to restore values for nodes 1 to i-1
+        }
+        else
+        {
+            errcode = EN_setnodevalue(p, i, property, values[i - 1]);
+            if (errcode != 0)
+            {
+                *badIndex = i;
+                j = i;        // Need to restore values for nodes 1 to i
+            }
+        }
+        if (errcode != 0)
+        {
+            for (int k = 1; k <= j; k++)
+            {
+                EN_setnodevalue(p, k, property, old[k - 1]);
+            }
+            break;
+        }
+    }
+    free(old);
+    return errcode;
+}
+
 int DLLEXPORT EN_setjuncdata(EN_Project p, int index, double elev,
                              double dmnd, const char *dmndpat)
 /*----------------------------------------------------------------
@@ -4302,6 +4351,55 @@ int DLLEXPORT EN_setlinkvalue(EN_Project p, int index, int property, double valu
         return 251;
     }
     return 0;
+}
+
+int DLLEXPORT EN_setlinkvalues(EN_Project p, int property, double *values, int *badIndex)
+/*----------------------------------------------------------------
+**  Input:   property = link property code (see EN_LinkProperty)
+**           values = array of link property values
+**  Output:  badIndex = index of link whose assignment fails (0 if none)
+**  Returns: error code
+**  Purpose: sets property values for all links
+**----------------------------------------------------------------
+*/
+{
+    int i, j, errcode = 0;
+    int n = p->network.Nlinks;
+    double *old = NULL;
+
+    if (badIndex) *badIndex = 0;
+
+    old = (double *)malloc(n * sizeof(double));
+    if (!old) return 101; /* insufficient memory available */
+
+    for (i = 1; i <= n; i++)
+    {
+        errcode = EN_getlinkvalue(p, i, property, &old[i - 1]);
+        if (errcode != 0)
+        {
+            *badIndex = i;
+            j = i - 1;        // Need to restore values for links 1 to i-1
+        }
+        else
+        {
+            errcode = EN_setlinkvalue(p, i, property, values[i - 1]);
+            if (errcode != 0)
+            {
+                *badIndex = i;
+                j = i;        // Need to restore values for links 1 to i
+            }
+        }
+        if (errcode != 0)
+        {
+            for (int k = 1; k <= j; k++)
+            {
+                EN_setlinkvalue(p, k, property, old[k - 1]);
+            }
+            break;
+        }
+    }
+    free(old);
+    return errcode;
 }
 
 int DLLEXPORT EN_setpipedata(EN_Project p, int index, double length,

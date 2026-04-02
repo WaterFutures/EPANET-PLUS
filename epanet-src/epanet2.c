@@ -7,7 +7,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 02/14/2025
+ Last Updated: 03/19/2026
  ******************************************************************************
 */
 
@@ -383,6 +383,47 @@ int DLLEXPORT ENsetnodevalue(int index, int property, EN_API_FLOAT_TYPE value)
     return EN_setnodevalue(_defaultProject, index, property, value);
 }
 
+int DLLEXPORT ENsetnodevalues(int property, EN_API_FLOAT_TYPE *values, int *badIndex)
+{
+    int i, j, errcode = 0;
+    int n = _defaultProject->network.Nnodes;
+    EN_API_FLOAT_TYPE *old = NULL;
+
+    if (badIndex) *badIndex = 0;
+	
+    old = (EN_API_FLOAT_TYPE *)malloc(n * sizeof(EN_API_FLOAT_TYPE));
+    if (!old) return 101; /* insufficient memory available */
+
+    for (i = 1; i <= n; i++)
+    {
+        errcode = ENgetnodevalue(i, property, &old[i - 1]);
+        if (errcode != 0)
+        {
+            *badIndex = i;
+            j = i - 1;        // Need to restore values for nodes 1 to i-1
+        }
+        else
+        {
+            errcode = ENsetnodevalue(i, property, values[i - 1]);
+            if (errcode != 0)
+            {
+                *badIndex = i;
+                j = i;        // Need to restore values for nodes 1 to i
+            }
+        }
+        if (errcode != 0)
+        {
+            for (int k = 1; k <= j; k++)
+            {
+                ENsetnodevalue(k, property, old[k - 1]);
+            }
+            break;
+        }
+    }
+    free(old);
+    return errcode;
+}
+
 int DLLEXPORT ENsetjuncdata(int index, EN_API_FLOAT_TYPE elev, EN_API_FLOAT_TYPE dmnd,
               const char *dmndpat)
 {
@@ -563,6 +604,47 @@ int DLLEXPORT ENgetlinkvalues(int property, EN_API_FLOAT_TYPE *values)
 int DLLEXPORT ENsetlinkvalue(int index, int property, EN_API_FLOAT_TYPE value)
 {
     return EN_setlinkvalue(_defaultProject, index, property, value);
+}
+
+int DLLEXPORT ENsetlinkvalues(int property, EN_API_FLOAT_TYPE *values, int *badIndex)
+{
+    int i, j, errcode = 0;
+    int n = _defaultProject->network.Nlinks;
+    EN_API_FLOAT_TYPE *old = NULL;
+
+    if (badIndex) *badIndex = 0;
+
+    old = (EN_API_FLOAT_TYPE *)malloc(n * sizeof(EN_API_FLOAT_TYPE));
+    if (!old) return 101; /* insufficient memory available */
+
+    for (i = 1; i <= n; i++)
+    {
+        errcode = ENgetlinkvalue(i, property, &old[i - 1]);
+        if (errcode != 0)
+        {
+            *badIndex = i;
+            j = i - 1;        // Need to restore values for links 1 to i-1
+        }
+        else
+        {
+            errcode = ENsetlinkvalue(i, property, values[i - 1]);
+            if (errcode != 0)
+            {
+                *badIndex = i;
+                j = i;        // Need to restore values for links 1 to i
+            }
+        }
+        if (errcode != 0)
+        {
+            for (int k = 1; k <= j; k++)
+            {
+                ENsetlinkvalue(k, property, old[k - 1]);
+            }
+            break;
+        }
+    }
+    free(old);
+    return errcode;
 }
 
 int DLLEXPORT ENsetpipedata(int index, EN_API_FLOAT_TYPE length,

@@ -11,7 +11,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 04/25/2025
+ Last Updated: 03/05/2026
  ******************************************************************************
  */
 
@@ -954,7 +954,19 @@ typedef struct Project *EN_Project;
   Values are in units that depend on the units used for flow rate (see @ref Units).
   */
   int  DLLEXPORT EN_setnodevalue(EN_Project ph, int index, int property, double value);
+ 
+  /**
+  @brief Sets property values for all nodes.
+  @param ph an EPANET project handle.
+  @param property the property to set (see @ref EN_NodeProperty).
+  @param values an array of property values for all nodes.
+  @param badIndex returns the index of the node whose assignment fails, or 0 if all succeed.
+  @return an error code.  
 
+   Values are in units that depend on the units used for flow rate (see @ref Units).
+  */
+  int DLLEXPORT EN_setnodevalues(EN_Project ph, int property, double *values, int *badIndex);    
+  
   /**
   @brief Sets a group of properties for a junction node.
   @param ph an EPANET project handle.
@@ -1324,6 +1336,18 @@ typedef struct Project *EN_Project;
   Values are in units that depend on the units used for flow rate (see @ref Units).
   */
   int  DLLEXPORT EN_setlinkvalue(EN_Project ph, int index, int property, double value);
+  
+  /**
+  @brief Sets property values for all links.
+  @param ph an EPANET project handle.
+  @param property the property to set (see @ref EN_LinkProperty).
+  @param values an array of property values for all links.
+  @param badIndex returns the index of the link whose assignment fails, or 0 if all succeed.
+  @return an error code.
+
+  Values are in units that depend on the units used for flow rate (see @ref Units).
+  */
+  int DLLEXPORT EN_setlinkvalues(EN_Project ph, int property, double *values, int *badIndex);
 
   /**
   @brief Sets a group of properties for a pipe link.
