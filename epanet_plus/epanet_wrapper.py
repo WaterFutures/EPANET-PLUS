@@ -857,6 +857,20 @@ class EpanetAPI():
             return self._process_result(epanet.EN_setnodevalue(self._ph, index, node_property,
                                                                value))
 
+    def setnodevaluse(self, node_property: int, values: list[float]):
+        """
+        EN_setnodevalues
+
+        Parameters
+        ----------
+        node_property : `int`
+        values : `list[float]`
+        """
+        if self._use_project is False:
+            return self._process_result(epanet.ENsetnodevalues(node_property, values))
+        else:
+            return self._process_result(epanet.EN_setnodevalues(self._ph, node_property, values))
+
     def setjuncdata(self, index: int, elev: float, dmnd: float, dmnd_pat: str):
         """
         EN_setjuncdata

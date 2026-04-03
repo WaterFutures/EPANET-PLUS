@@ -57,6 +57,7 @@ PyObject* method_EN_setnodeid(PyObject* self, PyObject* args);
 PyObject* method_EN_getnodetype(PyObject* self, PyObject* args);
 PyObject* method_EN_getnodevalue(PyObject* self, PyObject* args);
 PyObject* method_EN_setnodevalue(PyObject* self, PyObject* args);
+PyObject* method_EN_setnodevalues(PyObject* self, PyObject* args);
 PyObject* method_EN_setjuncdata(PyObject* self, PyObject* args);
 PyObject* method_EN_settankdata(PyObject* self, PyObject* args);
 PyObject* method_EN_getcoord(PyObject* self, PyObject* args);

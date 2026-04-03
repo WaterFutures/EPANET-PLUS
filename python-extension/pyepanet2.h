@@ -105,6 +105,7 @@ PyObject* method_ENsetlinktype(PyObject* self, PyObject* args);
 PyObject* method_ENsetlinkvalue(PyObject* self, PyObject* args);
 PyObject* method_ENsetnodeid(PyObject* self, PyObject* args);
 PyObject* method_ENsetnodevalue(PyObject* self, PyObject* args);
+PyObject* method_ENsetnodevalues(PyObject* self, PyObject* args);
 PyObject* method_ENsetoption(PyObject* self, PyObject* args);
 PyObject* method_ENsetpattern(PyObject* self, PyObject* args);
 PyObject* method_ENsetpatternid(PyObject* self, PyObject* args);

@@ -1833,6 +1833,33 @@ PyObject* method_ENsetnodevalue(PyObject* self, PyObject* args)
     return r;
 }
 
+PyObject* method_ENsetnodevalues(PyObject* self, PyObject* args)
+{
+    int property;
+    PyObject* values = NULL;
+
+    if(!PyArg_ParseTuple(args, "iO", &property, &values)) {
+        return NULL;
+    }
+
+    int count = PyList_GET_SIZE(values);
+    float* rawValues = (float*) malloc(sizeof(float) * count);
+    for(int i=0; i != count; i++) {
+        rawValues[i] = PyFloat_AsDouble(PyList_GET_ITEM(values, i));
+    }
+
+    int badIndex;
+    PyObject* err = PyLong_FromLong(ENsetnodevalues(property, rawValues, &badIndex));
+    PyObject* pyBadIndex = PyLong_FromLong(badIndex);
+    free(rawValues);
+
+    PyObject* r = PyTuple_Pack(1, err, pyBadIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyBadIndex);
+
+    return r;
+}
+
 PyObject* method_ENsetoption(PyObject* self, PyObject* args)
 {
     int option;

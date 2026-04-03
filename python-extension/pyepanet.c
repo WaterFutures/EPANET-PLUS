@@ -1021,6 +1021,34 @@ PyObject* method_EN_setnodevalue(PyObject* self, PyObject* args)
     return r;
 }
 
+PyObject* method_EN_setnodevalues(PyObject* self, PyObject* args)
+{
+    uintptr_t ptr;
+    int property;
+    PyObject* values = NULL;
+    if(!PyArg_ParseTuple(args, "KiO", &ptr, &property, &values)) {
+        return NULL;
+    }
+    EN_Project ph = (EN_Project) ptr;
+
+    int count = PyList_GET_SIZE(values);
+    double* rawValues = (double*) malloc(sizeof(double) * count); 
+    for(int i=0; i != count; i++) {
+        rawValues[i] = PyFloat_AsDouble(PyList_GET_ITEM(values, i));
+    }
+
+    int badIndex;
+    PyObject* err = PyLong_FromLong(EN_setnodevalues(ph, property, rawValues, &badIndex));
+    PyObject* pyBadIndex = PyLong_FromLong(badIndex);
+    free(rawValues);
+
+    PyObject* r = PyTuple_Pack(1, err, pyBadIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyBadIndex);
+
+    return r;
+}
+
 PyObject* method_EN_setjuncdata(PyObject* self, PyObject* args)
 {
     uintptr_t ptr;
