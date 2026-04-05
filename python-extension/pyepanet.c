@@ -1640,8 +1640,8 @@ PyObject* method_EN_setvertices(PyObject* self, PyObject* args)
 {
     uintptr_t ptr;
     int index;
-    double* x = NULL;
-    double* y = NULL;
+    PyObject* x = NULL;
+    PyObject* y = NULL;
     int count;
     if(!PyArg_ParseTuple(args, "KiOOi", &ptr, &index, &x, &y, &count)) {
         return NULL;

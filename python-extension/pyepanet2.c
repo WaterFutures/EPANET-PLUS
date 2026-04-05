@@ -2158,8 +2158,8 @@ PyObject* method_ENsettitle(PyObject* self, PyObject* args)
 PyObject* method_ENsetvertices(PyObject* self, PyObject* args)
 {
     int index;
-    double* x = NULL;
-    double* y = NULL;
+    PyObject* x = NULL;
+    PyObject* y = NULL;
     int count;
     if(!PyArg_ParseTuple(args, "iOOi", &index, &x, &y, &count)) {
         return NULL;
