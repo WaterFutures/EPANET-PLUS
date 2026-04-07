@@ -1093,6 +1093,50 @@ class EPyT(EpanetAPI):
         """
         self.settimeparam(EpanetConstants.EN_HYDSTEP, time_step)
 
+    def get_pattern_time_step(self) -> int:
+        """
+        Returns the pattern time step in seconds.
+
+        Returns
+        -------
+        `int`
+            Pattern time step.
+        """
+        return self.gettimeparam(EpanetConstants.EN_PATTERNSTEP)
+
+    def set_pattern_time_step(self, time_step: int) -> None:
+        """
+        Specifies the pattern time step.
+
+        Parameters
+        ----------
+        time_step : `int`
+            Pattern time step in seconds.
+        """
+        self.settimeparam(EpanetConstants.EN_PATTERNSTEP, time_step)
+
+    def get_pattern_start_time(self) -> int:
+        """
+        Returns the pattern offset in seconds, which will start to be applied at simulation start.
+
+        Returns
+        -------
+        `int`
+            Pattern offset time.
+        """
+        return self.gettimeparam(EpanetConstants.EN_PATTERNSTART)
+
+    def set_pattern_start_time(self, start_time: int) -> None:
+        """
+        Specifies the pattern offset in seconds, which will start to be applied at simulation start.
+
+        Parameters
+        ----------
+        start_time : `int`
+            Pattern offset time step in seconds since simulation start.
+        """
+        self.settimeparam(EpanetConstants.EN_PATTERNSTART, start_time)
+
     def get_quality_time_step(self) -> int:
         """
         Returns the quality time step in seconds.
@@ -1154,7 +1198,7 @@ class EPyT(EpanetAPI):
 
         Parameters
         ----------
-        time_step : `int`
+        start_time : `int`
             Reporting start time step in seconds since simulation start.
         """
         self.settimeparam(EpanetConstants.EN_REPORTSTART, start_time)
@@ -1969,7 +2013,7 @@ class EPyT(EpanetAPI):
         node_idx : `int`
             Index of the node.
         elev : `float`
-            Eleveation of the node.
+            Elevation of the node.
         base_demand : `float`
             Base demand of the node.
         demand_pattern_id : `str`
