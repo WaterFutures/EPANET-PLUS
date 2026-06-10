@@ -1,4 +1,6 @@
 #include <Python.h>
+#include "numpy/ndarraytypes.h"
+#include "numpy/ufuncobject.h"
 #include "epanet2_2.h"
 #include "types.h"
 
@@ -8,6 +10,8 @@
 
 PyObject* method_EN_createproject(PyObject* self, PyObject* Py_UNUSED(args))
 {
+    _import_array();  // Import NumPy C API
+
     EN_Project ph;
     int err = EN_createproject(&ph);
  
@@ -2595,6 +2599,39 @@ PyObject* method_EN_timetonextevent(PyObject* self, PyObject* args)
     Py_DECREF(pyEventType);
     Py_DECREF(pyDuration);
     Py_DECREF(pyElemIndex);
+
+    return r;
+}
+
+PyObject* method_EN_getnodevalues_NPY(PyObject* self, PyObject* args)
+{
+    uintptr_t ptr;
+    int property;
+    if(!PyArg_ParseTuple(args, "Ki", &ptr, &property)) {
+        return NULL;
+    }
+    EN_Project ph = (EN_Project) ptr;
+
+    int numNodes;
+    int errcode = EN_getcount(ph, EN_NODECOUNT, &numNodes);
+    if(errcode != 0) {
+        PyObject* err = PyLong_FromLong(errcode);
+        PyObject* r = PyTuple_Pack(1, err);
+        Py_DECREF(err);
+
+        return r;
+    }
+
+    double* values = (double*) malloc(sizeof(double) * numNodes);
+    PyObject* err = PyLong_FromLong(EN_getnodevalues(ph, property, values));
+
+    npy_intp * dims[1];
+    dims[0] = numNodes;
+    PyObject* array = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, (void*)values);
+
+    PyObject* r = PyTuple_Pack(2, err, array);
+    Py_DECREF(array);
+    Py_DECREF(err);
 
     return r;
 }

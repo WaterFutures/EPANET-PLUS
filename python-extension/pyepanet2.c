@@ -1,10 +1,14 @@
 #include <Python.h>
+#include "numpy/ndarraytypes.h"
+#include "numpy/ufuncobject.h"
 #include "epanet2.h"
 #include "types.h"
 
 
 PyObject* method_ENopen(PyObject* self, PyObject* args)
 {
+    _import_array();    // Import NumPy C API
+
     char *inpFile, *rptFile, *outFile = NULL;
 
     if(!PyArg_ParseTuple(args, "sss", &inpFile, &rptFile, &outFile)) {
@@ -21,6 +25,8 @@ PyObject* method_ENopen(PyObject* self, PyObject* args)
 
 PyObject* method_ENopenX(PyObject* self, PyObject* args)
 {
+    _import_array();    // Import NumPy C API
+
     char *inpFile, *rptFile, *outFile = NULL;
 
     if(!PyArg_ParseTuple(args, "sss", &inpFile, &rptFile, &outFile)) {
@@ -2327,6 +2333,37 @@ PyObject* method_ENgetnodevalues(PyObject* self, PyObject* args)
 
     PyObject* r = PyTuple_Pack(2, err, valuesList);
     Py_DECREF(valuesList);
+    Py_DECREF(err);
+
+    return r;
+}
+
+PyObject* method_ENgetnodevalues_NPY(PyObject* self, PyObject* args)
+{
+    int property;
+    if(!PyArg_ParseTuple(args, "i", &property)) {
+        return NULL;
+    }
+
+    int numNodes;
+    int errcode = ENgetcount(EN_NODECOUNT, &numNodes);
+    if(errcode != 0) {
+        PyObject* err = PyLong_FromLong(errcode);
+        PyObject* r = PyTuple_Pack(1, err);
+        Py_DECREF(err);
+
+        return r;
+    }
+
+    float* values = (float*) malloc(sizeof(float) * numNodes);
+    PyObject* err = PyLong_FromLong(ENgetnodevalues(property, values));
+
+    npy_intp * dims[1];
+    dims[0] = numNodes;
+    PyObject* array = PyArray_SimpleNewFromData(1, dims, NPY_FLOAT, (void*)values);
+
+    PyObject* r = PyTuple_Pack(2, err, array);
+    Py_DECREF(array);
     Py_DECREF(err);
 
     return r;
