@@ -2030,6 +2030,19 @@ class EpanetAPI():
             return self._process_result(epanet.ENgetlinkvalues(property))
         else:
             return self._process_result(epanet.EN_getlinkvalues(self._ph, property))
+        
+    def getlinkvalues_numpy(self, property: int):
+        """
+        EN_getlinkvalues (NumPy compatible)
+
+        Parameters
+        ----------
+        property : `int`
+        """
+        if self._use_project is False:
+            return self._process_result(epanet.ENgetlinkvalues_NPY(property))
+        else:
+            return self._process_result(epanet.EN_getlinkvalues_NPY(self._ph, property))
 
     def setvertex(self, link_idx: int, vertex_idx: int, x: float, y: float):
         """

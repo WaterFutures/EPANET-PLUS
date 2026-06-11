@@ -2672,6 +2672,39 @@ PyObject* method_EN_getnodevalues(PyObject* self, PyObject* args)
     return r;
 }
 
+PyObject* method_EN_getlinkvalues_NPY(PyObject* self, PyObject* args)
+{
+    uintptr_t ptr;
+    int property;
+    if(!PyArg_ParseTuple(args, "Ki", &ptr, &property)) {
+        return NULL;
+    }
+    EN_Project ph = (EN_Project) ptr;
+
+    int numLinks;
+    int errcode = EN_getcount(ph, EN_LINKCOUNT, &numLinks);
+    if(errcode != 0) {
+        PyObject* err = PyLong_FromLong(errcode);
+        PyObject* r = PyTuple_Pack(1, err);
+        Py_DECREF(err);
+
+        return r;
+    }
+
+    double* values = (double*) malloc(sizeof(double) * numLinks);
+    PyObject* err = PyLong_FromLong(EN_getlinkvalues(ph, property, values));
+
+    npy_intp * dims[1];
+    dims[0] = numLinks;
+    PyObject* array = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, (void*)values);
+
+    PyObject* r = PyTuple_Pack(2, err, array);
+    Py_DECREF(array);
+    Py_DECREF(err);
+
+    return r;
+}
+
 PyObject* method_EN_getlinkvalues(PyObject* self, PyObject* args)
 {
     uintptr_t ptr;
@@ -2691,15 +2724,15 @@ PyObject* method_EN_getlinkvalues(PyObject* self, PyObject* args)
         return r;
     }
 
-    double* value = (double*) malloc(sizeof(double) * numLinks);
-    PyObject* err = PyLong_FromLong(EN_getlinkvalues(ph, property, value));
+    double* values = (double*) malloc(sizeof(double) * numLinks);
+    PyObject* err = PyLong_FromLong(EN_getlinkvalues(ph, property, values));
 
     PyObject* valuesList = PyList_New(numLinks);
     for(int i=0; i != numLinks; i++) {
-        PyList_SET_ITEM(valuesList, i, PyFloat_FromDouble(value[i]));
+        PyList_SET_ITEM(valuesList, i, PyFloat_FromDouble(values[i]));
     }
 
-    free(value);
+    free(values);
 
     PyObject* r = PyTuple_Pack(2, err, valuesList);
     Py_DECREF(valuesList);

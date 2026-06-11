@@ -137,6 +137,7 @@ PyObject* method_EN_timetonextevent(PyObject* self, PyObject* args);
 PyObject* method_EN_getnodevalues(PyObject* self, PyObject* args);
 PyObject* method_EN_getnodevalues_NPY(PyObject* self, PyObject* args);
 PyObject* method_EN_getlinkvalues(PyObject* self, PyObject* args);
+PyObject* method_EN_getlinkvalues_NPY(PyObject* self, PyObject* args);
 PyObject* method_EN_setvertex(PyObject* self, PyObject* args);
 PyObject* method_EN_loadpatternfile(PyObject* self, PyObject* args);
 PyObject* method_EN_setcurvetype(PyObject* self, PyObject* args);

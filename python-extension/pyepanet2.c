@@ -2386,18 +2386,49 @@ PyObject* method_ENgetlinkvalues(PyObject* self, PyObject* args)
         return r;
     }
 
-    float* value = (float*) malloc(sizeof(float) * numLinks);
-    PyObject* err = PyLong_FromLong(ENgetlinkvalues(property, value));
+    float* values = (float*) malloc(sizeof(float) * numLinks);
+    PyObject* err = PyLong_FromLong(ENgetlinkvalues(property, values));
 
     PyObject* valuesList = PyList_New(numLinks);
     for(int i=0; i != numLinks; i++) {
-        PyList_SET_ITEM(valuesList, i, PyFloat_FromDouble(value[i]));
+        PyList_SET_ITEM(valuesList, i, PyFloat_FromDouble(values[i]));
     }
 
-    free(value);
+    free(values);
 
     PyObject* r = PyTuple_Pack(2, err, valuesList);
     Py_DECREF(valuesList);
+    Py_DECREF(err);
+
+    return r;
+}
+
+PyObject* method_ENgetlinkvalues_NPY(PyObject* self, PyObject* args)
+{
+    int property;
+    if(!PyArg_ParseTuple(args, "i", &property)) {
+        return NULL;
+    }
+
+    int numLinks;
+    int errcode = ENgetcount(EN_LINKCOUNT, &numLinks);
+    if(errcode != 0) {
+        PyObject* err = PyLong_FromLong(errcode);
+        PyObject* r = PyTuple_Pack(1, err);
+        Py_DECREF(err);
+
+        return r;
+    }
+
+    float* values = (float*) malloc(sizeof(float) * numLinks);
+    PyObject* err = PyLong_FromLong(ENgetlinkvalues(property, values));
+
+    npy_intp * dims[1];
+    dims[0] = numLinks;
+    PyObject* array = PyArray_SimpleNewFromData(1, dims, NPY_FLOAT, (void*)values);
+
+    PyObject* r = PyTuple_Pack(2, err, array);
+    Py_DECREF(array);
     Py_DECREF(err);
 
     return r;
