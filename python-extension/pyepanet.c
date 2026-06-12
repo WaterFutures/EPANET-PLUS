@@ -1580,6 +1580,33 @@ PyObject* method_EN_setlinkvalue(PyObject* self, PyObject* args)
     return r;
 }
 
+PyObject* method_EN_setlinkvalues(PyObject* self, PyObject* args)
+{
+    uintptr_t ptr;
+    int property;
+    PyObject* values = NULL;
+    if(!PyArg_ParseTuple(args, "KiO", &ptr, &property, &values)) {
+        return NULL;
+    }
+    EN_Project ph = (EN_Project) ptr;
+
+    int count = PyList_GET_SIZE(values);
+    double* rawValues = (double*) malloc(sizeof(double) * count); 
+    for(int i=0; i != count; i++) {
+        rawValues[i] = PyFloat_AsDouble(PyList_GET_ITEM(values, i));
+    }
+
+    int badIndex;
+    PyObject* err = PyLong_FromLong(EN_setlinkvalues(ph, property, rawValues, &badIndex));
+    PyObject* pyBadIndex = PyLong_FromLong(badIndex);
+
+    PyObject* r = PyTuple_Pack(2, err, pyBadIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyBadIndex);
+
+    return r;
+}
+
 PyObject* method_EN_setpipedata(PyObject* self, PyObject* args)
 {
     uintptr_t ptr;
@@ -2625,9 +2652,9 @@ PyObject* method_EN_getnodevalues_NPY(PyObject* self, PyObject* args)
     double* values = (double*) malloc(sizeof(double) * numNodes);
     PyObject* err = PyLong_FromLong(EN_getnodevalues(ph, property, values));
 
-    npy_intp * dims[1];
+    npy_intp dims[1];
     dims[0] = numNodes;
-    PyObject* array = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, (void*)values);
+    PyObject* array = PyArray_SimpleNewFromData(1, (npy_intp*)&dims, NPY_DOUBLE, (void*)values);
 
     PyObject* r = PyTuple_Pack(2, err, array);
     Py_DECREF(array);

@@ -103,6 +103,7 @@ PyObject* method_ENsetlinkid(PyObject* self, PyObject* args);
 PyObject* method_ENsetlinknodes(PyObject* self, PyObject* args);
 PyObject* method_ENsetlinktype(PyObject* self, PyObject* args);
 PyObject* method_ENsetlinkvalue(PyObject* self, PyObject* args);
+PyObject* method_ENsetlinkvalues(PyObject* self, PyObject* args);
 PyObject* method_ENsetnodeid(PyObject* self, PyObject* args);
 PyObject* method_ENsetnodevalue(PyObject* self, PyObject* args);
 PyObject* method_ENsetnodevalues(PyObject* self, PyObject* args);

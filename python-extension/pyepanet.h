@@ -85,6 +85,7 @@ PyObject* method_EN_getlinknodes(PyObject* self, PyObject* args);
 PyObject* method_EN_setlinknodes(PyObject* self, PyObject* args);
 PyObject* method_EN_getlinkvalue(PyObject* self, PyObject* args);
 PyObject* method_EN_setlinkvalue(PyObject* self, PyObject* args);
+PyObject* method_EN_setlinkvalues(PyObject* self, PyObject* args);
 PyObject* method_EN_setpipedata(PyObject* self, PyObject* args);
 PyObject* method_EN_getvertexcount(PyObject* self, PyObject* args);
 PyObject* method_EN_getvertex(PyObject* self, PyObject* args);

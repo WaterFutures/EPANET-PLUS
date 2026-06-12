@@ -1274,6 +1274,20 @@ class EpanetAPI():
         else:
             return self._process_result(epanet.EN_setlinkvalue(self._ph, index, property, value))
 
+    def setlinkvalues(self, property: int, values: list[float]):
+        """
+        EN_setlinkvalues
+
+        Parameters
+        ----------
+        property : `int`
+        values : `list[float]`
+        """
+        if self._use_project is False:
+            return self._process_result(epanet.ENsetlinkvalues(property, values))
+        else:
+            return self._process_result(epanet.EN_setlinkvalues(self._ph, property, values))
+
     def setpipedata(self, index: int, length: float, diam: float, rough: float, mloss: float):
         """
         EN_setpipedata
