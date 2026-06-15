@@ -2721,9 +2721,9 @@ PyObject* method_EN_getlinkvalues_NPY(PyObject* self, PyObject* args)
     double* values = (double*) malloc(sizeof(double) * numLinks);
     PyObject* err = PyLong_FromLong(EN_getlinkvalues(ph, property, values));
 
-    npy_intp * dims[1];
+    npy_intp dims[1];
     dims[0] = numLinks;
-    PyObject* array = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, (void*)values);
+    PyObject* array = PyArray_SimpleNewFromData(1, (npy_intp*)&dims, NPY_DOUBLE, (void*)values);
 
     PyObject* r = PyTuple_Pack(2, err, array);
     Py_DECREF(array);

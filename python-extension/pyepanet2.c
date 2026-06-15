@@ -2383,9 +2383,9 @@ PyObject* method_ENgetnodevalues_NPY(PyObject* self, PyObject* args)
     float* values = (float*) malloc(sizeof(float) * numNodes);
     PyObject* err = PyLong_FromLong(ENgetnodevalues(property, values));
 
-    npy_intp * dims[1];
+    npy_intp dims[1];
     dims[0] = numNodes;
-    PyObject* array = PyArray_SimpleNewFromData(1, dims, NPY_FLOAT, (void*)values);
+    PyObject* array = PyArray_SimpleNewFromData(1, (npy_intp*)&dims, NPY_FLOAT, (void*)values);
 
     PyObject* r = PyTuple_Pack(2, err, array);
     Py_DECREF(array);
@@ -2448,9 +2448,9 @@ PyObject* method_ENgetlinkvalues_NPY(PyObject* self, PyObject* args)
     float* values = (float*) malloc(sizeof(float) * numLinks);
     PyObject* err = PyLong_FromLong(ENgetlinkvalues(property, values));
 
-    npy_intp * dims[1];
+    npy_intp dims[1];
     dims[0] = numLinks;
-    PyObject* array = PyArray_SimpleNewFromData(1, dims, NPY_FLOAT, (void*)values);
+    PyObject* array = PyArray_SimpleNewFromData(1, (npy_intp*)&dims, NPY_FLOAT, (void*)values);
 
     PyObject* r = PyTuple_Pack(2, err, array);
     Py_DECREF(array);
