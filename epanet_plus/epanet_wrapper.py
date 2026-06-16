@@ -857,7 +857,7 @@ class EpanetAPI():
             return self._process_result(epanet.EN_setnodevalue(self._ph, index, node_property,
                                                                value))
 
-    def setnodevaluse(self, node_property: int, values: list[float]):
+    def setnodevalues(self, node_property: int, values: list[float]):
         """
         EN_setnodevalues
 
