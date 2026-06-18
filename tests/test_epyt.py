@@ -2,6 +2,7 @@
 This module tests the toolkit functions implemented in the clas EPyT.
 """
 import os
+import numpy as np
 from epanet_plus import EPyT, EpanetConstants
 
 
@@ -88,7 +89,10 @@ def test_quality_simulation():
             assert len(epanet_api.getnodevalues(EpanetConstants.EN_PRESSURE)) > 0
             assert len(epanet_api.getlinkvalues(EpanetConstants.EN_FLOW)) > 0
             assert len(epanet_api.getnodevalues(EpanetConstants.EN_QUALITY)) > 0
-            assert len(epanet_api.getlinkvalues(EpanetConstants.EN_QUALITY)) > 0            
+            assert len(epanet_api.getlinkvalues(EpanetConstants.EN_QUALITY)) > 0
+
+            assert np.all(epanet_api.getnodevalues_numpy(EpanetConstants.EN_QUALITY) == np.array(epanet_api.getnodevalues(EpanetConstants.EN_QUALITY))) == True
+            assert np.all(epanet_api.getlinkvalues_numpy(EpanetConstants.EN_QUALITY) == np.array(epanet_api.getlinkvalues(EpanetConstants.EN_QUALITY))) == True  
 
             tstep = epanet_api.nextH()
             epanet_api.nextQ()
