@@ -7,12 +7,13 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 03/19/2026
+ Last Updated: 05/11/2026
  ******************************************************************************
 */
 
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 
 #include "types.h"
 #include "funcs.h"
@@ -32,6 +33,10 @@ void createtmpfiles()
     getTmpName(_defaultProject->TmpHydFname);
     getTmpName(_defaultProject->TmpOutFname);
     getTmpName(_defaultProject->TmpStatFname);
+    
+    // Use system's decimal point (will be changed locally to dot
+    // when reading/writing EPANET input files)
+    setlocale(LC_NUMERIC, "");
 }
 
 void removetmpfiles()
@@ -385,7 +390,7 @@ int DLLEXPORT ENsetnodevalue(int index, int property, EN_API_FLOAT_TYPE value)
 
 int DLLEXPORT ENsetnodevalues(int property, EN_API_FLOAT_TYPE *values, int *badIndex)
 {
-    int i, j, errcode = 0;
+    int i, j, k, errcode = 0;
     int n = _defaultProject->network.Nnodes;
     EN_API_FLOAT_TYPE *old = NULL;
 
@@ -413,7 +418,7 @@ int DLLEXPORT ENsetnodevalues(int property, EN_API_FLOAT_TYPE *values, int *badI
         }
         if (errcode != 0)
         {
-            for (int k = 1; k <= j; k++)
+            for (k = 1; k <= j; k++)
             {
                 ENsetnodevalue(k, property, old[k - 1]);
             }
@@ -608,7 +613,7 @@ int DLLEXPORT ENsetlinkvalue(int index, int property, EN_API_FLOAT_TYPE value)
 
 int DLLEXPORT ENsetlinkvalues(int property, EN_API_FLOAT_TYPE *values, int *badIndex)
 {
-    int i, j, errcode = 0;
+    int i, j, k, errcode = 0;
     int n = _defaultProject->network.Nlinks;
     EN_API_FLOAT_TYPE *old = NULL;
 
@@ -636,7 +641,7 @@ int DLLEXPORT ENsetlinkvalues(int property, EN_API_FLOAT_TYPE *values, int *badI
         }
         if (errcode != 0)
         {
-            for (int k = 1; k <= j; k++)
+            for (k = 1; k <= j; k++)
             {
                 ENsetlinkvalue(k, property, old[k - 1]);
             }

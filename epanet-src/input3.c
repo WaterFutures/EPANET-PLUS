@@ -36,10 +36,8 @@ extern int getheadlossoption(Project *, char *);
 
 // Local functions
 static double  gettokvalue(Project *, double, int, int *, int *);
-static int  getlinknodes(Project *, int *, int *);
 static int  optionchoice(Project *, int);
 static int  optionvalue(Project *, int);
-static int  getpumpcurve(Project *, int);
 static void changestatus(Network *, int, StatusType, double);
 static int  setError(Parser *, int, int);
 
@@ -181,7 +179,7 @@ int tankdata(Project *pr)
 
     int errcode = 0;
     int errtok = -1;
-    double x;
+    double x = 0.0;;
 
     // Add new tank to data base
     if (net->Ntanks == parser->MaxTanks ||
@@ -195,12 +193,15 @@ int tankdata(Project *pr)
     // Check for valid data
     n = parser->Ntokens;
     if (n < 2) errcode = 201;
-    if (!errcode && !getfloat(parser->Tok[1], &x))
+    else
     {
-        errcode = 202;
-        errtok = 1;
+        if (!getfloat(parser->Tok[1], &x))
+        {
+            errcode = 202;
+            errtok = 1;
+        }
+        else el = x;
     }
-    else el = x;
 
     // Node is a reservoir
     if (n <= 3)
@@ -529,14 +530,16 @@ int pumpdata(Project *pr)
         else if (match(parser->Tok[m - 1], w_HEAD))  // Custom pump curve
         {
             c = findcurve(net, parser->Tok[m]);
-            if (c == 0) return setError(parser, m, 206);
+            if (c == 0)
+                return setError(parser, m, 206);
 			pump->Ptype = CUSTOM;
             pump->Hcurve = c;
         }
         else if (match(parser->Tok[m - 1], w_PATTERN))  // Speed/status pattern
         {
             p = findpattern(net, parser->Tok[m]);
-            if (p < 0) return setError(parser, m, 205);
+            if (p < 0)
+                return setError(parser, m, 205);
             pump->Upat = p;
         }
         else if (match(parser->Tok[m - 1], w_SPEED))   // Speed setting
@@ -545,7 +548,7 @@ int pumpdata(Project *pr)
                 return setError(parser, m, 202);
             link->Kc = y;
         }
-        else return setError(parser, m-1, 201);;
+        else return setError(parser, m-1, 201);
         m = m + 2;  // Move to next keyword token
     }
     link->InitSetting = link->Kc;
@@ -571,12 +574,10 @@ int valvedata(Project *pr)
         j1,                    // Start-node index
         j2,                    // End-node index
         n;                     // # data items
-    char  status = ACTIVE,     // Valve status
-          type;                // Valve type
+    char type;                 // Valve type
     double x;
     Slink *link;
-    int errcode = 0,
-        losscurve = 0;          // Loss coeff. curve
+    int errcode = 0;
 
     // Check that end nodes exist
     if (net->Nlinks == parser->MaxLinks ||
@@ -921,7 +922,7 @@ int demanddata(Project *pr)
     }
 
     // Otherwise add new demand to junction
-    else if (!adddemand(&net->Node[j], y, p, parser->Comment) > 0) return 101;
+    else if (!adddemand(&net->Node[j], y, p, parser->Comment)) return 101;
     return 0;
 }
 

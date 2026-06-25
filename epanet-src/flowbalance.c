@@ -52,7 +52,7 @@ void updateflowbalance(Project *pr, long hstep)
     Times   *time = &pr->times;
 
     int i, j;
-    double v, dt, deficit, fullDemand;
+    double v, dt, deficit;
     SflowBalance flowBalance;
     
     // Determine current time interval in seconds
@@ -71,7 +71,6 @@ void updateflowbalance(Project *pr, long hstep)
     flowBalance.leakageDemand = 0.0;
     flowBalance.deficitDemand = 0.0;
     flowBalance.storageDemand = 0.0;
-    fullDemand = 0.0;
     
     // Initialize leakage loss
     hyd->LeakageLoss = 0.0;
@@ -85,7 +84,6 @@ void updateflowbalance(Project *pr, long hstep)
             flowBalance.totalInflow += (-v);
         else
         {
-            fullDemand += hyd->FullDemand[i];
             flowBalance.consumerDemand += v;
             flowBalance.totalOutflow += v;
         }

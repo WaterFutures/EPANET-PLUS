@@ -72,7 +72,8 @@ int openqual(Project *pr)
         if (errcode ) return errcode;
 
         // Check for unconnected nodes
-        if (errcode = unlinked(pr)) return errcode;
+        errcode = unlinked(pr);
+        if (errcode) return errcode;
     }
 
     // Create a memory pool for water quality segments

@@ -7,14 +7,20 @@ Description:  reads and interprets network data from an EPANET input file
 Authors:      see AUTHORS
 Copyright:    see AUTHORS
 License:      see LICENSE
-Last Updated: 02/19/2025
+Last Updated: 05/11/2026
 ******************************************************************************
 */
+
+#define _GNU_SOURCE  // to expose strtod_l on Linux
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <locale.h>
+#ifdef __APPLE__
+  #include <xlocale.h>
+#endif
 
 #include "types.h"
 #include "funcs.h"
@@ -676,11 +682,42 @@ int getfloat(char *s, double *y)
 **  Output:  *y = floating point number
 **           returns 1 if conversion successful, 0 if not
 **  Purpose: converts string to floating point number
+**
+**  This function will correctly convert a numerical string
+**  that uses a dot for its decimal point (as required by
+**  EPANET's input file format) no matter what the system
+**  locale uses as the decimal point.
 **-----------------------------------------------------------
 */
 {
+// Windows equivalents for POSIX C terms
+#ifdef _WIN32
+  #define locale_t _locale_t
+  #define LC_NUMERIC_MASK LC_NUMERIC
+  #define newlocale(mask, locale, base) _create_locale(mask, locale)
+  #define freelocale _free_locale
+  #define strtod_l _strtod_l
+#endif
+
     char *endptr;
-    *y = (double)strtod(s, &endptr);
+    locale_t locale;
+    struct lconv *lc = localeconv();
+
+    // Use standard strtod function if system locale uses dot for decimal point
+    if (lc->decimal_point[0] == '.')
+    {
+        *y = strtod(s, &endptr);
+    }
+    
+    // Otherwise create a thread-safe local locale with a dot
+    // decimal point and use it with the strtod_l function
+    else
+    {
+        locale = newlocale(LC_NUMERIC_MASK, "C", NULL);
+        *y = strtod_l(s, &endptr, locale);
+        freelocale(locale);
+    }    
+
     if (*endptr > 0) return 0;
     return 1;
 }
