@@ -272,7 +272,6 @@ void solve_nodequal(int m, double tstep)
 	double coelastseg, coefirstseg;
 
 	int njuncs = MSX.Nobjects[NODE] - MSX.Nobjects[TANK];
-	int found = 0;
 
 
 	//let's take a look of the matrix
@@ -306,13 +305,11 @@ void solve_nodequal(int m, double tstep)
 		coelastseg = ldispersion * asquare / lastseg->v;   //dispersion should be pipe by pipe
 		MSX.Dispersion.Aij[MSX.Dispersion.Ndx[k]] -= coefirstseg * firstseg->uresponse; //coefirstseg*firstseg->greenu = coelastseg*lastseg->greend 
 
-		found = 0;
 		source = MSX.Node[n2].sources;
 		while(source != NULL)
 		{
 			if (source->species == m)
 			{
-				found = 1;
 				break;
 			}
 			else
@@ -338,14 +335,11 @@ void solve_nodequal(int m, double tstep)
 			MSX.Dispersion.F[MSX.Dispersion.Row[n1]] += coelastseg * MSX.LastSeg[k]->dresponse * MSX.Node[n2].c[m];
 		}
 
-			
-		found = 0;
 		source = MSX.Node[n1].sources;
 		while (source != NULL)
 		{
 			if (source->species == m)
 			{
-				found = 1;
 				break;
 			}
 			else
@@ -382,7 +376,7 @@ void solve_nodequal(int m, double tstep)
 		}
 	}
 
-	int errcode = msx_linsolve(njuncs, MSX.Dispersion.Aii, MSX.Dispersion.Aij, MSX.Dispersion.F);
+	msx_linsolve(njuncs, MSX.Dispersion.Aii, MSX.Dispersion.Aij, MSX.Dispersion.F);
 
 	for (int i = 1; i <= njuncs; i++)
 	{

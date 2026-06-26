@@ -4359,7 +4359,7 @@ int DLLEXPORT EN_setlinkvalue(EN_Project p, int index, int property, double valu
         if (Link[index].Type <= PUMP) return 264;           //Link not a valve
         valveType = ROUND(value);
         if (valveType < PRV || valveType > PCV) return 213; //Invalid valve type
-        if (valveType == Link[index].Type) return 0;        //No type change
+        if (valveType == (int)Link[index].Type) return 0;        //No type change
         return changevalvetype(p, index, valveType);        //See project.c
 
     default:

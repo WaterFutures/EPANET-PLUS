@@ -50,14 +50,13 @@ void  MSXtank_mix1(int i, double vin, double *massin, double vnet)
 **    vnet  = inflow - outflow     
 */
 {
-    int    k, m, n;
+    int    k, m;
     double c;
     double vnew;
     Pseg   seg;
 
 // --- blend inflow with contents
 
-    n = MSX.Tank[i].node;
     k = MSX.Nobjects[LINK] + i;
     seg = MSX.FirstSeg[k];
     if (seg)
@@ -95,15 +94,13 @@ void  MSXtank_mix2(int i, double vin, double *massin, double vnet)
 **            vnet  = inflow - outflow
 */
 {
-    int     k, m, n;
+    int     k, m;
     double  vt,                         //transferred volume        
             vmz;                        //full mixing zone volume
     Pseg    mixzone,                      // Mixing zone segment
             stagzone;                     // Stagnant zone segment
 
 // --- find inflows & outflows 
-
-    n = MSX.Tank[i].node;
 
 // --- get segments for each zone
 
@@ -204,14 +201,13 @@ void  MSXtank_mix3(int i, double vin, double *massin, double vnet)
 **            vnet = inflow - outflow    
 */
 {
-   int    k, m, n;
+   int    k, m;
    double vout, vseg, vsum;
    Pseg   seg;
 
 // --- find inflows & outflows
 
     k = MSX.Nobjects[LINK] + i;
-    n = MSX.Tank[i].node;
     vout = vin - vnet;
     
     if (MSX.LastSeg[k] == NULL || MSX.FirstSeg[k] == NULL) return;
@@ -309,14 +305,13 @@ void  MSXtank_mix4(int i, double vin, double *massin, double vnet)
 **----------------------------------------------------------
 */
 {
-   int    k, m, n;
+   int    k, m;
    double vsum, vseg;
    Pseg   seg;
 
 // --- find inflows & outflows
 
     k = MSX.Nobjects[LINK] + i;
-    n = MSX.Tank[i].node;
 
     if (MSX.LastSeg[k] == NULL || MSX.FirstSeg[k] == NULL) return;
 
