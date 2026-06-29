@@ -261,6 +261,9 @@ int  MSXutils_getDouble(char *s, double *y)
         if (*endptr > 0) return(0);
         return(1);
     }
+    else {
+        return r;
+    }
 }
 
 //=============================================================================
