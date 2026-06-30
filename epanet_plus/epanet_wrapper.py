@@ -2,6 +2,7 @@
 This module contains a Python wrapper (incl. error handling) for EPANET and EPANET-MSX functions.
 """
 import warnings
+import numpy
 import epanet
 
 
@@ -2006,52 +2007,72 @@ class EpanetAPI():
         else:
             return self._process_result(epanet.EN_timetonextevent(self._ph))
 
-    def getnodevalues(self, property: int):
+    def getnodevalues(self, property: int) -> tuple[int, list[float]]:
         """
         EN_getnodevalues
 
         Parameters
         ----------
         property : `int`
+
+        Returns
+        -------
+        `tuple[int, list[float]]`
+            Error code and link values as a list.
         """
         if self._use_project is False:
             return self._process_result(epanet.ENgetnodevalues(property))
         else:
             return self._process_result(epanet.EN_getnodevalues(self._ph, property))
         
-    def getnodevalues_numpy(self, property: int):
+    def getnodevalues_numpy(self, property: int) -> tuple[int, numpy.ndarray]:
         """
         EN_getnodevalues (NumPy compatible)
 
         Parameters
         ----------
         property : `int`
+
+        Returns
+        -------
+        `tuple[int, numpy.ndarray]`
+            Error code and node values as a NumPy array.
         """
         if self._use_project is False:
             return self._process_result(epanet.ENgetnodevalues_NPY(property))
         else:
             return self._process_result(epanet.EN_getnodevalues_NPY(self._ph, property))
 
-    def getlinkvalues(self, property: int):
+    def getlinkvalues(self, property: int) -> tuple[int, list[float]]:
         """
         EN_getlinkvalues
 
         Parameters
         ----------
         property : `int`
+
+        Returns
+        -------
+        `tuple[int, list[float]]`
+            Error code and link values as a list.
         """
         if self._use_project is False:
             return self._process_result(epanet.ENgetlinkvalues(property))
         else:
             return self._process_result(epanet.EN_getlinkvalues(self._ph, property))
         
-    def getlinkvalues_numpy(self, property: int):
+    def getlinkvalues_numpy(self, property: int) -> tuple[int, numpy.ndarray]:
         """
         EN_getlinkvalues (NumPy compatible)
 
         Parameters
         ----------
         property : `int`
+
+        Returns
+        -------
+        `tuple[int, numpy.ndarray]`
+            Error code and link values as a NumPy array.
         """
         if self._use_project is False:
             return self._process_result(epanet.ENgetlinkvalues_NPY(property))
