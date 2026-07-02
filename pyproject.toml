@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "numpy"]
+requires = ["setuptools", "wheel", "numpy"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -45,7 +45,7 @@ find = {}
 
 [tool.setuptools]
 ext-modules = [
-  {name = "epanet", extra-compile-args = ["-fopenmp"], extra-link-args = ["-fopenmp"], include-dirs=["epanet-src/include", "epanet-src/", "epanet-msx-src/include", "epanet-msx-src/",
+  {name = "epanet", include-dirs=["epanet-src/include", "epanet-src/", "epanet-msx-src/include", "epanet-msx-src/",
                                   "python-extension", "epanet_plus/include", "epanet-src/util"], sources = ["python-extension/pyepanet.c",
                                   "python-extension/pyepanet2.c", "python-extension/pyepanetmsx.c", "python-extension/pyepanet_plus.c",
                                   "python-extension/ext.c", "epanet_plus/epanet_plus.c", "epanet-src/epanet2.c", "epanet-src/hydcoeffs.c",
