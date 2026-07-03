@@ -47,7 +47,9 @@ jobs:
       - name: Install built wheel
         shell: bash
         run: |
-          python -m pip install wheelhouse/*.whl
+          python -m pip install -r REQUIREMENTS.txt
+          python -m pip install -e .
+          python -m pip install -r REQUIREMENTS-DEV.txt
 
       - name: Run tests
         run: pytest -v
