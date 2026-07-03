@@ -13,7 +13,7 @@ Compilation of the C library
     Each release of EPANET-PLUS contains binaries build for all major platforms.
 
 We offer platform-specific scripts for building the C library -- note that those
-require the latest version of `gcc`:
+require the latest version of `gcc` (for MacOSX users: you have to install gcc-15 from HomeBrew):
 
     - Linux: `compile_linux.sh <https://raw.githubusercontent.com/WaterFutures/EPANET-PLUS/main/compile_linux.sh>`_
     - MacOS: `compile_macos.sh <https://raw.githubusercontent.com/WaterFutures/EPANET-PLUS/main/compile_macos.sh>`_
@@ -65,3 +65,9 @@ Build and install the package:
 
     This step triggers the build of the C extension, which requires a C compiler to be
     installed on the system.
+    Furthermore, on MacOSX, you have to run:
+
+    ..code:: bash
+
+        brew install libomp
+        export LIBOMP_PREFIX="$(brew --prefix libomp)"

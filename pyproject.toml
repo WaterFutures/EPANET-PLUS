@@ -23,7 +23,7 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14"
 ]
-keywords=["epanet", "water", "networks", "hydraulics", "quality", "simulations"]
+keywords = ["epanet", "water", "networks", "hydraulics", "quality", "simulations"]
 dynamic = ["version", "readme", "dependencies"]
 
 [project.urls]
@@ -42,25 +42,3 @@ before-all = "uname -a"
 
 [tool.setuptools.packages]
 find = {}
-
-[tool.setuptools]
-ext-modules = [
-  {name = "epanet", include-dirs=["epanet-src/include", "epanet-src/", "epanet-msx-src/include", "epanet-msx-src/",
-                                  "python-extension", "epanet_plus/include", "epanet-src/util"], sources = ["python-extension/pyepanet.c",
-                                  "python-extension/pyepanet2.c", "python-extension/pyepanetmsx.c", "python-extension/pyepanet_plus.c",
-                                  "python-extension/ext.c", "epanet_plus/epanet_plus.c", "epanet-src/epanet2.c", "epanet-src/hydcoeffs.c",
-                                  "epanet-src/inpfile.c", "epanet-src/quality.c", "epanet-src/rules.c", "epanet-src/epanet.c",
-                                  "epanet-src/hydraul.c", "epanet-src/input1.c", "epanet-src/mempool.c", "epanet-src/qualreact.c",
-                                  "epanet-src/smatrix.c", "epanet-src/genmmd.c", "epanet-src/hydsolver.c", "epanet-src/input2.c",
-                                  "epanet-src/output.c", "epanet-src/qualroute.c", "epanet-src/hash.c", "epanet-src/hydstatus.c",
-                                  "epanet-src/input3.c", "epanet-src/project.c", "epanet-src/report.c", "epanet-msx-src/hash.c",
-                                  "epanet-src/flowbalance.c", "epanet-src/leakage.c", "epanet-src/validate.c",
-                                  "epanet-src/util/filemanager.c", "epanet-src/util/errormanager.c", "epanet-src/util/cstr_helper.c",
-                                  "epanet-msx-src/msxcompiler.c", "epanet-msx-src/msxfuncs.c", "epanet-msx-src/msxqual.c",
-                                  "epanet-msx-src/msxutils.c", "epanet-msx-src/smatrix.c", "epanet-msx-src/mathexpr.c",
-                                  "epanet-msx-src/msxdispersion.c", "epanet-msx-src/msxinp.c", "epanet-msx-src/msxrpt.c",
-                                  "epanet-msx-src/newton.c", "epanet-msx-src/mempool.c", "epanet-msx-src/msxerr.c",
-                                  "epanet-msx-src/msxout.c", "epanet-msx-src/msxtank.c", "epanet-msx-src/rk5.c",
-                                  "epanet-msx-src/msxchem.c", "epanet-msx-src/msxfile.c", "epanet-msx-src/msxproj.c",
-                                  "epanet-msx-src/msxtoolkit.c", "epanet-msx-src/ros2.c"]}
-]

@@ -23,11 +23,8 @@ jobs:
 
       - name: Install libomp on macOS
         if: runner.os == 'macOS'
-        run: brew install libomp
-
-      - name: Export libomp paths on macOS
-        if: runner.os == 'macOS'
         run: |
+          brew install libomp
           echo "LIBOMP_PREFIX=$(brew --prefix libomp)" >> "$GITHUB_ENV"
 
       - name: Install cibuildwheel
@@ -35,45 +32,25 @@ jobs:
 
       - name: Build wheels
         env:
-          CIBW_ENVIRONMENT_LINUX: >-
-            CFLAGS=-fopenmp
-            CXXFLAGS=-fopenmp
-            LDFLAGS=-fopenmp
-          CIBW_ENVIRONMENT_WINDOWS: >-
-            CL=/openmp
           CIBW_ENVIRONMENT_MACOS: >-
             CC=clang
             CXX=clang++
             MACOSX_DEPLOYMENT_TARGET=15.0
-            CPPFLAGS=-I${{ env.LIBOMP_PREFIX }}/include
-            CFLAGS=-Xpreprocessor\ -fopenmp
-            CXXFLAGS=-Xpreprocessor\ -fopenmp
-            LDFLAGS=-L${{ env.LIBOMP_PREFIX }}/lib\ -Wl,-rpath,${{ env.LIBOMP_PREFIX }}/lib\ -lomp
+            LIBOMP_PREFIX=${{ env.LIBOMP_PREFIX }}
         run: python -m cibuildwheel --output-dir wheelhouse
 
-      - name: Test on all platforms except macOS
-        if: runner.os != 'macOS'
+      - name: Install test dependencies
         run: |
           python -m pip install -r REQUIREMENTS.txt
-          python -m pip install -e .
           python -m pip install -r REQUIREMENTS-DEV.txt
-          pytest -v
 
-      - name: Test on macOS
-        if: runner.os == 'macOS'
-        env:
-          CC: clang
-          CXX: clang++
-          MACOSX_DEPLOYMENT_TARGET: "15.0"
-          CPPFLAGS: -I${{ env.LIBOMP_PREFIX }}/include
-          CFLAGS: -Xpreprocessor -fopenmp
-          CXXFLAGS: -Xpreprocessor -fopenmp
-          LDFLAGS: -L${{ env.LIBOMP_PREFIX }}/lib -Wl,-rpath,${{ env.LIBOMP_PREFIX }}/lib -lomp
+      - name: Install built wheel
+        shell: bash
         run: |
-          python -m pip install -r REQUIREMENTS.txt
-          python -m pip install -e .
-          python -m pip install -r REQUIREMENTS-DEV.txt
-          pytest -v
+          python -m pip install wheelhouse/*.whl
+
+      - name: Run tests
+        run: pytest -v
 
       - uses: actions/upload-artifact@v4
         with:
