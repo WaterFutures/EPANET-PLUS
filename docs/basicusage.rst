@@ -39,6 +39,7 @@ Quick example
             t = epanet_api.runH()
 
             print(epanet_api.getnodevalues(EpanetConstants.EN_PRESSURE))
+            #print(epanet_api.getnodevalues_numpy(EpanetConstants.EN_PRESSURE))  # Or get the values as a NumPy array
 
             tstep = epanet_api.nextH()
 

@@ -26,6 +26,7 @@ if __name__ == "__main__":
         t = epanet_api.runH()
 
         print(f"Current pressure per node: {epanet_api.getnodevalues(EpanetConstants.EN_PRESSURE)}")
+        #print(f"Current pressure per node: {epanet_api.getnodevalues_numpy(EpanetConstants.EN_PRESSURE)}")  # Or get the values as a NumPy array
 
         tstep = epanet_api.nextH()
 
