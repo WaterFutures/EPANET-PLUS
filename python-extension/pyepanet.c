@@ -1035,9 +1035,9 @@ PyObject* method_EN_setnodevalues(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int count = PyList_GET_SIZE(values);
+    Py_ssize_t count = PyList_GET_SIZE(values);
     double* rawValues = (double*) malloc(sizeof(double) * count); 
-    for(int i=0; i != count; i++) {
+    for(int i=0; i < count; i++) {
         rawValues[i] = PyFloat_AsDouble(PyList_GET_ITEM(values, i));
     }
 
@@ -1590,9 +1590,9 @@ PyObject* method_EN_setlinkvalues(PyObject* self, PyObject* args)
     }
     EN_Project ph = (EN_Project) ptr;
 
-    int count = PyList_GET_SIZE(values);
+    Py_ssize_t count = PyList_GET_SIZE(values);
     double* rawValues = (double*) malloc(sizeof(double) * count); 
-    for(int i=0; i != count; i++) {
+    for(int i=0; i < count; i++) {
         rawValues[i] = PyFloat_AsDouble(PyList_GET_ITEM(values, i));
     }
 
