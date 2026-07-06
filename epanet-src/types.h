@@ -7,7 +7,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 02/03/2026
+ Last Updated: 05/11/2026
  ******************************************************************************
 */
 
@@ -31,7 +31,7 @@ typedef  int          INT4;
    Various constants
 ----------------------------------------------
 */
-#define   CODEVERSION        20305
+#define   CODEVERSION        20306
 #define   MAGICNUMBER        516114521
 #define   ENGINE_VERSION     201   // Used for binary hydraulics file
 #define   EOFMARK            0x1A  // Use 0x04 for UNIX systems
@@ -793,7 +793,8 @@ typedef struct {
     OpenHflag,             // Hydraulic system opened flag
     Haltflag,              // Flag to halt simulation
     DeficientNodes,        // Number of pressure deficient nodes
-    HasLeakage;            // TRUE if project has non-zero leakage parameters
+    HasLeakage,            // TRUE if project has non-zero leakage parameters
+    LeakageChanged;        // TRUE if leakage parameters changed
     
   Sleakage *Leakage;       // Array of node leakage parameters
 

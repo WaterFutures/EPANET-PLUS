@@ -136,7 +136,7 @@ int ros2_integrate(double y[], int n, double t, double tnext,
 {      
     double UROUND = 2.3e-16;
     double g, ghinv, ghinv1, dghinv, ytol;
-    double h, hold, hmin, hmax, tplus;
+    double h, hmin, hmax, tplus;
     double ej, err, factor, facmax;
     int    nfcn, njac, naccept, nreject, j;
     int    isReject;
@@ -241,7 +241,6 @@ int ros2_integrate(double y[], int n, double t, double tnext,
 
     // --- Error estimation
 
-        hold = h;
         err = 0.0;
         if ( adjust )
         {

@@ -37,14 +37,12 @@ static char *Logo[] =
      "*                           Version 2.0.0                        *",     //2.0.00
      "******************************************************************"};
 
-static char PageHdr[] = "  Page %d                                    ";
 static char *StatsHdrs[] =
     {"", "Average Values  ", "Minimum Values  ",
          "Maximum Values  ", "Range of Values "};
 static char Line[MAXLINE+1];
 static long LineNum;
 static long PageNum;
-static int  *RptdSpecies;
 static struct TableHdrStruct
 {
     char Line1[MAXLINE+1];
@@ -327,7 +325,7 @@ void  newPage()
     char  s[MAXLINE+1];
     LineNum = 1;
     sprintf(s,
-            "\nPage %-3d                                             EPANET-MSX 2.0.0",   //2.0.0
+            "\nPage %lu                                             EPANET-MSX 2.0.0",   //2.0.0
             PageNum);
     writeLine(s);
     writeLine("");
@@ -359,7 +357,6 @@ void writemassbalance()
 {
 
     char s1[MAXMSG + 1];
-    int  kunits = 0;
 
     for (int m = 1; m <= MSX.Nobjects[SPECIES]; m++)
     {

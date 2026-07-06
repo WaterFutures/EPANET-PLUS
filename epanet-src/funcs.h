@@ -13,6 +13,8 @@
 #ifndef FUNCS_H
 #define FUNCS_H
 
+#include "types.h"
+
 // ------- PROJECT.C ------------
 
 void    initpointers(Project *);

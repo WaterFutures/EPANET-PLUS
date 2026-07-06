@@ -422,7 +422,6 @@ void  tankstatus(Project *pr, int k, int n, double q)
 
     int   i;
     Stank *tank;
-    Slink *link = &net->Link[k];
 
     // Return if link is closed
     if (hyd->LinkStatus[k] <= CLOSED) return;

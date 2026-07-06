@@ -880,6 +880,7 @@ int changevalvetype(Project *pr, int index, int type)
         case GPV:
             setting = 0.0;
             break;
+        default: break;
     }
     switch (type)
     {
@@ -1114,12 +1115,12 @@ void assigncurvetypes(Network *network)
 **----------------------------------------------------------------
 */
 {
+    int i, j;
     // Pump curves
-    for (int i = 1; i <= network->Npumps; i++)
+    for (i = 1; i <= network->Npumps; i++)
     {
         Spump *pump = &network->Pump[i];
 
-        int j;
         if ((j = pump->Hcurve) > 0) {
             network->Curve[j].Type = PUMP_CURVE;
         }
@@ -1129,21 +1130,19 @@ void assigncurvetypes(Network *network)
     }
 
     // Tank volume curves
-    for (int i=1; i <= network->Ntanks; i++) {
+    for (i=1; i <= network->Ntanks; i++) {
         Stank* tank = &network->Tank[i];
 
-        int j;
         if ((j = tank->Vcurve) > 0) {
             network->Curve[j].Type = VOLUME_CURVE;
         }
     }
 
     // Valve curves
-    for (int i=1; i <= network->Nvalves; i++) {
+    for (i=1; i <= network->Nvalves; i++) {
         Svalve* valve = &network->Valve[i];
         Slink* link = &network->Link[valve->Link];
 
-        int j;
         if (link->Type == PCV) {
             if((j = valve->Curve) > 0) {
                 network->Curve[j].Type = VALVE_CURVE;
@@ -1310,7 +1309,6 @@ int setcontrol(EN_Project p, int type, int linkIndex, double setting,
 */
 {
     Network *net = &p->network;
-    Parser *parser = &p->parser;
     
     long t = 0;
     double lvl = 0.0, s = MISSING;
@@ -1370,6 +1368,7 @@ int setcontrol(EN_Project p, int type, int linkIndex, double setting,
                 else return 202;
                 s = net->Link[linkIndex].Kc;
                 break;
+            default: break;
         }
     }
     

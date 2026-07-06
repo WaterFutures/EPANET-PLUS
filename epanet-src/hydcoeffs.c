@@ -172,7 +172,6 @@ double pcvlosscoeff(Project* pr, int k, double s)
     
     int v = findvalve(net, k);         // valve index
     int c = net->Valve[v].Curve;       // Kv curve index
-    double d;                          // valve diameter
     double kmo;                        // fully open loss coeff.
     double km;                         // partly open loss coeff.
     double kvr;                        // Kv / Kvo (Kvo = Kv at fully open)
@@ -184,7 +183,6 @@ double pcvlosscoeff(Project* pr, int k, double s)
     if (s == MISSING) return 0.0;
     
     // Valve is completely open so return its Km value
-    d = net->Link[k].Diam;
     kmo = net->Link[k].Km;
     if (s >= 100.0) return kmo;
     

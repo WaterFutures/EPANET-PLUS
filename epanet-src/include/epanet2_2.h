@@ -11,7 +11,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 03/05/2026
+ Last Updated: 05/11/2026
  ******************************************************************************
  */
 
@@ -221,6 +221,9 @@ typedef struct Project *EN_Project;
   @param ph an EPANET project handle.
   @param filename the name of the file to create.
   @return an error code
+  
+  This function is not thread safe. Do not call it for multiple projects
+  being analyzed in separate threads simultaneously.
   */
   int DLLEXPORT EN_saveinpfile(EN_Project ph, const char *filename);
 

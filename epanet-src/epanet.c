@@ -7,7 +7,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 03/19/2026
+ Last Updated: 05/11/2026
  ******************************************************************************
 */
 
@@ -16,6 +16,7 @@
 #include <string.h>
 #include <float.h>
 #include <math.h>
+#include <locale.h>
 
 #include "epanet2_2.h"
 #include "types.h"
@@ -48,6 +49,10 @@ int DLLEXPORT EN_createproject(EN_Project *p)
     getTmpName(project->TmpOutFname);
     getTmpName(project->TmpStatFname);
     *p = project;
+    
+    // Use system's decimal point (will be changed locally to dot
+    // when reading/writing EPANET input files)
+    setlocale(LC_NUMERIC, "");
     return 0;
 }
 
@@ -2768,7 +2773,7 @@ int DLLEXPORT EN_setnodevalues(EN_Project p, int property, double *values, int *
 **----------------------------------------------------------------
 */
 {
-    int i, j, errcode = 0;
+    int i, j, k, errcode = 0;
     int n = p->network.Nnodes;
     double *old = NULL;
 
@@ -2796,7 +2801,7 @@ int DLLEXPORT EN_setnodevalues(EN_Project p, int property, double *values, int *
         }
         if (errcode != 0)
         {
-            for (int k = 1; k <= j; k++)
+            for (k = 1; k <= j; k++)
             {
                 EN_setnodevalue(p, k, property, old[k - 1]);
             }
@@ -4331,12 +4336,22 @@ int DLLEXPORT EN_setlinkvalue(EN_Project p, int index, int property, double valu
 
     case EN_LEAK_AREA:  // leak area per 100 pipe lengths units
         if (value < 0.0) return 211;
-        Link[index].LeakArea = value * Ucf[LENGTH];
+        value = value * Ucf[LENGTH];
+        if (fabs(value - Link[index].LeakArea) > TINY)
+        {
+            Link[index].LeakArea = value;
+            if (hyd->OpenHflag) hyd->LeakageChanged = TRUE;
+        }
         break;
 
     case EN_LEAK_EXPAN:  // leak area expansion slope per 100 pipe length units
         if (value < 0.0) return 211;
-        Link[index].LeakExpan = value * Ucf[LENGTH];
+        value = value * Ucf[LENGTH];
+        if (fabs(value - Link[index].LeakExpan) > TINY)
+        {
+            Link[index].LeakExpan = value;
+            if (hyd->OpenHflag) hyd->LeakageChanged = TRUE;
+        }
         break;
         
     case EN_VALVE_TYPE:
@@ -4344,7 +4359,7 @@ int DLLEXPORT EN_setlinkvalue(EN_Project p, int index, int property, double valu
         if (Link[index].Type <= PUMP) return 264;           //Link not a valve
         valveType = ROUND(value);
         if (valveType < PRV || valveType > PCV) return 213; //Invalid valve type
-        if (valveType == Link[index].Type) return 0;        //No type change
+        if (valveType == (int)Link[index].Type) return 0;        //No type change
         return changevalvetype(p, index, valveType);        //See project.c
 
     default:
@@ -4363,7 +4378,7 @@ int DLLEXPORT EN_setlinkvalues(EN_Project p, int property, double *values, int *
 **----------------------------------------------------------------
 */
 {
-    int i, j, errcode = 0;
+    int i, j, k, errcode = 0;
     int n = p->network.Nlinks;
     double *old = NULL;
 
@@ -4391,7 +4406,7 @@ int DLLEXPORT EN_setlinkvalues(EN_Project p, int property, double *values, int *
         }
         if (errcode != 0)
         {
-            for (int k = 1; k <= j; k++)
+            for (k = 1; k <= j; k++)
             {
                 EN_setlinkvalue(p, k, property, old[k - 1]);
             }
@@ -4632,7 +4647,6 @@ int DLLEXPORT EN_setheadcurveindex(EN_Project p, int linkIndex, int curveIndex)
     Network *net = &p->network;
 
     int pumpIndex;
-    int err = 0;
     Spump *pump;
 
     // Check for valid parameters

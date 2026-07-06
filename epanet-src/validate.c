@@ -87,7 +87,6 @@ int validatepatterns(Project *pr)
 **-------------------------------------------------------------------
 */
 {
-    Network *net = &pr->network;
     int j, result = 1;
     char errmsg[MAXMSG+1] = "";
 

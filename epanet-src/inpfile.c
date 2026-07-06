@@ -7,7 +7,7 @@ Description:  saves network data to an EPANET formatted text file
 Authors:      see AUTHORS
 Copyright:    see AUTHORS
 License:      see LICENSE
-Last Updated: 04/19/2025
+Last Updated: 05/11/2026
 ******************************************************************************
 */
 
@@ -15,6 +15,7 @@ Last Updated: 04/19/2025
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <locale.h>
 
 #include "types.h"
 #include "funcs.h"
@@ -132,6 +133,9 @@ int saveinpfile(Project *pr, const char *fname)
 
     // Open the new text file
     if ((f = fopen(fname, "wt")) == NULL) return 302;
+    
+    // Set global decimal point character to dot (not thread safe)
+    setlocale(LC_NUMERIC, "C");
 
     // Write [TITLE] section
     fprintf(f, s_TITLE);
@@ -881,5 +885,9 @@ int saveinpfile(Project *pr, const char *fname)
     // Close the new input file
     fprintf(f, "\n%s\n", s_END);
     fclose(f);
+    
+    // Reset global decimal point character to system value
+    setlocale(LC_NUMERIC, "");
+    
     return 0;
 }

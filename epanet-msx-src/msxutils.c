@@ -17,6 +17,7 @@
 #include <float.h>
 
 #include "msxutils.h"
+#include "funcs.h"
 // --- define WINDOWS
 
 #undef WINDOWS
@@ -252,10 +253,17 @@ int  MSXutils_getDouble(char *s, double *y)
 **    1 if conversion successful, 0 if not.
 */
 {
-    char *endptr;
-    *y = strtod(s, &endptr);
-    if (*endptr > 0) return(0);
-    return(1);
+    int r = getfloat(s, y);
+
+    if (r==0) {
+        char *endptr;
+        *y = strtod(s, &endptr);
+        if (*endptr > 0) return(0);
+        return(1);
+    }
+    else {
+        return r;
+    }
 }
 
 //=============================================================================

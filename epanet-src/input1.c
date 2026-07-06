@@ -352,8 +352,6 @@ void inittanks(Project *pr)
 
     int i, j, n = 0;
     double a;
-    int errcode = 0;
-    char errmsg[MAXMSG+1] = "";
     Stank *tank;
     Scurve *curve;
 
