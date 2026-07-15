@@ -1,10 +1,10 @@
 """
 This module contains a Python wrapper (incl. error handling) for EPANET and EPANET-MSX functions.
 """
+from typing import Any
 import warnings
 import numpy
 import epanet
-import Any 
 
 
 class EpanetAPI():
