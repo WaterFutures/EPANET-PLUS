@@ -86,6 +86,7 @@ int MSXcompiler_open()
 //     and replace any '.' characters in it (for the Borland compiler to work)
 
         Fname = MSXutils_getTempName(TempName) ;
+        if ( Fname == NULL ) return ERR_COMPILE_FAILED;
 
 // --- assign names to source code and compiled files
 
