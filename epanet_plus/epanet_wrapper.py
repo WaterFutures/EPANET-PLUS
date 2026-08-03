@@ -1,7 +1,7 @@
 """
 This module contains a Python wrapper (incl. error handling) for EPANET and EPANET-MSX functions.
 """
-from typing import Any
+from typing import Any, Tuple
 import warnings
 import numpy
 import epanet
@@ -303,6 +303,22 @@ class EpanetAPI():
             return self._process_result(epanet.ENopenX(inpFile, rptFile, outFile))
         else:
             return self._process_result(epanet.EN_openX(self._ph, inpFile, rptFile, outFile))
+
+    def gettmpfiles(self) -> Tuple[str, str, str]:
+        """
+        EN_gettmpfiles -- extension of EPANET and part of EPANET-PLUS
+
+        Returns
+        -------
+        tuple[str, str, str]
+            Filenames of temporary EPANET files.
+            The underlying C function returns a tuple (errcode, TmpHydFname, TmpOutFname, TmpStatFname), 
+            which `_process_result` unwraps and returns as a list of three strings.
+        """
+        if self._use_project is False:
+            return self._process_result(epanet.ENgettmpfiles())
+        else:
+            return self._process_result(epanet.EN_gettmpfiles(self._ph))
 
     def gettitle(self) -> list[str]:
         """

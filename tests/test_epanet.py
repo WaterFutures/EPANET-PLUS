@@ -14,5 +14,6 @@ def test():
     assert epanet_api.getcount(EpanetConstants.EN_NODECOUNT) > 0
     assert epanet_api.getcount(EpanetConstants.EN_LINKCOUNT) > 0
     assert epanet_api.getcount(EpanetConstants.EN_TANKCOUNT) > 0
+    assert len(epanet_api.gettmpfiles()) == 3
 
     epanet_api.close()
