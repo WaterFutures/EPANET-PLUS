@@ -7,8 +7,10 @@
 
 PyMethodDef EpanetMethods[] = {
     // EPANET-PLUS
-    {"ENopenfrombuffer", method_ENopenfrombuffer, METH_VARARGS, "Python interface for ENopenfrombuffer TODO"},
-    {"EN_openfrombuffer", method_EN_openfrombuffer, METH_VARARGS, "Python interface for EN_openfrombuffer TODO"},
+    {"ENopenfrombuffer", method_ENopenfrombuffer, METH_VARARGS, "Python interface for custom ENopenfrombuffer function"},
+    {"EN_openfrombuffer", method_EN_openfrombuffer, METH_VARARGS, "Python interface for custom EN_openfrombuffer function"},
+    {"ENgettmpfiles", method_ENgettmpfiles, METH_NOARGS, "Python interface for custom ENgettmpfiles function"},
+    {"EN_gettmpfiles", method_EN_gettmpfiles, METH_VARARGS, "Python interface for custom EN_gettmpfiles function"},
 
     // EPANET-MSX
     {"MSXENopen", method_MSXENopen, METH_VARARGS, "Python interface for MSXENopen C function from EPANET-MSX"},

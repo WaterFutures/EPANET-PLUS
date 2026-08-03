@@ -27,6 +27,11 @@
 Project __defaultProject;
 Project *_defaultProject = &__defaultProject;
 
+Project* ENgetdefaultproject()  // Added by EPANET-PLUS to get access to _defaultProject
+{
+    return _defaultProject;
+}
+
 // Functions for creating and removing default temporary files
 void createtmpfiles()
 {

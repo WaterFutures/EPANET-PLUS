@@ -346,9 +346,19 @@ class EPyT(EpanetAPI):
         Buffer containing the network -- i.e., content of an .inp file.
 
         The default is None.
+    rpt_file_out : `str`, optional
+        Path to report file (.rpt).
+        If None, no .rpt file will be created
+
+        The default is None.
+    out_file_out : `str`, optional
+        Path to binary output file.
+        If None, no output file will be created
+
+        The default is None.
     """
     def __init__(self, inp_file_in: str = None, msx_file_in: str = None, use_project: bool = False,
-                 inp_buffer: str = None, **kwds):
+                 inp_buffer: str = None, rpt_file_out: str = None, out_file: str = None, **kwds):
         if msx_file_in is not None and use_project is True:
             raise ValueError("'use_project' must be False if 'msx_file_in' is not None")
 
@@ -369,11 +379,13 @@ class EPyT(EpanetAPI):
 
         self._inp_file = inp_file_in
         self._msx_file = msx_file_in
+        self._rpt_file = "" if rpt_file_out is None else rpt_file_out
+        self._out_file = "" if out_file is None else out_file
 
         if inp_buffer is not None:
-            self.openfrombuffer(inp_buffer, self._inp_file, self._inp_file + ".rpt", "")
+            self.openfrombuffer(inp_buffer, self._inp_file, self._rpt_file, self._out_file)
         else:
-            self.open(self._inp_file, self._inp_file + ".rpt", "")
+            self.open(self._inp_file, self._rpt_file, self._out_file)
 
         if msx_file_in is not None:
             self.load_msx_file(self._msx_file)
