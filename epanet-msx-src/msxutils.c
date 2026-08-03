@@ -28,6 +28,10 @@
   #define WINDOWS
 #endif
 
+#ifndef WINDOWS
+  #include <unistd.h>
+#endif
+
 #define UCHAR(x) (((x) >= 'a' && (x) <= 'z') ? ((x)&~32) : (x))
 #define TINY1 1.0e-20
 
@@ -68,9 +72,13 @@ char * MSXutils_getTempName(char *s)
 	strcpy(s, ".\\");
     strcat(s, ptr);
 #else
+    int fd;
+
     // --- use system function mkstemp() to create a temporary file name
     strcpy(s, "msxXXXXXX");
-    mkstemp(s);
+    fd = mkstemp(s);
+    if (fd < 0) return NULL;
+    close(fd);
 #endif
     return s;
 }

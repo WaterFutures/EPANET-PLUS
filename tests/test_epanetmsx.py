@@ -1,7 +1,12 @@
 """
 This module tests EPANET-MSX functions.
 """
+import ctypes
 import os
+
+import epanet
+import pytest
+
 from epanet_plus import EPyT, EpanetAPI, EpanetConstants
 
 
@@ -36,3 +41,25 @@ def test_simulation():
 
             if tleft == 0:
                 break
+
+
+@pytest.mark.skipif(not os.path.exists("/dev/fd"),
+                    reason="File descriptor counting requires /dev/fd")
+def test_msx_temp_name_does_not_leak_file_descriptors(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+
+    library = ctypes.CDLL(epanet.__file__)
+    get_temp_name = library.MSXutils_getTempName
+    get_temp_name.argtypes = [ctypes.POINTER(ctypes.c_char)]
+    get_temp_name.restype = ctypes.c_char_p
+
+    initial_fd_count = len(os.listdir("/dev/fd"))
+
+    for _ in range(100):
+        temp_name = ctypes.create_string_buffer(1024)
+        assert get_temp_name(temp_name) is not None
+        os.remove(temp_name.value.decode())
+
+    final_fd_count = len(os.listdir("/dev/fd"))
+
+    assert final_fd_count <= initial_fd_count + 1
