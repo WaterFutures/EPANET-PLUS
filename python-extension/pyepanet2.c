@@ -1832,8 +1832,32 @@ PyObject* method_ENsetlinkvalues(PyObject* self, PyObject* args)
 
 PyObject* method_ENsetlinkvalues_NPY(PyObject* self, PyObject* args)
 {
-    // TOOD
-    return NULL;
+    int property; 
+    PyObject* values = NULL;
+    if(!PyArg_ParseTuple(args, "iO", &property, &values)) {
+        return NULL;
+    }
+    
+
+    PyArrayObject* array = (PyArrayObject*) PyArray_FROM_OTF (values, NPY_FLOAT, NPY_ARRAY_IN_ARRAY);
+
+    if (array == NULL) {
+        return NULL;
+    }
+
+    float* rawValues = (float*) PyArray_DATA(array);
+
+    int badIndex;
+    PyObject* err = PyLong_FromLong(ENsetlinkvalues(property, rawValues, &badIndex));
+    PyObject* pyBadIndex = PyLong_FromLong(badIndex);
+
+    PyObject* r = PyTuple_Pack(2, err, pyBadIndex);
+    
+    Py_DECREF(array);
+    Py_DECREF(err);
+    Py_DECREF(pyBadIndex);
+
+    return r;
 }
 
 PyObject* method_ENsetnodeid(PyObject* self, PyObject* args)
@@ -1898,11 +1922,10 @@ PyObject* method_ENsetnodevalues(PyObject* self, PyObject* args)
 }
 
 PyObject* method_ENsetnodevalues_NPY(PyObject* self, PyObject* args)
-{
-    uintptr_t ptr; 
+{ 
     int property; 
     PyObject* values = NULL;
-    if(!PyArg_ParseTuple(args, "KiO", &ptr, &property, &values)) {
+    if(!PyArg_ParseTuple(args, "iO", &property, &values)) {
         return NULL;
     }
 

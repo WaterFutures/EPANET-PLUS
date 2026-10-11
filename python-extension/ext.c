@@ -182,6 +182,7 @@ PyMethodDef EpanetMethods[] = {
     {"EN_timetonextevent", method_EN_timetonextevent, METH_VARARGS, "Python interface for EN_timetonextevent C function from EPANET"},
     {"EN_getnodevalues", method_EN_getnodevalues, METH_VARARGS, "Python interface for EN_getnodevalues C function from EPANET"},
     {"EN_setnodevalues", method_EN_setnodevalues, METH_VARARGS, "Python interface for EN_setnodevalues C function from EPANET"},
+    {"EN_setnodevalues_NPY", method_EN_setnodevalues_NPY, METH_VARARGS, "NumPy compatible Python interface for EN_setnodevalues C function from EPANET"},
     {"EN_getnodevalues_NPY", method_EN_getnodevalues_NPY, METH_VARARGS, "NumPy compatible Python interface for EN_getnodevalues C function from EPANET"},
     {"EN_getlinkvalues", method_EN_getlinkvalues, METH_VARARGS, "Python interface for EN_getlinkvalues C function from EPANET"},
     {"EN_getlinkvalues_NPY", method_EN_getlinkvalues_NPY, METH_VARARGS, "Numpy compatible Python interface for EN_getlinkvalues C function from EPANET"},
