@@ -1830,6 +1830,36 @@ PyObject* method_ENsetlinkvalues(PyObject* self, PyObject* args)
     return r;
 }
 
+PyObject* method_ENsetlinkvalues_NPY(PyObject* self, PyObject* args)
+{
+    int property; 
+    PyObject* values = NULL;
+    if(!PyArg_ParseTuple(args, "iO", &property, &values)) {
+        return NULL;
+    }
+    
+
+    PyArrayObject* array = (PyArrayObject*) PyArray_FROM_OTF (values, NPY_FLOAT, NPY_ARRAY_IN_ARRAY);
+
+    if (array == NULL) {
+        return NULL;
+    }
+
+    float* rawValues = (float*) PyArray_DATA(array);
+
+    int badIndex;
+    PyObject* err = PyLong_FromLong(ENsetlinkvalues(property, rawValues, &badIndex));
+    PyObject* pyBadIndex = PyLong_FromLong(badIndex);
+
+    PyObject* r = PyTuple_Pack(2, err, pyBadIndex);
+    
+    Py_DECREF(array);
+    Py_DECREF(err);
+    Py_DECREF(pyBadIndex);
+
+    return r;
+}
+
 PyObject* method_ENsetnodeid(PyObject* self, PyObject* args)
 {
     int index;
@@ -1884,7 +1914,36 @@ PyObject* method_ENsetnodevalues(PyObject* self, PyObject* args)
     PyObject* pyBadIndex = PyLong_FromLong(badIndex);
     free(rawValues);
 
-    PyObject* r = PyTuple_Pack(1, err, pyBadIndex);
+    PyObject* r = PyTuple_Pack(2, err, pyBadIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyBadIndex);
+
+    return r;
+}
+
+PyObject* method_ENsetnodevalues_NPY(PyObject* self, PyObject* args)
+{ 
+    int property; 
+    PyObject* values = NULL;
+    if(!PyArg_ParseTuple(args, "iO", &property, &values)) {
+        return NULL;
+    }
+
+    PyArrayObject* array = (PyArrayObject*) PyArray_FROM_OTF (values, NPY_FLOAT, NPY_ARRAY_IN_ARRAY);
+
+    if (array == NULL) {
+        return NULL;
+    }
+
+    float* rawValues = (float*) PyArray_DATA(array);
+
+    int badIndex;
+    PyObject* err = PyLong_FromLong(ENsetnodevalues(property, rawValues, &badIndex));
+    PyObject* pyBadIndex = PyLong_FromLong(badIndex);
+
+    PyObject* r = PyTuple_Pack(2, err, pyBadIndex);
+
+    Py_DECREF(array);
     Py_DECREF(err);
     Py_DECREF(pyBadIndex);
 

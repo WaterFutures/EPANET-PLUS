@@ -1285,8 +1285,9 @@ int DLLEXPORT EN_setoption(EN_Project p, int option, double value)
         return 0;
     }
 
-    // All other option values must be non-negative
-    if (value < 0.0) return 213;
+    // Bulk and tank reaction orders can be negative to select
+    // Michaelis-Menten kinetics. All other option values must be non-negative.
+    if (value < 0.0 && option != EN_BULKORDER && option != EN_TANKORDER) return 213;
 
     // Process the specified option
     switch (option)
@@ -1477,7 +1478,7 @@ int DLLEXPORT EN_setflowunits(EN_Project p, int units)
 
     int i, j;
     double qfactor, vfactor, hfactor, efactor, pfactor, dfactor, xfactor, yfactor;
-    double dcf, pcf, hcf, qcf;
+    double dcf, pcf, hcf, qcf, kwallfactor;
     double *Ucf = p->Ucf;
 
     if (!p->Openflag) return 102;
@@ -1506,6 +1507,22 @@ int DLLEXPORT EN_setflowunits(EN_Project p, int units)
         break;
     }
     initunits(p);
+
+    // Preserve the physical meaning of wall reaction coefficients when the
+    // unit system changes. First-order wall coefficients use length/time
+    // units while zero-order coefficients use mass/area/time units.
+    if (p->quality.WallOrder == 0.0)
+        kwallfactor = SQR(efactor / Ucf[ELEV]);
+    else
+        kwallfactor = Ucf[ELEV] / efactor;
+
+    p->quality.Kwall *= kwallfactor;
+    if (p->quality.Rfactor != MISSING) p->quality.Rfactor *= kwallfactor;
+    for (i = 1; i <= net->Nlinks; i++)
+    {
+        if (net->Link[i].Type <= PIPE && net->Link[i].Kw != MISSING)
+            net->Link[i].Kw *= kwallfactor;
+    }
 
     // Update units in rules
     dcf =  Ucf[DEMAND] / dfactor;
@@ -2878,7 +2895,7 @@ int DLLEXPORT EN_settankdata(EN_Project p, int index, double elev,
 
     int i, j, n, curveIndex = 0;
     double *Ucf = p->Ucf;
-    double area;
+    double area, minVolume;
     Stank *Tank = net->Tank;
     Scurve *curve;
 
@@ -2923,12 +2940,21 @@ int DLLEXPORT EN_settankdata(EN_Project p, int index, double elev,
     Tank[j].Vcurve = curveIndex;
     if (curveIndex == 0)
     {
-        if (minvol > 0.0) Tank[j].Vmin = minvol / Ucf[VOLUME];
-        else Tank[j].Vmin = Tank[j].A * (Tank[j].Hmin - elev / Ucf[ELEV]);
+        // Compute cylindrical volumes in user units before converting them
+        // to internal units, matching the input-file parsing path.
+        minVolume = area * minlvl;
+        if (minvol > 0.0) minVolume = minvol;
+        Tank[j].Vmin = minVolume / Ucf[VOLUME];
+        Tank[j].V0 = (minVolume + area * (initlvl - minlvl)) / Ucf[VOLUME];
+        Tank[j].Vmax = (minVolume + area * (maxlvl - minlvl)) / Ucf[VOLUME];
     }
-    else Tank[j].Vmin = tankvolume(p, j, Tank[j].Hmin);
-    Tank[j].V0 = tankvolume(p, j, Tank[j].H0);
-    Tank[j].Vmax = tankvolume(p, j, Tank[j].Hmax);
+    else 
+    {
+        Tank[j].Vmin = tankvolume(p, j, Tank[j].Hmin);
+        Tank[j].V0 = tankvolume(p, j, Tank[j].H0);
+        Tank[j].Vmax = tankvolume(p, j, Tank[j].Hmax);
+    }
+    
     return 0;
 }
 

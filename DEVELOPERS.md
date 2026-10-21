@@ -25,6 +25,49 @@ Code must work with all current Python versions from 3.10 to 3.14. Also, code mu
 
 - [Nox](https://nox.thea.codes/en/stable/) is used to test different Python versions -- see [noxfile.py](noxfile.py).
 
+
+## Compiling EPANET-PLUS
+
+1. Install the `build` package if it is not already installed:
+
+```bash
+pip install build
+```
+
+2. Build the Python package:
+
+```bash
+python -m build
+```
+
+3. Compile the EPANET-PLUS shared library using the script for your operating system:
+
+**Linux:**
+
+```bash
+./compile_linux.sh
+```
+
+**macOS:**
+
+```bash
+./compile_macos.sh
+```
+
+If the script is not executable, run:
+
+```bash
+chmod +x compile_linux.sh
+```
+
+or, on macOS:
+
+```bash
+chmod +x compile_macos.sh
+```
+
+and then run the corresponding script again.
+
 ## Building the documentation
 
 1. Install all REQUIREMENTS listed in [requirements.txt](docs/requirements.txt) by running:

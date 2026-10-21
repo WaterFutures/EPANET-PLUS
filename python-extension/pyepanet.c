@@ -1,8 +1,10 @@
 #include <Python.h>
 #include "numpy/ndarraytypes.h"
 #include "numpy/ufuncobject.h"
+#include <numpy/arrayobject.h>
 #include "epanet2_2.h"
 #include "types.h"
+
 
 
 
@@ -1046,11 +1048,43 @@ PyObject* method_EN_setnodevalues(PyObject* self, PyObject* args)
     PyObject* pyBadIndex = PyLong_FromLong(badIndex);
     free(rawValues);
 
-    PyObject* r = PyTuple_Pack(1, err, pyBadIndex);
+    PyObject* r = PyTuple_Pack(2, err, pyBadIndex);
     Py_DECREF(err);
     Py_DECREF(pyBadIndex);
 
     return r;
+}
+
+PyObject* method_EN_setnodevalues_NPY(PyObject* self, PyObject* args)
+{
+    uintptr_t ptr; 
+    int property; 
+    PyObject* values = NULL;
+    if(!PyArg_ParseTuple(args, "KiO", &ptr, &property, &values)) {
+        return NULL;
+    }
+    EN_Project ph = (EN_Project) ptr; 
+
+    PyArrayObject* array = (PyArrayObject*) PyArray_FROM_OTF (values, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY);
+
+    if (array == NULL) {
+        return NULL;
+    }
+
+    double* rawValues = (double*) PyArray_DATA(array);
+
+    int badIndex;
+    PyObject* err = PyLong_FromLong(EN_setnodevalues(ph, property, rawValues, &badIndex));
+    PyObject* pyBadIndex = PyLong_FromLong(badIndex);
+
+    PyObject* r = PyTuple_Pack(2, err, pyBadIndex);
+
+    Py_DECREF(array);
+    Py_DECREF(err);
+    Py_DECREF(pyBadIndex);
+
+    return r;
+
 }
 
 PyObject* method_EN_setjuncdata(PyObject* self, PyObject* args)
@@ -1601,6 +1635,37 @@ PyObject* method_EN_setlinkvalues(PyObject* self, PyObject* args)
     PyObject* pyBadIndex = PyLong_FromLong(badIndex);
 
     PyObject* r = PyTuple_Pack(2, err, pyBadIndex);
+    Py_DECREF(err);
+    Py_DECREF(pyBadIndex);
+
+    return r;
+}
+
+PyObject* method_EN_setlinkvalues_NPY(PyObject* self, PyObject* args)
+{
+    uintptr_t ptr; 
+    int property; 
+    PyObject* values = NULL;
+    if(!PyArg_ParseTuple(args, "KiO", &ptr, &property, &values)) {
+        return NULL;
+    }
+    EN_Project ph = (EN_Project) ptr; 
+
+    PyArrayObject* array = (PyArrayObject*) PyArray_FROM_OTF (values, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY);
+
+    if (array == NULL) {
+        return NULL;
+    }
+
+    double* rawValues = (double*) PyArray_DATA(array);
+
+    int badIndex;
+    PyObject* err = PyLong_FromLong(EN_setlinkvalues(ph, property, rawValues, &badIndex));
+    PyObject* pyBadIndex = PyLong_FromLong(badIndex);
+
+    PyObject* r = PyTuple_Pack(2, err, pyBadIndex);
+    
+    Py_DECREF(array);
     Py_DECREF(err);
     Py_DECREF(pyBadIndex);
 

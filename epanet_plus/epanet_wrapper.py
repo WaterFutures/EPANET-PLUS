@@ -1331,6 +1331,28 @@ class EpanetAPI():
         else:
             return self._process_result(epanet.EN_setnodevalues(self._ph, node_property, values))
 
+    def setnodevalues_numpy(self, node_property: int, values: numpy.ndarray) -> None: 
+        """
+        EN_setnodevalues_NPY (numpy compatible)
+
+        Parameters
+        ----------
+        node_property : `int`
+        values: `nmumpy.ndarray`
+
+        Returns
+        -------
+        None
+            The underlying C function returns a tuple containing only the
+            error code (errcode,), which `_process_result` unwraps and
+            returns as None. Errors trigger warnings or exceptions depending 
+            on configuration.
+        """
+        if self._use_project is False: 
+            return self._process_result(epanet.ENsetnodevalues_NPY(node_property, values))
+        else: 
+            return self._process_result(epanet.EN_setnodevalues_NPY(self._ph, node_property, values))
+
     def setjuncdata(self, index: int, elev: float, dmnd: float, dmnd_pat: str) -> None:
         """
         EN_setjuncdata
@@ -1962,6 +1984,30 @@ class EpanetAPI():
             return self._process_result(epanet.ENsetlinkvalues(property, values))
         else:
             return self._process_result(epanet.EN_setlinkvalues(self._ph, property, values))
+
+    def setlinkvalues_numpy(self, property: int, values: list[float]) -> int:
+        """
+        EN_setlinkvalues_NPY (numpy compatible)
+
+        Parameters
+        ----------
+        property : `int`
+        values : `numpy.ndarray`
+
+        Returns
+        -------
+        int
+            The index of the first link for which the update failed. 
+            The underlying C function returns a tuple (errcode, badIndex), which 
+            `_process_result` unwraps and returns as a plain integer.
+            A return value of 0 indicates that all updates succeeded. 
+
+        
+        """
+        if self._use_project is False:
+            return self._process_result(epanet.ENsetlinkvalues_NPY(property, values))
+        else:
+            return self._process_result(epanet.EN_setlinkvalues_NPY(self._ph, property, values))
 
     def setpipedata(self, index: int, length: float, diam: float, rough: float, mloss: float) -> None:
         """
