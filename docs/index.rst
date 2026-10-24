@@ -28,6 +28,7 @@ Unique features of EPANET-PLUS that make it superior to other Python interfaces 
 
     installation
     basicusage
+    msx_parser_usage
     tut.overview
 
 .. _tut.examples:
@@ -39,7 +40,7 @@ Examples
    :caption: Jupyter notebooks
 
    examples/basic_usage
-
+   examples/msx_parser_example
 
 API Reference
 =============
