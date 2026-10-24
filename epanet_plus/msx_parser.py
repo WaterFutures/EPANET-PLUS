@@ -3,10 +3,8 @@ This module contains a Python parser for EPANET-MSX functions.
 """
 import re
 import sympy
-from sympy import symbols, lambdify, pycode
+from sympy import symbols, lambdify
 from sympy.parsing.sympy_parser import parse_expr, standard_transformations, convert_xor
-import torch
-from collections import defaultdict
 from sympy.utilities.lambdify import lambdastr
 from typing import Any 
 
@@ -80,7 +78,7 @@ def parse_equation(equation_str: str, constants: dict[str, float], terms: dict[s
     sym_expr = sym_expr.subs(surface_per_vol, 4 / (1000 * diameter)) 
     # Lambdify converts the symbolic expression into a Python function
     # It accepts the species as a vector/list matching the species_list order
-    rate_equation = lambdify([sym_map.values(), *sym_variables.values(), *fn_args], sym_expr, modules='jax')
+    rate_equation = lambdify([sym_map.values(), *sym_variables.values(), *fn_args], sym_expr, modules='numpy')
     print(lambdastr((tuple(sym_map.values()), *sym_variables.values(), *fn_args), sym_expr))
     
     
