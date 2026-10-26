@@ -5,7 +5,6 @@ import re
 import sympy
 from sympy import symbols, lambdify
 from sympy.parsing.sympy_parser import parse_expr, standard_transformations, convert_xor
-from sympy.utilities.lambdify import lambdastr
 from typing import Any 
 
 
@@ -79,7 +78,7 @@ def parse_equation(equation_str: str, constants: dict[str, float], terms: dict[s
     # Lambdify converts the symbolic expression into a Python function
     # It accepts the species as a vector/list matching the species_list order
     rate_equation = lambdify([sym_map.values(), *sym_variables.values(), *fn_args], sym_expr, modules='numpy')
-    print(lambdastr((tuple(sym_map.values()), *sym_variables.values(), *fn_args), sym_expr))
+    #print(lambdastr((tuple(sym_map.values()), *sym_variables.values(), *fn_args), sym_expr))
     
     
     return species_name, rate_equation
