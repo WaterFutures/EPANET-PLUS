@@ -17,3 +17,12 @@ epanet_plus.epanet_toolkit
    :members:
    :show-inheritance:
 
+
+epanet_plus.msx_parser
+--------------------------
+
+.. automodule:: epanet_plus.msx_parser
+   :members:
+   :show-inheritance:
+
+
