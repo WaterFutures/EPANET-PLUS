@@ -100,7 +100,7 @@ def parse_constants(constant_str : str) -> tuple [str, float]:
     parts = re.split(r'\s+', constant_str)[1:]
     assert len(parts) >= 2
     name = parts[0]
-    value = float(parts[1])
+    value = float(parts[1].replace(",", "."))
     return name, value
 
 def parse_terms(term_str : str, constants : dict[str, float]) -> tuple [str, str]:
@@ -216,12 +216,12 @@ def parse_msx(msx_file : str, variables : list[str] = []) -> dict[str, Any]:
             if line.startswith('NODE'):
                 parts = re.split(r'\s+', line)[1:]
                 species_name = parts[1]
-                initial_value = float(parts[2])
+                initial_value = float(parts[2].replace(",", "."))
                 initial_conditions[species_name] = initial_value
             elif line.startswith('GLOBAL'):
                 parts = re.split(r'\s+', line)[1:]
                 species_name = parts[0]
-                initial_value = float(parts[1])
+                initial_value = float(parts[1].replace(",", "."))
                 initial_conditions[species_name] = initial_value
     
 
