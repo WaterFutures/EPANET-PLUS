@@ -7,7 +7,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 02/17/2025
+ Last Updated: 10/10/2026
  ******************************************************************************
 */
 #ifndef FUNCS_H
@@ -63,12 +63,18 @@ int     settag(Network *, int, int, const char *);
 
 int     namevalid(const char *);
 void    getTmpName(char *);
+void    *setnumericlocale(const char *);
+void    restorenumericlocale(void *);
 char    *xstrcpy(char **, const char *, const size_t n);
 int     strcomp(const char *, const char *);
 double  interp(int, double [], double [], double);
 char    *geterrmsg(int, char *);
 void    errmsg(Project *, int);
 void    writewin(void (*vp)(char *), char *);
+
+// ------- VALIDATE.C --------------
+
+int     validtankcurve(const Scurve *);
 
 // ------- INPUT1.C ----------------
 
@@ -79,6 +85,7 @@ void    adjustdata(Project *);
 void    inittanks(Project *);
 void    initunits(Project *);
 void    convertunits(Project *);
+void    adjustpressuredata(Project *, double);
 
 //-------- INPUT2.C -----------------
 
@@ -179,6 +186,10 @@ void    emitterheadloss(Project *, int, double *, double *);
 void    demandheadloss(Project *, int, double, double, double *, double *);
 double  pcvlosscoeff(Project *, int, double);
 
+// ------- VALIDATE.C -----------------
+
+int     updatepumpparams(Project *, int);
+
 // ------- QUALITY.C --------------------
 
 int     openqual(Project *);
@@ -195,6 +206,7 @@ int     savenetdata(Project *);
 int     savehyd(Project *, long *);
 int     savehydstep(Project *, long *);
 int     saveenergy(Project *);
+void    pumpenergystats(Project *, int, Senergy *);
 int     readhyd(Project *, long *);
 int     readhydstep(Project *, long *);
 int     saveoutput(Project *);

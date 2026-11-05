@@ -7,7 +7,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 03/18/2024
+ Last Updated: 10/08/2026
  ******************************************************************************
 */
 
@@ -23,6 +23,25 @@
 // Exported functions
 int  validateproject(Project *);
 void reindextanks(Project *);
+
+int validtankcurve(const Scurve *curve)
+/*
+**-------------------------------------------------------------------
+**  Input:   curve = tank volume curve
+**  Output:  returns 1 if valid, 0 otherwise
+**  Purpose: checks that tank volume increases with water depth.
+**-------------------------------------------------------------------
+*/
+{
+    int i;
+    if (curve->Npts < 2) return 0;
+    for (i = 1; i < curve->Npts; i++)
+    {
+        if (curve->X[i] <= curve->X[i-1] ||
+            curve->Y[i] <= curve->Y[i-1]) return 0;
+    }
+    return 1;
+}
 
 int validatetanks(Project *pr)
 /*
@@ -58,6 +77,14 @@ int validatetanks(Project *pr)
         if (i > 0)
         {
             curve = &net->Curve[i];
+            if (!validtankcurve(curve))
+            {
+                sprintf(pr->Msg, "Error 228: %s node %s", geterrmsg(228, errmsg),
+                        net->Node[tank->Node].ID);
+                writeline(pr, pr->Msg);
+                result = 0;
+                continue;
+            }
             n = curve->Npts - 1;
             if ((tank->Hmin - elev) * pr->Ucf[ELEV] < curve->X[0] - TINY ||
                 (tank->Hmax - elev) * pr->Ucf[ELEV] > curve->X[n] + TINY)
@@ -146,6 +173,48 @@ int validatecurves(Project *pr)
                     break;
                 }
             }       
+        }
+    }
+    return result;
+}
+
+int validatevalves(Project *pr)
+/*
+**-------------------------------------------------------------------
+**  Input:   none
+**  Output:  returns 1 if successful, 0 if not
+**  Purpose: checks that each GPV is assigned a head loss curve.
+**-------------------------------------------------------------------
+*/
+{
+    Network *net = &pr->network;
+    int i, c, result = 1;
+    char errmsg[MAXMSG+1] = "";
+    Slink *link;
+
+    for (i = 1; i <= net->Nvalves; i++)
+    {
+        link = &net->Link[net->Valve[i].Link];
+        if (link->Type != GPV) continue;
+
+        // Check for valid head loss curve
+        c = net->Valve[i].Curve;
+        if (c < 1 || c > net->Ncurves)
+        {
+            sprintf(pr->Msg, "Error 206: %s for GPV %s",
+                geterrmsg(206, errmsg), link->ID);
+            writeline(pr, pr->Msg);
+            result = 0;
+        }
+
+        // Head loss is interpolated between curve points, so a GPV's
+        // curve needs at least 2 (validatecurves() reports 0 points)
+        else if (net->Curve[c].Npts == 1)
+        {
+            sprintf(pr->Msg, "Error 231: %s %s (a GPV curve needs 2 or more points)",
+                geterrmsg(231, errmsg), net->Curve[c].ID);
+            writeline(pr, pr->Msg);
+            result = 0;
         }
     }
     return result;
@@ -276,12 +345,38 @@ int constpowerpump(Project *pr, Spump *pump)
 {
     pump->Ptype = CONST_HP;
     pump->H0 = 0.0;
-    pump->R = -8.814 * pr->network.Link[pump->Link].Km / pr->Ucf[POWER];
+    pump->R = -8.814 * pr->network.Link[pump->Link].Km;
     pump->N = -1.0;
     pump->Hmax = BIG; // No head limit
     pump->Qmax = BIG; // No flow limit
     pump->Q0 = 1.0;   // Init. flow = 1 cfs
     return 0;
+}
+  
+int updatepumpparams(Project *pr, int i)
+/*
+**-------------------------------------------------------------------
+**  Input:   i = pump index
+**  Output:  returns an error code
+**  Purpose: computes a pump's head curve coefficients from its head
+**           curve or its constant power rating.
+**-------------------------------------------------------------------
+*/
+{
+    Network *net = &pr->network;
+    Spump *pump = &net->Pump[i];
+
+    // Pump has a designated pump curve
+    if (pump->Hcurve > 0)
+        return pumpcurvepump(pr, pump, &net->Curve[pump->Hcurve]);
+
+    // Pump has a constant power setting
+    if (net->Link[pump->Link].Km > 0.0)
+        return constpowerpump(pr, pump);
+
+    // Pump has no pump curve info assigned
+    pump->Ptype = NOCURVE;
+    return 226;
 }
  
 int validatepumps(Project *pr)
@@ -300,22 +395,8 @@ int validatepumps(Project *pr)
     
     for (i = 1; i <= net->Npumps; i++)
     {
-        // Pump has a designated pump curve
         pump = &net->Pump[i];
-        if (pump->Hcurve > 0)
-            errcode = pumpcurvepump(pr, pump, &net->Curve[pump->Hcurve]);
-        
-        // Pump has a constant power setting
-        else if (net->Link[pump->Link].Km > 0.0)
-            errcode = constpowerpump(pr, pump);
-        
-        // Pump has no pump curve info assigned
-        else
-        {
-            pump->Ptype = NOCURVE;
-            errcode = 226;
-        }
-        
+        errcode = updatepumpparams(pr, i);
         if (errcode)
         {
             sprintf(pr->Msg, "Error %d: %s %s",
@@ -343,6 +424,7 @@ int validateproject(Project *pr)
     if (!validatepumps(pr)) errcode = 110;
     if (!validatepatterns(pr)) errcode = 110;
     if (!validatecurves(pr)) errcode = 110;
+    if (!validatevalves(pr)) errcode = 110;
     return errcode;
 }
 
@@ -393,10 +475,12 @@ void reindextanks(Project *pr)
                 control = &net->Control[j];
                 if (control->Node == n1) control->Node = n2;
             }
-            adjusttankrules(pr, -ndiff);
             if (qual->TraceNode == n1) qual->TraceNode = n2;
         }
-        
+
+        // Shift tank indexes in rule premises (all tanks at once)
+        adjusttankrules(pr, -ndiff);
+
         // Reallocate the Node array (shouldn't fail as new size < old size)
         parser->MaxJuncs = net->Njuncs;
         parser->MaxNodes = net->Njuncs + net->Ntanks;

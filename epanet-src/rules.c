@@ -7,13 +7,14 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 02/11/2025
+ Last Updated: 10/08/2026
  ******************************************************************************
 */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #include "types.h"
 #include "funcs.h"
@@ -133,6 +134,9 @@ void deleterule(Project *pr, int index)
 
     int i;
     Srule *lastRule;
+ 
+    // No rule to delete (e.g. an error before the first RULE clause)
+    if (index < 1 || index > net->Nrules) return;
 
     // Free memory allocated to rule's premises & actions
     clearrule(pr, index);
@@ -195,12 +199,13 @@ int ruledata(Project *pr)
         err;
     char **Tok = parser->Tok;  // Tokenized line of a rule statement
 
-    // Exit if current rule has an error
-    if (rules->RuleState == r_ERROR) return 0;
-
     // Find the key word that begins the rule statement
     err = 0;
     key = findmatch(Tok[0], Ruleword);
+
+    // Skip the rest of a rule that has an error, up to the next RULE clause
+    if (rules->RuleState == r_ERROR && key != r_RULE) return 0;
+
     switch (key)
     {
         case -1:
@@ -208,16 +213,15 @@ int ruledata(Project *pr)
           break;
 
         case r_RULE:
-          // Missing the rule label
-          if (parser->Ntokens != 2)
-          {
-              err = 201;
-              break;
-          }
+          // Start the new rule even if its label is bad, so that an
+          // error is charged to it and not to the previous rule
           net->Nrules++;
           newrule(pr);
           rules->RuleState = r_RULE;
           rules->Errcode = 0;
+
+          // Missing the rule label
+          if (parser->Ntokens != 2) err = 201;
           break;
 
         case r_IF:
@@ -696,12 +700,14 @@ void newrule(Project *pr)
     char **Tok = pr->parser.Tok;
     Srule *rule = &net->Rule[net->Nrules];
 
-    strncpy(rule->label, Tok[1], MAXID);
+    if (pr->parser.Ntokens > 1) strncpy(rule->label, Tok[1], MAXID);
+    else strcpy(rule->label, "");
     rule->Premises = NULL;
     rule->ThenActions = NULL;
     rule->ElseActions = NULL;
     rule->priority = 0.0;
     rule->isEnabled = TRUE;
+    rule->label[MAXID] = '\0';  // strncpy() above may not terminate it
     pr->rules.LastPremise = NULL;
     pr->rules.LastThenAction = NULL;
     pr->rules.LastElseAction = NULL;
@@ -824,6 +830,7 @@ int newpremise(Project *pr, int logop)
         if (parser->Ntokens == 6) x = hour(Tok[4], Tok[5]) * 3600.;
         else                      x = hour(Tok[4], "") * 3600.;
         if (x < 0.0) return 202;
+        x = floor(x + 0.5);  // whole seconds, e.g. 8:00:01 is 28800.999...
     }
     else if ((k = findmatch(Tok[parser->Ntokens - 1], Value)) > IS_NUMBER) s = k;
     else
@@ -832,6 +839,9 @@ int newpremise(Project *pr, int logop)
         return (202);
         if (v == r_FILLTIME || v == r_DRAINTIME) x = x * 3600.0;
     }
+
+    // Only a link has a status to compare with
+    if (s > IS_NUMBER && i != r_LINK) return 202;
 
     // Create new premise structure
     p = (Spremise *)malloc(sizeof(Spremise));
@@ -940,6 +950,7 @@ int newpriority(Project *pr)
     double x;
     char **Tok = pr->parser.Tok;
 
+    if (pr->parser.Ntokens < 2) return 201;
     if (!getfloat(Tok[1], &x)) return 202;
     net->Rule[net->Nrules].priority = x;
     return 0;
@@ -993,7 +1004,8 @@ int checktime(Project *pr, Spremise *p)
     Rules *rules = &pr->rules;
 
     char flag;
-    long t1, t2, x;
+    long t1, t2;
+    double x;
 
     // Get start and end of rule evaluation time interval
     if (p->variable == r_TIME)
@@ -1008,8 +1020,9 @@ int checktime(Project *pr, Spremise *p)
     }
     else return (0);
 
-    // Test premise's time
-    x = (long)(p->value);
+    // Test premise's time (as a double: converting a very large time to
+    // long would be undefined)
+    x = p->value;
     switch (p->relop)
     {
       // For inequality, test against current time
@@ -1382,7 +1395,7 @@ void writepremise(Spremise *p, FILE *f, Network *net)
 {
     char s_obj[20];
     char s_id[MAXID + 1];
-    char s_value[20];
+    char s_value[MAXLINE+1]; // fits "%.4f" of any double
     int  subtype;
 
     // Get the type name & ID of object referred to in the premise
@@ -1414,10 +1427,14 @@ void writepremise(Spremise *p, FILE *f, Network *net)
         switch (p->variable)
         {
         case r_CLOCKTIME:
-        case r_DRAINTIME:
-        case r_FILLTIME:
         case r_TIME:
             gettimetxt(p->value, s_value);
+            break;
+
+        // Fill and drain times are read back as decimal hours
+        case r_DRAINTIME:
+        case r_FILLTIME:
+            sprintf(s_value, "%.4f", p->value / 3600.0);
             break;
         default: sprintf(s_value, "%.4f", p->value);
         }
@@ -1436,7 +1453,7 @@ void writeaction(Saction *a, FILE *f, Network *net)
     char s_id[MAXID + 1];
     char s_obj[20];
     char s_var[20];
-    char s_value[20];
+    char s_value[MAXLINE + 1];  // fits "%.4f" of any double
     int subtype;
 
     subtype = net->Link[a->link].Type;
@@ -1489,10 +1506,16 @@ void gettimetxt(double secs, char *timetxt)
 //-----------------------------------------------------------------------------
 {
     int hours = 0, minutes = 0, seconds = 0;
-    hours = (int)secs / 3600;
-    if (hours > 24 * 7) sprintf(timetxt, "%.4f", secs / 3600.0);
+
+    // Times of 169 hours or more are written in decimal hours. Test the
+    // double, since (int)secs is undefined for 2^31 s or more.
+    if (secs < 0.0 || secs >= (24 * 7 + 1) * 3600.0)
+    {
+        sprintf(timetxt, "%.4f", secs / 3600.0);
+    }
     else
     {
+        hours = (int)secs / 3600;
         minutes = (int)((secs - 3600 * hours) / 60);
         seconds = (int)(secs - 3600 * hours - minutes * 60);
         sprintf(timetxt, "%d:%02d:%02d", hours, minutes, seconds);

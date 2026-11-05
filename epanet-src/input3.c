@@ -7,7 +7,7 @@ Description:  parses network data from a line of an EPANET input file
 Authors:      see AUTHORS
 Copyright:    see AUTHORS
 License:      see LICENSE
-Last Updated: 04/19/2025
+Last Updated: 10/08/2026
 ******************************************************************************
 */
 
@@ -15,6 +15,7 @@ Last Updated: 04/19/2025
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <limits.h>
 
 #include "types.h"
 #include "funcs.h"
@@ -179,7 +180,7 @@ int tankdata(Project *pr)
 
     int errcode = 0;
     int errtok = -1;
-    double x = 0.0;;
+    double x = 0.0;
 
     // Add new tank to data base
     if (net->Ntanks == parser->MaxTanks ||
@@ -352,7 +353,7 @@ int pipedata(Project *pr)
     // Check that end nodes exist
     if (net->Nlinks == parser->MaxLinks) return 200;
     n = parser->Ntokens;
-    if (n < 3) return setError(parser, -1, errcode);
+    if (n < 3) return setError(parser, -1, 201);
     if ((j1 = findnode(net, parser->Tok[1])) == 0) return setError(parser, 1, 203);
     if ((j2 = findnode(net, parser->Tok[2])) == 0) return setError(parser, 2, 203);
     if (j1 == j2) return setError(parser, 0, 222);
@@ -476,7 +477,7 @@ int pumpdata(Project *pr)
     if (net->Nlinks == parser->MaxLinks ||
         net->Npumps == parser->MaxPumps) return 200;
     n = parser->Ntokens;
-    if (n < 3) return setError(parser, -1, errcode);
+    if (n < 3) return setError(parser, -1, 201);
     if ((j1 = findnode(net, parser->Tok[1])) == 0) return setError(parser, 1, 203);
     if ((j2 = findnode(net, parser->Tok[2])) == 0) return setError(parser, 2, 203);
     if (j1 == j2) return setError(parser, 0, 222);
@@ -583,7 +584,7 @@ int valvedata(Project *pr)
     if (net->Nlinks == parser->MaxLinks ||
         net->Nvalves == parser->MaxValves) return 200;
     n = parser->Ntokens;
-    if (n < 5) return setError(parser, -1, errcode);
+    if (n < 5) return setError(parser, -1, 201);
     if ((j1 = findnode(net, parser->Tok[1])) == 0) return setError(parser, 1, 203);
     if ((j2 = findnode(net, parser->Tok[2])) == 0) return setError(parser, 2, 203);
     if (j1 == j2) return setError(parser, 0, 222);
@@ -599,7 +600,7 @@ int valvedata(Project *pr)
     else return setError(parser, 4, 213);
     
     // Check for illegal connections
-    if (valvecheck(pr, net->Nlinks, type, j1, j2))
+    if (valvecheck(pr, 0, type, j1, j2))
     {
         if      (j1 > net->Njuncs) return setError(parser, 1, 219);
         else if (j2 > net->Njuncs) return setError(parser, 2, 219);
@@ -645,7 +646,7 @@ int valvedata(Project *pr)
         {
             c = findcurve(net, parser->Tok[5]);
             if (c == 0) return setError(parser, 5, 206);
-            link->Kc = c;
+            net->Valve[net->Nvalves].Curve = c;
             net->Curve[c].Type = HLOSS_CURVE;
             link->InitStatus = OPEN;
         }
@@ -669,7 +670,7 @@ int valvedata(Project *pr)
         net->Valve[net->Nvalves].Curve = c;
         net->Curve[c].Type = VALVE_CURVE;
         if (link->Kc > 100.0) link->Kc = 100.0;
-    }
+    }            
     link->InitSetting = link->Kc;
     return 0;
 }
@@ -980,13 +981,11 @@ int controldata(Project *pr)
     {
         status = OPEN;
         if (linktype == PUMP) setting = 1.0;
-        if (linktype == GPV)  setting = net->Link[k].Kc;
     }
     else if (match(parser->Tok[2], w_CLOSED))
     {
         status = CLOSED;
         if (linktype == PUMP) setting = 0.0;
-        if (linktype == GPV)  setting = net->Link[k].Kc;
     }
     else if (linktype == GPV) return setError(parser, 1, 207);
     else if (!getfloat(parser->Tok[2], &setting)) return setError(parser, 2, 202);
@@ -1039,7 +1038,7 @@ int controldata(Project *pr)
     control->Type = ctltype;
     control->Status = status;
     control->Setting = setting;
-    control->Time = (long)(3600.0 * time);
+    control->Time = (long)(3600.0 * time + 0.5);
     if (ctltype == TIMEOFDAY) control->Time %= SECperDAY;
     control->Grade = level;
     control->isEnabled = isEnabled;
@@ -1751,6 +1750,10 @@ int reportdata(Project *pr)
         if (!getfloat(parser->Tok[2], &y)) return setError(parser, 2, 202);
         if (j == PREC)
         {
+            // Report tables print values into a 16-byte buffer,
+            // which holds at most 6 decimal places (see report.c)
+            y = MAX(y, 0.0);
+            y = MIN(y, 6.0);
             rpt->Field[i].Enabled = TRUE;
             rpt->Field[i].Precision = ROUND(y);
         }
@@ -1831,6 +1834,11 @@ int timedata(Project *pr)
             }
         }
     }
+    
+    // Reject a time that is negative, too large or not a number: its
+    // number of seconds must fit in half the range of a long, so that
+    // two times can be added without overflow
+    if (!(y >= 0.0 && y < (double)LONG_MAX / 7200.0)) return setError(parser, n, 213);
     t = (long)(3600.0 * y + 0.5);
 
     /// Process the value assigned to the matched parameter
@@ -2090,11 +2098,11 @@ int optionvalue(Project *pr, int n)
 
     // Check for valid numerical input
     if (!getfloat(parser->Tok[nvalue], &y)) return setError(parser, nvalue, 202);
+    if (y < 0.0) return setError(parser, nvalue, 213);
 
     // Quality tolerance option (which can be 0)
     if (match(tok0, w_TOLERANCE))
     {
-        if (y < 0.0) return setError(parser, nvalue, 213);
         qual->Ctol = y;
         return 0;
     }
@@ -2102,12 +2110,25 @@ int optionvalue(Project *pr, int n)
     // Diffusivity
     if (match(tok0, w_DIFFUSIVITY))
     {
-        if (y < 0.0) return setError(parser, nvalue, 213);
         qual->Diffus = y;
         return 0;
     }
+    
+    // Frequency of status checking by hydraulic solver
+    else if (match(tok0, w_CHECKFREQ))
+    {
+        hyd->CheckFreq = (int)y;
+        return 0;
+    }
+    
+    // Maximum trials to continue status checking
+    else if (match(tok0, w_MAXCHECK))
+    {
+        hyd->MaxCheck = (int)y;
+        return 0;
+    }
 
-    // Hydraulic damping limit option */
+    // Hydraulic damping limit option
     if (match(tok0, w_DAMPLIMIT))
     {
         hyd->DampLimit = y;
@@ -2117,7 +2138,6 @@ int optionvalue(Project *pr, int n)
     // Flow change limit
     else if (match(tok0, w_FLOWCHANGE))
     {
-          if (y < 0.0) return setError(parser, nvalue, 213);
           hyd->FlowChangeLimit = y;
           return 0;
     }
@@ -2125,7 +2145,6 @@ int optionvalue(Project *pr, int n)
     // Head loss error limit
     else if (match(tok0, w_HEADERROR))
     {
-        if (y < 0.0) return setError(parser, nvalue, 213);
         hyd->HeadErrorLimit = y;
         return 0;
     }
@@ -2133,7 +2152,6 @@ int optionvalue(Project *pr, int n)
     // Pressure dependent demand parameters
     else if (match(tok0, w_MINIMUM))
     {
-        if (y < 0.0) return setError(parser, nvalue, 213);
         // Required pressure still at default value
         if (hyd->Preq == MINPDIFF)
             hyd->Preq = y + MINPDIFF;
@@ -2145,15 +2163,15 @@ int optionvalue(Project *pr, int n)
     }
     else if (match(tok0, w_REQUIRED))
     {
-        if (y < 0.0) return setError(parser, nvalue, 213);
         if (y - hyd->Pmin < MINPDIFF)
             return setError(parser, nvalue, 208);
         hyd->Preq = y;
         return 0;
     }
+    // Pressure exponent in pressure dependent demand equation
     else if (match(tok0, w_PRESSURE))
     {
-        if (y < 0.0) return setError(parser, nvalue, 213);
+        if (y <= 0.0) return setError(parser, nvalue, 213);
         hyd->Pexp = y;
         return 0;
     }
@@ -2161,10 +2179,19 @@ int optionvalue(Project *pr, int n)
     // All other options must be > 0
     if (y <= 0.0) return setError(parser, nvalue, 213);
 
+    // Options stored as integers must fit in an int (NaN fails this test)
+    if ((match(tok0, w_TRIALS) || match(tok0, w_CHECKFREQ) ||
+         match(tok0, w_MAXCHECK)) && !(y <= INT_MAX))
+        return setError(parser, nvalue, 213);
+
     // Assign value to all other options
     if (match(tok0, w_VISCOSITY))     hyd->Viscos = y;
     else if (match(tok0, w_SPECGRAV)) hyd->SpGrav = y;
-    else if (match(tok0, w_TRIALS))   hyd->MaxIter = (int)y;
+    else if (match(tok0, w_TRIALS))
+    {
+        if (y < 1.0) return setError(parser, nvalue, 213);
+        hyd->MaxIter = (int)y;
+    }    
     else if (match(tok0, w_ACCURACY))
     {
         y = MAX(y, 1.e-5);
@@ -2178,8 +2205,6 @@ int optionvalue(Project *pr, int n)
         if (y >= 1.0) return 213;
         hyd->RQtol = y;
     }
-    else if (match(tok0, w_CHECKFREQ)) hyd->CheckFreq = (int)y;
-    else if (match(tok0, w_MAXCHECK))  hyd->MaxCheck = (int)y;
     else if (match(tok0, w_EMITTER))   hyd->Qexp = 1.0 / y;
     else if (match(tok0, w_DEMAND))    hyd->Dmult = y;
     else return 201;

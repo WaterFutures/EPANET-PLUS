@@ -7,7 +7,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 01/28/2026
+ Last Updated: 10/09/2026
  ******************************************************************************
 */
 
@@ -168,6 +168,7 @@ void inithyd(Project *pr, int initflag)
         pump->Energy.CurrentPower = 0.0;
         pump->Energy.CurrentEffic = 0.0;
     }
+    hyd->Emax = 0.0;
     
     // Initialize flow balance
     startflowbalance(pr);
@@ -182,7 +183,8 @@ void inithyd(Project *pr, int initflag)
     hyd->Haltflag = 0;
     time->Htime = 0;
     time->Hydstep = 0;
-    time->Rtime = time->Rstep;
+    time->Rtime = time->Rstart % time->Rstep;
+    if (time->Rtime == 0) time->Rtime = time->Rstep;
 }
 
 
@@ -202,7 +204,7 @@ int   runhyd(Project *pr, long *t)
 
     int   iter;          // Iteration count
     int   errcode;       // Error code
-    double relerr;       // Solution accuracy
+    double relerr = 0.0; // Solution accuracy
 
     // Re-initialize leakage coeffs. if parameters have changed
     if (hyd->LeakageChanged)
@@ -266,8 +268,8 @@ int  nexthyd(Project *pr, long *tstep)
     *tstep = 0;
     hydstep = 0;
     if (time->Htime < time->Dur) hydstep = timestep(pr);
-    if (pr->outfile.Saveflag) errcode = savehydstep(pr,&hydstep);
-
+    if (pr->outfile.Saveflag) ERRCODE(savehydstep(pr,&hydstep));
+ 
     // Accumulate pumping energy
     if (time->Dur == 0) addenergy(pr,0);
     else if (time->Htime < time->Dur) addenergy(pr,hydstep);
@@ -309,7 +311,9 @@ void  closehyd(Project *pr)
 {
     freesparse(pr);
     freematrix(pr);
-    freeadjlists(&pr->network);
+
+    // Keep the adjacency lists if the quality solver is still using them
+    if (!pr->quality.OpenQflag) freeadjlists(&pr->network);
 }
 
 
@@ -452,8 +456,10 @@ void  setlinksetting(Project *pr, int index, double value, StatusType *s,
     LinkType t = link->Type;
 
     // For a pump, status is OPEN if speed > 0, CLOSED otherwise
+    // (a negative speed, e.g. from a pattern, counts as 0)
     if (t == PUMP)
     {
+        if (value < 0.0) value = 0.0;
         *k = value;
         if (value > 0 && *s <= CLOSED)
         {
@@ -595,9 +601,20 @@ int  controls(Project *pr)
         if ((n = control->Node) > 0 && n > net->Njuncs)
         {
             h = hyd->NodeHead[n];
-            vplus = ABS(hyd->NodeDemand[n]);
-            v1 = tankvolume(pr,n - net->Njuncs,h);
-            v2 = tankvolume(pr,n - net->Njuncs, control->Grade);
+            
+            // A reservoir has no volume, so compare its head instead
+            if (net->Tank[n - net->Njuncs].A == 0.0)
+            {
+                vplus = 0.0;
+                v1 = h;
+                v2 = control->Grade;
+            }
+            else
+            {    
+                vplus = ABS(hyd->NodeDemand[n]);
+                v1 = tankvolume(pr,n - net->Njuncs,h);
+                v2 = tankvolume(pr,n - net->Njuncs, control->Grade);
+            }
             if (control->Type == LOWLEVEL && v1 <= v2 + vplus) reset = 1;
             if (control->Type == HILEVEL && v1 >= v2 - vplus)  reset = 1;
         }
@@ -665,11 +682,15 @@ long  timestep(Project *pr)
     // Revise time step based on time until next demand period
     // (n = next pattern period, t = time till next period)
     n = ((time->Htime + time->Pstart) / time->Pstep) + 1;
-    t = n * time->Pstep - time->Htime;
+    t = n * time->Pstep - (time->Htime + time->Pstart);
     if (t > 0 && t < tstep) tstep = t;
 
     // Revise time step based on time until next reporting period
     t = time->Rtime - time->Htime;
+    if (t > 0 && t < tstep) tstep = t;
+ 
+    // Revise time step so that it does not go past the end of the simulation
+    t = time->Dur - time->Htime;
     if (t > 0 && t < tstep) tstep = t;
 
     // Revise time step based on smallest time to fill or drain a tank
@@ -763,6 +784,10 @@ int  controltimestep(Project *pr, long *tstep)
         {
             continue;
         }
+
+        // Skip a control de-activated by setting its link to 0
+        if (control->Link <= 0) continue;
+
         // Control depends on a tank level
         if ( (n = control->Node) > 0)
         {
@@ -841,8 +866,9 @@ void  ruletimestep(Project *pr, long *tstep)
     tnow = time->Htime;
     tmax = tnow + *tstep;
 
-    // If no rules, then time increment equals current time step
-    if (net->Nrules == 0)
+    // If no rules (or no rule time step), then time increment
+    // equals current time step
+    if (net->Nrules == 0 || time->Rulestep <= 0)
     {
         dt = *tstep;
         dt1 = dt;
@@ -1083,7 +1109,7 @@ void  tanklevels(Project *pr, long tstep)
         {
             tank->V = tank->Vmax;
         }
-        else if (tank->V - hyd->NodeDemand[n] <= tank->Vmin)
+        else if (tank->V + hyd->NodeDemand[n] <= tank->Vmin)
         {
             tank->V = tank->Vmin;
         }

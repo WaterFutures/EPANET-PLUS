@@ -8,7 +8,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 06/26/2024
+ Last Updated: 10/06/2026
  ******************************************************************************
 */
 
@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <limits.h>
 
 #include "types.h"
 #include "funcs.h"
@@ -109,7 +110,7 @@ int  hydsolve(Project *pr, int *iter, double *relerr)
     // (ExtraIter used to increase trials in case of status cycling.)
     if (rpt->Statflag == FULL) writerelerr(pr, 0, 0);
     maxtrials = hyd->MaxIter;
-    if (hyd->ExtraIter > 0) maxtrials += hyd->ExtraIter;
+    if (hyd->ExtraIter > 0) maxtrials += MIN(hyd->ExtraIter, INT_MAX - maxtrials);
     *iter = 1;
     while (*iter <= maxtrials)
     {
@@ -320,7 +321,7 @@ int  pswitch(Project *pr)
             s = hyd->LinkStatus[k];
             if (link->Type == PIPE)
             {
-                if (s != (char)net->Control[i].Status) change = 1;
+                if (s != net->Control[i].Status) change = 1;
             }
             if (link->Type == PUMP)
             {
@@ -329,7 +330,7 @@ int  pswitch(Project *pr)
             if (link->Type >= PRV)
             {
                 if (hyd->LinkSetting[k] != net->Control[i].Setting) change = 1;
-                else if (hyd->LinkSetting[k] == MISSING && s != (char)net->Control[i].Status)
+                else if (hyd->LinkSetting[k] == MISSING && s != net->Control[i].Status)
                 {
                     change = 1;
                 }
@@ -579,7 +580,7 @@ void newdemandflows(Project *pr, Hydbalance *hbal, double *qsum, double *dqsum)
     
     // Get demand function parameters
     if (hyd->DemandModel == DDA) return;
-    dp = MAX((hyd->Preq - hyd->Pmin), MINPDIFF);
+    dp = hyd->Preq - hyd->Pmin;
     n = 1.0 / hyd->Pexp;
 
     // Examine each junction

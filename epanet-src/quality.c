@@ -7,7 +7,7 @@ Description:  implements EPANET's water quality engine
 Authors:      see AUTHORS
 Copyright:    see AUTHORS
 License:      see LICENSE
-Last Updated: 02/14/2025
+Last Updated: 10/08/2026
 ******************************************************************************
 */
 
@@ -92,6 +92,7 @@ int openqual(Project *pr)
     qual->LastSeg = (Pseg *)calloc(n, sizeof(Pseg));
 
     // Allocate memory for topologically sorted nodes
+    n = net->Nnodes + 1;
     qual->SortedNodes = (int *)calloc(n, sizeof(int));
 
     ERRCODE(MEMCHECK(qual->FlowDir));
@@ -141,11 +142,12 @@ int initqual(Project *pr)
     }
     if (qual->Qualflag == NONE) return errcode;
 
-    // Initialize tank quality
-    for (i = 1; i <= net->Ntanks; i++)
-    {
+    // Initialize tank quality & volume
+     for (i = 1; i <= net->Ntanks; i++)
+     {
         net->Tank[i].C = qual->NodeQual[net->Tank[i].Node];
-    }
+        net->Tank[i].Vq = net->Tank[i].V0;
+     }
 
     // Initialize quality at trace node (if applicable)
     if (qual->Qualflag == TRACE) qual->NodeQual[qual->TraceNode] = 100.0;
@@ -225,7 +227,7 @@ int runqual(Project *pr, long *t)
         // Save current results to output file
         if (time->Htime >= time->Rtime)
         {
-            if (pr->outfile.Saveflag)
+            if (pr->outfile.OutSaveflag)
             {
                 errcode = saveoutput(pr);
                 pr->report.Nperiods++;
@@ -306,7 +308,7 @@ int nextqual(Project *pr, long *tstep)
         }
 
         // ... write the final portion of the binary output file
-        if (pr->outfile.Saveflag) errcode = savefinaloutput(pr);
+        if (pr->outfile.OutSaveflag) errcode = savefinaloutput(pr);
     }
     return errcode;
 }
@@ -385,7 +387,7 @@ int stepqual(Project *pr, long *tleft)
         }
 
         // ... write the final portion of the binary output file
-        if (pr->outfile.Saveflag) errcode = savefinaloutput(pr);
+        if (pr->outfile.OutSaveflag) errcode = savefinaloutput(pr);
     }
     return errcode;
 }
@@ -406,13 +408,16 @@ int closequal(Project *pr)
     if (qual->Qualflag != NONE)
     {
         if (qual->SegPool) mempool_delete(qual->SegPool);
+        qual->SegPool = NULL;
         FREE(qual->FirstSeg);
         FREE(qual->LastSeg);
         FREE(qual->PipeRateCoeff);
         FREE(qual->FlowDir);
         FREE(qual->SortedNodes);
     }
-    freeadjlists(&pr->network);
+
+    // Keep the adjacency lists if the hydraulic solver is still using them
+    if (!pr->hydraul.OpenHflag) freeadjlists(&pr->network);
     return errcode;
 }
 
@@ -484,6 +489,7 @@ double findsourcequal(Project *pr, int n, double volout, long tstep)
     // Return 0 if node is not a quality source or has no outflow
     source = net->Node[n].S;
     if (source == NULL)    return 0.0;
+    source->Smass = 0.0;
     if (source->C0 == 0.0) return 0.0;
     if (volout / tstep <= Q_STAGNANT) return 0.0;
 
@@ -526,11 +532,11 @@ double findsourcequal(Project *pr, int n, double volout, long tstep)
     // Source mass added over time step = source concen. * outflow volume
     massadded = c * volout;
 
-    // Update source's total mass added
-    source->Smass += massadded;
+    // Update source's mass inflow rate (mass/sec)
+    source->Smass = massadded / tstep;
 
     // Update Wsource
-    if (time->Htime >= time->Rstart)
+    if (time->Qtime >= time->Rstart)
     {
         qual->Wsource += massadded;
     }

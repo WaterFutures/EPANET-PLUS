@@ -7,14 +7,19 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 04/23/2025
+ Last Updated: 10/09/2026
  ******************************************************************************
 */
 
 #include <stdlib.h>
+#include <limits.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h> 
+#include <locale.h>
+#ifdef __APPLE__
+  #include <xlocale.h>
+#endif
 
 //*** For the Windows SDK _tempnam function ***//
 #ifdef _WIN32
@@ -92,14 +97,16 @@ int openproject(Project *pr, const char *inpFile, const char *rptFile,
             }
         }            
 
-        // Write input summary to report file
-        if (pr->report.Summaryflag) writesummary(pr);
+        // Write input summary to report file (in the system's locale)
+        if (pr->report.Summaryflag)
+        {
+            void *savedlocale = setnumericlocale("");
+            writesummary(pr);
+            restorenumericlocale(savedlocale);
+        }
         pr->Openflag = TRUE;
     }
     errmsg(pr, errcode);
-
-    // Fix curve types
-    assigncurvetypes(&pr->network);
 
     return errcode;
 }
@@ -877,9 +884,6 @@ int changevalvetype(Project *pr, int index, int type)
         case PBV:
             setting *= pr->Ucf[PRESSURE];
             break;
-        case GPV:
-            setting = 0.0;
-            break;
         default: break;
     }
     switch (type)
@@ -895,7 +899,6 @@ int changevalvetype(Project *pr, int index, int type)
     }
     
     // Save setting
-    if (type == GPV) setting = 0.0;
     if (type == PCV) setting = MIN(setting, 100.0);
     link->Kc = setting;
     link->InitSetting = setting;
@@ -1149,7 +1152,7 @@ void assigncurvetypes(Network *network)
             }
         }
         else if (link->Type == GPV){
-            if((j = valve->Curve) > 0) {
+            if((j = valve->Curve) > 0) {            
                 network->Curve[j].Type = HLOSS_CURVE;
             }
         }
@@ -1254,9 +1257,11 @@ void adjustcurves(Network *network, int index)
         }
         if (network->Link[k].Type == GPV)
         {
-            curve = INT(network->Link[k].Kc);
-            adjustcurve(&curve, index);
-            network->Link[k].Kc = curve;
+            if ((curve = network->Valve[j].Curve) > 0)
+            {
+                adjustcurve(&curve, index);
+                network->Valve[j].Curve = curve;
+            }
         }
     }
 }
@@ -1333,13 +1338,13 @@ int setcontrol(EN_Project p, int type, int linkIndex, double setting,
     {
         status = OPEN;
         if (linktype == PUMP) s = 1.0;
-        if (linktype == GPV)  s = net->Link[linkIndex].Kc;
+        if (linktype == GPV)  s = 1.0;
     }
     else if (setting == SET_CLOSED)
     {
         status = CLOSED;
         if (linktype == PUMP) s = 0.0;
-        if (linktype == GPV)  s = net->Link[linkIndex].Kc;
+        if (linktype == GPV)  s = 0.0;
     }
     
     // Convert units of control setting
@@ -1366,7 +1371,7 @@ int setcontrol(EN_Project p, int type, int linkIndex, double setting,
                 if (s == 0.0) status = CLOSED;
                 else if (s == 1.0) status = OPEN;
                 else return 202;
-                s = net->Link[linkIndex].Kc;
+                s = 0;
                 break;
             default: break;
         }
@@ -1380,8 +1385,12 @@ int setcontrol(EN_Project p, int type, int linkIndex, double setting,
     }
     else if (type == TIMER || type == TIMEOFDAY)
     {
-        t = (long)level;
-        if (t < 0) return 202;
+        // Time in seconds must be a number from 0 up to half the range
+        // of a long, so that times can be added without overflow (NaN
+        // fails this test)
+        if (!(level >= 0.0 && level < (double)LONG_MAX / 2.0)) return 202;
+        t = (long)(level + 0.5);
+        if (type == TIMEOFDAY) t %= SECperDAY;
     }
     
     // Assign values to control struct
@@ -1594,6 +1603,82 @@ void getTmpName(char *fname)
 #endif
 }
 
+// Calling thread's locale saved by setnumericlocale()
+typedef struct
+{
+#ifdef _WIN32
+    int      mode;       // previous per-thread locale setting
+    char    *name;       // previous numeric locale name
+#else
+    locale_t prev;       // previous locale of the thread
+    locale_t loc;        // locale set by setnumericlocale()
+#endif
+} Slocale;
+
+void *setnumericlocale(const char *name)
+//----------------------------------------------------------------
+//  Input:   name = locale for numbers: "C" for a dot as the decimal
+//                  point, "" for the system's locale
+//  Output:  returns the thread's previous locale, to be passed to
+//           restorenumericlocale(), or NULL if nothing was changed
+//  Purpose: changes the locale used for numbers by printf and strtod
+//           in the calling thread only. setlocale() would change it
+//           for the whole program, including the host application.
+//----------------------------------------------------------------
+{
+    Slocale *saved = (Slocale *)malloc(sizeof(Slocale));
+    if (saved == NULL) return NULL;
+
+#ifdef _WIN32
+    // Give the thread its own copy of the locale, then change that
+    saved->mode = _configthreadlocale(_ENABLE_PER_THREAD_LOCALE);
+    if (saved->mode != -1)
+    {
+        char *prev = setlocale(LC_NUMERIC, NULL);
+        saved->name = prev ? _strdup(prev) : NULL;
+        if (saved->name && setlocale(LC_NUMERIC, name)) return saved;
+        free(saved->name);
+        _configthreadlocale(saved->mode);
+    }
+#else
+    // Copy the thread's current locale with its numeric part replaced
+    locale_t base = duplocale(uselocale((locale_t)0));
+    if (base != (locale_t)0)
+    {
+        saved->loc = newlocale(LC_NUMERIC_MASK, name, base);
+        if (saved->loc != (locale_t)0)
+        {
+            saved->prev = uselocale(saved->loc);
+            return saved;
+        }
+        freelocale(base);
+    }
+#endif
+    free(saved);
+    return NULL;
+}
+
+void restorenumericlocale(void *savedlocale)
+//----------------------------------------------------------------
+//  Input:   savedlocale = value returned by setnumericlocale()
+//  Output:  none
+//  Purpose: gives the calling thread back its previous locale
+//----------------------------------------------------------------
+{
+    Slocale *saved = (Slocale *)savedlocale;
+    if (saved == NULL) return;
+
+#ifdef _WIN32
+    setlocale(LC_NUMERIC, saved->name);
+    free(saved->name);
+    _configthreadlocale(saved->mode);
+#else
+    uselocale(saved->prev);
+    freelocale(saved->loc);
+#endif
+    free(saved);
+}
+
 char *xstrcpy(char **s1, const char *s2, const size_t n)
 //----------------------------------------------------------------
 //  Input:   s1 = destination string
@@ -1630,7 +1715,12 @@ char *xstrcpy(char **s1, const char *s2, const size_t n)
     if (n2 > n1) *s1 = realloc(*s1, (n2 + 1) * sizeof(char));
 
     // Copy the source string into the destination string
-    if (*s1) strncpy(*s1, s2, n2+1);
+    // (always null-terminated, even when s2 was truncated to n characters)
+    if (*s1)
+    {
+        memcpy(*s1, s2, n2);
+        (*s1)[n2] = '\0';
+    }
     return *s1;
 }
 

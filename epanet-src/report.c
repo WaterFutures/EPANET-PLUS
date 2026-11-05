@@ -7,7 +7,7 @@
  Authors:      see AUTHORS
  Copyright:    see AUTHORS
  License:      see LICENSE
- Last Updated: 02/14/2025
+ Last Updated: 10/10/2026
  ******************************************************************************
 */
 
@@ -349,7 +349,7 @@ void writehydstat(Project *pr, int iter, double relerr)
   int i, n;
   double *NodeDemand;
   char s1[MAXLINE + 1];
-  char atime[13];
+  char atime[sizeof(rpt->Atime)];
   StatusType newstat;
   Stank *Tank = net->Tank;
   Slink *Link = net->Link;
@@ -478,7 +478,12 @@ void writemassbalance(Project *pr)
     char s1[MAXMSG+1];
     char *units[] = {"", " (mg)", " (ug)", " (hrs)"};
     int  kunits = 0;
+    void *savedlocale;
 
+    // Write numbers in the system's locale (this is the only part of
+    // the report written during a water quality run)
+    savedlocale = setnumericlocale("");
+   
     if      (qual->Qualflag == TRACE) kunits = 1;
     else if (qual->Qualflag == AGE)   kunits = 3;
     else
@@ -507,6 +512,7 @@ void writemassbalance(Project *pr)
     writeline(pr, s1);                          
     snprintf(s1, MAXMSG, "================================\n");
     writeline(pr, s1);
+    restorenumericlocale(savedlocale);
 }
 
 void writeenergy(Project *pr)
@@ -526,6 +532,7 @@ void writeenergy(Project *pr)
     double csum;
     char s[MAXLINE + 1];
     Spump *pump;
+    Senergy e;
 
     if (net->Npumps == 0) return;
     writeline(pr, " ");
@@ -535,14 +542,15 @@ void writeenergy(Project *pr)
     for (j = 1; j <= net->Npumps; j++)
     {
         pump = &net->Pump[j];
-        csum += pump->Energy.TotalCost;
+        pumpenergystats(pr, j, &e);
+        csum += e.TotalCost;
         if (rpt->LineNum == (long)rpt->PageSize) writeheader(pr, ENERHDR, 1);
 
         sprintf(s, "%-8s  %6.2f %6.2f %9.2f %9.2f %9.2f %9.2f",
-            net->Link[pump->Link].ID, pump->Energy.TimeOnLine,
-            pump->Energy.Efficiency,  pump->Energy.KwHrsPerFlow,
-            pump->Energy.KwHrs,       pump->Energy.MaxKwatts,
-            pump->Energy.TotalCost);
+            net->Link[pump->Link].ID, e.TimeOnLine,
+            e.Efficiency, e.KwHrsPerFlow,
+            e.KwHrs,      e.MaxKwatts,
+            e.TotalCost);
         writeline(pr, s);
     }
 
@@ -639,8 +647,9 @@ int writeresults(Project *pr)
         }
     }
 
-    // Free output file
-    if (outFile != NULL)
+    // Close output file if it was opened here
+    // (the project's own OutFile is closed by closeoutfile)
+    if (outFile != NULL && outFile != out->OutFile)
     {
         fclose(outFile);
         outFile = NULL;
@@ -1527,7 +1536,7 @@ char *clocktime(char *atime, long seconds)
     h = seconds / 3600;
     m = seconds % 3600 / 60;
     s = seconds - 3600 * h - 60 * m;
-    sprintf(atime, "%01d:%02d:%02d", (int)h, (int)m, (int)s);
+    sprintf(atime, "%01ld:%02ld:%02ld", h, m, s);
     return atime;
 }
 
