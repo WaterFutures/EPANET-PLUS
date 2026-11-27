@@ -4,3 +4,5 @@ recursive-include epanet_plus/ *
 recursive-include python-extension/ *
 include epanet_plus/epanet_wrapper.py
 include epanet_plus/epanet_toolkit.py
+global-exclude */__pycache__/*
+global-exclude *.pyc
